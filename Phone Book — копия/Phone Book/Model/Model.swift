@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import UIKit
 
 public struct Contact{
     public var name: String
     public var number: String
+    public var image: UIImage?
 }
 
 class Model{

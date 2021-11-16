@@ -22,6 +22,7 @@ class AddTableViewController: UITableViewController {
     
     @IBOutlet var nameField: UITextField!
     @IBOutlet var numberField: UITextField!
+    
     @IBAction func saveButton(_ sender: UIButton){
         let newContact: Contact = Contact(name: nameField.text ?? "", number: numberField.text ?? "")
         controller.AddContact(contact: newContact)
