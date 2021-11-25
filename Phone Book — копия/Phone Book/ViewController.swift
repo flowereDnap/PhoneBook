@@ -7,8 +7,8 @@
 
 import UIKit
 
+// FIXME: why we use this initialize 3 times? What the reason of it?
 var controller:Controller = Controller()
-
 
 
 class ViewController: UIViewController {
@@ -16,9 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    
     var filteredData: [Contact]!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +28,6 @@ class ViewController: UIViewController {
         filteredData = Model.data
         searchBar.delegate = self
     }
-    
-    
 }
 
 extension ViewController: UISearchBarDelegate{
