@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 //  FIXME: What does it mean class Controller?
+
+
+
 class Controller: UIViewController {
     
     var currentContactId:Int{
