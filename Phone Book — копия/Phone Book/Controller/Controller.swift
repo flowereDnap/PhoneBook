@@ -26,14 +26,10 @@ class Controller: UIViewController{
         Model.data.append(contact)
     }
     
-    func getContact(Id: Int? = nil)->Contact{
-        if let id = Id {
-            return Model.data[id]
-        }
-        else {
-            return Model.data[currentContactId]
-        }
+    func getContact(id: Int) -> Contact? {
+        return Model.data[id]
     }
+
     func updCurrentContact(contact: Contact){
         Model.data[Model.currentContactId] = contact
     }

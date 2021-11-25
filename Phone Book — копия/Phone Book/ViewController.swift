@@ -67,7 +67,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-            cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
+            cell.textLabel?.text = controller.getContact(id:indexPath.row)?.name
             return cell
         }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
