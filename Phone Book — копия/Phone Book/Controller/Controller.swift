@@ -12,7 +12,7 @@ import UIKit
 
 
 
-class Controller: UIViewController {
+class Controller {
     
     var currentContactId:Int{
         set(newId){
@@ -27,12 +27,12 @@ class Controller: UIViewController {
     }
     
     //  FIXME: as usual, we don't name methods from the uppercase letter
-    public func AddContact(contact:Contact)->(){
+    public func addContact(contact:Contact)->(){
         Model.data.append(contact)
     }
     
-    func getContact(id: Int) -> Contact? {
-        return Model.data[id]
+    func getContact(Id: Int) -> Contact{
+        return Model.data[Id]
     }
 
     func updCurrentContact(contact: Contact){

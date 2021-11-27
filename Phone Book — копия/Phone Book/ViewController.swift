@@ -12,12 +12,12 @@ var controller:Controller = Controller()
 
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
     var filteredData: [Contact]!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -28,48 +28,59 @@ class ViewController: UIViewController {
         filteredData = Model.data
         searchBar.delegate = self
     }
+    
+    @IBAction func addButton(_ sender: UIButton){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let editScreen = storyboard.instantiateViewController(withIdentifier:
+        "AddContactScene") as! AddTableViewController
+        self.navigationController?.pushViewController(editScreen, animated:
+true)
+        
+    }
+
+    
 }
+
 
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            // When there is no text, filteredData is the same as the original data
-            // When user has entered text into the search box
-            // Use the filter method to iterate over all items in the data array
-            // For each item, return true if the item should be included and false if the
-            // item should NOT be included
+       
         filteredData = searchText.isEmpty ? Model.data : Model.data.filter { (item: Contact) -> Bool in
-                // If dataItem matches the searchText, return true to include it
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-            }
-        
-            tableView.reloadData()
         }
+        
+        tableView.reloadData()
+    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return controller.count
-        }
-        
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       switch tableView {
-       case self.tableView:
-           return controller.count
-        default:
-          return 0
-       }
+        return 1
     }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-            cell.textLabel?.text = controller.getContact(id:indexPath.row)?.name
-            return cell
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch tableView {
+        case self.tableView:
+            return controller.count
+        default:
+            return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
+        cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
+        return cell
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        controller.currentContactId = indexPath.row
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let newViewController = storyBoard.instantiateViewController(withIdentifier: "newViewController")
-                self.present(newViewController, animated: true, completion: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let editScreen = storyboard.instantiateViewController(withIdentifier:
+        "ContactScene") as! ContactTableViewController
+        editScreen.currentContact = controller.getContact(Id: indexPath.row)
+        
+        self.navigationController?.pushViewController(editScreen, animated:
+true)
     }
 }
+

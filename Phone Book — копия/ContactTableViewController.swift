@@ -11,15 +11,15 @@ class ContactTableViewController: UITableViewController {
 
     @IBOutlet var nameField: UITextField!
     @IBOutlet var numberField: UITextField!
+
+    var currentContact:Contact = Contact(name: "", number: "")
     var controller: Controller = Controller()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentContact = controller.getContact(id: 0)
-        nameField.text = currentContact?.name
-        numberField.text = currentContact?.number
+        nameField.text = currentContact.name
+        numberField.text = currentContact.number
     }
-    
     
     @IBAction func EditButtonPressed(_ sender: UIButton){
         if sender.title(for: .normal) == "Edit"{
@@ -53,9 +53,9 @@ class ContactTableViewController: UITableViewController {
             nameField.isUserInteractionEnabled = false
             numberField.isUserInteractionEnabled = false
             
-            let currentContact = controller.getContact(id: 0)
-            nameField.text = currentContact?.name
-            numberField.text = currentContact?.number
+            let currentContact = controller.getContact(Id: 0)
+            nameField.text = currentContact.name
+            numberField.text = currentContact.number
         }
     }
     // MARK: - Table view data source

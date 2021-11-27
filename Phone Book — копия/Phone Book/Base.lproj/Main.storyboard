@@ -25,7 +25,7 @@
                                     <navigationItem title="Phone Book" id="E2n-jL-v4C">
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="hYh-pK-LXB">
                                             <connections>
-                                                <segue destination="zOb-Dm-0CB" kind="show" id="RIl-oB-A0R"/>
+                                                <action selector="addButton:" destination="BYZ-38-t0r" id="TOt-f6-Fui"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -73,7 +73,7 @@
         <!--Add Table View Controller-->
         <scene sceneID="Bgn-BY-QCT">
             <objects>
-                <viewController id="zOb-Dm-0CB" customClass="AddTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddContactScene" id="zOb-Dm-0CB" customClass="AddTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oVg-tI-XuT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -92,7 +92,7 @@
                                 </items>
                             </navigationBar>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dW-AL-ERr">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <connections>
                                     <segue destination="vdI-4p-pHd" kind="embed" id="0Sc-e4-K0M"/>
                                 </connections>
@@ -116,26 +116,26 @@
             </objects>
             <point key="canvasLocation" x="776.81159420289862" y="39.508928571428569"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Add Table View Controller-->
         <scene sceneID="Jsd-Uh-S8h">
             <objects>
-                <tableViewController id="vdI-4p-pHd" sceneMemberID="viewController">
+                <tableViewController id="vdI-4p-pHd" customClass="AddTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="t9U-BJ-YLT">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="774"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="Name" id="6ph-aV-FWB">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="wQy-sz-0oD">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="19"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="19.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wQy-sz-0oD" id="heX-3A-dlJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="19"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gMm-JX-q77">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="19"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
@@ -153,14 +153,14 @@
                             <tableViewSection headerTitle="Number" id="a4Z-kj-ACC">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="rAv-Mq-Ep1">
-                                        <rect key="frame" x="0.0" y="130.5" width="414" height="19.5"/>
+                                        <rect key="frame" x="0.0" y="131" width="414" height="19"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rAv-Mq-Ep1" id="frU-dL-gYX">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="19.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="19"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fGb-5K-bcE">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="19.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="19"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
@@ -181,6 +181,10 @@
                             <outlet property="delegate" destination="vdI-4p-pHd" id="RQo-uJ-30p"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="nameField" destination="gMm-JX-q77" id="dq4-8p-IrT"/>
+                        <outlet property="numberField" destination="fGb-5K-bcE" id="Gkl-MT-5Zr"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yhf-YN-Xeg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -189,7 +193,7 @@
         <!--Contact Table View Controller-->
         <scene sceneID="Lwm-q1-SUh">
             <objects>
-                <viewController id="sj7-2w-T0B" customClass="ContactTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ContactScene" id="sj7-2w-T0B" customClass="ContactTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5rJ-bp-qNI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -232,10 +236,10 @@
             </objects>
             <point key="canvasLocation" x="242.0289855072464" y="-853.125"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Contact Table View Controller-->
         <scene sceneID="il0-hI-m2c">
             <objects>
-                <tableViewController id="OE8-4l-mLM" sceneMemberID="viewController">
+                <tableViewController id="OE8-4l-mLM" customClass="ContactTableViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="T89-BK-Ivs">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -297,6 +301,10 @@
                             <outlet property="delegate" destination="OE8-4l-mLM" id="pKJ-kc-2KU"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="nameField" destination="0rq-Aj-Js6" id="xeh-KP-yLQ"/>
+                        <outlet property="numberField" destination="mpD-xx-QBi" id="0yT-q4-bcW"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ept-Qg-7oB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
