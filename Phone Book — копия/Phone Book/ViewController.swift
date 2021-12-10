@@ -30,15 +30,12 @@ class ViewController: UIViewController {
     }
     
     @IBAction func addButton(_ sender: UIButton){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let editScreen = storyboard.instantiateViewController(withIdentifier:
-        "AddContactScene") as! AddTableViewController
-        self.navigationController?.pushViewController(editScreen, animated:
-true)
-        
+       
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc :AddTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "AddContactScene") as! AddTableViewController
+        self.present(vc, animated: true, completion: nil)
     }
 
-    
 }
 
 
@@ -74,13 +71,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let editScreen = storyboard.instantiateViewController(withIdentifier:
-        "ContactScene") as! ContactTableViewController
-        editScreen.currentContact = controller.getContact(Id: indexPath.row)
-        
-        self.navigationController?.pushViewController(editScreen, animated:
-true)
+       
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
+        //vc.currentContact = controller.getContact(Id: indexPath.row)
+        vc.currentContact = controller.getContact(Id: indexPath.row)
+        print(vc.currentContact)
+        self.present(vc, animated: true, completion: nil)
+    
     }
 }
 

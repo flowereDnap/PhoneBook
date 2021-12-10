@@ -11,12 +11,15 @@ class ContactTableViewController: UITableViewController {
 
     @IBOutlet var nameField: UITextField!
     @IBOutlet var numberField: UITextField!
+    @IBOutlet var tableView2: UITableView!
 
     var currentContact:Contact = Contact(name: "", number: "")
     var controller: Controller = Controller()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        
         nameField.text = currentContact.name
         numberField.text = currentContact.number
     }
@@ -63,12 +66,12 @@ class ContactTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 1
     }
 
     /*
