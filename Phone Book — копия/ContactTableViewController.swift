@@ -58,7 +58,7 @@ class ContactTableViewController: UITableViewController {
         if nameField.text != nil{
             let contact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "")
             controller.addContact(contact: contact)
-            
+            controller.currentContactId = controller.count
             selectedType = .view
             viewWillAppear(false)
         }

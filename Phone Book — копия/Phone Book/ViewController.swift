@@ -86,6 +86,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
         //vc.currentContact = controller.getContact(Id: indexPath.row)
         vc.currentContact = controller.getContact(Id: indexPath.row)
+        controller.currentContactId = indexPath.row
         vc.selectedType = .view
         self.navigationController?.pushViewController(vc, animated: true)
         //self.present(vc, animated: true, completion: nil)
