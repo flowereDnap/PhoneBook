@@ -27,7 +27,9 @@ class AddTableViewController: UITableViewController {
         let newContact: Contact = Contact(name: nameField.text ?? "", number: numberField.text ?? "")
         controller.addContact(contact: newContact)
     }
-
+    @IBAction func backButtonPressed(_ sender:UIButton){
+        self.dismiss(animated: true, completion: nil)
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections

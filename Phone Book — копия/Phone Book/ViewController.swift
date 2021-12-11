@@ -16,12 +16,19 @@ class ViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    
     var filteredData: [Contact]!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+        self.tableView.reloadData()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
+        title = "Phone Book"
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -29,11 +36,14 @@ class ViewController: UIViewController {
         searchBar.delegate = self
     }
     
+    
     @IBAction func addButton(_ sender: UIButton){
        
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc :AddTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "AddContactScene") as! AddTableViewController
-        self.present(vc, animated: true, completion: nil)
+        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
+        //vc.currentContact = controller.getContact(Id: indexPath.row)
+        vc.selectedType = .create
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
 }
@@ -76,8 +86,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
         //vc.currentContact = controller.getContact(Id: indexPath.row)
         vc.currentContact = controller.getContact(Id: indexPath.row)
-        print(vc.currentContact)
-        self.present(vc, animated: true, completion: nil)
+        vc.selectedType = .view
+        self.navigationController?.pushViewController(vc, animated: true)
+        //self.present(vc, animated: true, completion: nil)
     
     }
 }

@@ -15,4 +15,5 @@ public struct Contact{
 class Model{
     static public var data:[Contact] = [Contact(name:"lala",number: " h"),Contact(name:"popo",number: "bb"),Contact(name: "bib", number: "dfg")]
     public static var currentContactId:Int = 0
+    
 }
