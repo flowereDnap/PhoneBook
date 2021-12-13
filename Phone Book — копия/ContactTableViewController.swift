@@ -11,64 +11,93 @@ class ContactTableViewController: UITableViewController {
 
     @IBOutlet var nameField: UITextField!
     @IBOutlet var numberField: UITextField!
+    @IBOutlet var tableView2: UITableView!
+    
+    enum SelectedType{
+        case edit
+        case view
+        case create
+    }
+    
+    var currentContact:Contact = Contact(name: "", number: "")
+    var selectedType:SelectedType = .view
     var controller: Controller = Controller()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        switch selectedType {
+        case .edit:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveButtonPressed))
+            nameField.isUserInteractionEnabled = true
+            numberField.isUserInteractionEnabled = true
+        case .view:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Edit", style: .done, target: self, action: #selector(editButtonPressed))
+            nameField.isUserInteractionEnabled = false
+            numberField.isUserInteractionEnabled = false
+        case .create:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Create", style: .done, target: self, action: #selector(createButtonPressed))
+            nameField.isUserInteractionEnabled = true
+            numberField.isUserInteractionEnabled = true
+
+        }
+                //или self.navigationController?.navigationBarHidden = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentContact = controller.getContact()
         nameField.text = currentContact.name
         numberField.text = currentContact.number
+        self.navigationItem.leftBarButtonItem?.action = #selector(backButtonPressred)
     }
     
+    @objc func backButtonPressred(_ sender: UIButton){
+        
+        self.navigationController?.popViewController(animated: true)
+    }
     
-    @IBAction func EditButtonPressed(_ sender: UIButton){
-        if sender.title(for: .normal) == "Edit"{
-            self.navigationItem.leftBarButtonItem?.title = "Cansel"
-            self.navigationItem.rightBarButtonItem?.title = "Save"
-            nameField.isUserInteractionEnabled = true
-            numberField.isUserInteractionEnabled = true
-        }else if sender.title(for: .normal) == "Save"{
-            self.navigationItem.leftBarButtonItem?.title = "Cansel"
-            self.navigationItem.rightBarButtonItem?.title = "Save"
-            nameField.isUserInteractionEnabled = false
-            numberField.isUserInteractionEnabled = false
+    @objc func createButtonPressed(_ sender: UIButton){
+        if nameField.text != nil{
+            let contact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "")
+            controller.addContact(contact: contact)
+            controller.currentContactId = controller.count
+            selectedType = .view
+            viewWillAppear(false)
+        }
+        else{
             
-            guard let name = nameField.text else{
-                controller.deleteCurrentContact()
-                return
-            }
-            let editedContact: Contact = Contact(name: name, number: numberField.text ?? "")
-            controller.updCurrentContact(contact: editedContact)
         }
     }
     
-    @IBAction func BackButtonPressed(_ sender: UIButton){
-        if sender.title(for: .normal) == "Back"{
-            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let newViewController = storyBoard.instantiateViewController(withIdentifier: "Main")
-                    self.present(newViewController, animated: true, completion: nil)
-        }else if sender.title(for: .normal) == "Cansel"{
-            self.navigationItem.leftBarButtonItem?.title = "Back"
-            self.navigationItem.rightBarButtonItem?.title = "Edit"
-            nameField.isUserInteractionEnabled = false
-            numberField.isUserInteractionEnabled = false
-            
-            let currentContact = controller.getContact()
-            nameField.text = currentContact.name
-            numberField.text = currentContact.number
-        }
+    @IBAction func editButtonPressed(_ sender: UIButton){
+        selectedType = .edit
+        viewWillAppear(false)
     }
+    
+    
+    @objc func saveButtonPressed(_ sender: UIButton){
+        guard let name = nameField.text else{
+            controller.deleteCurrentContact()
+            return
+        }
+        let editedContact: Contact = Contact(name: name, number: numberField.text ?? "")
+        controller.updCurrentContact(contact: editedContact)
+    selectedType = .view
+    viewWillAppear(false)
+    }
+    
+    
+    
+    
     // MARK: - Table view data source
    
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 1
     }
 
     /*
@@ -127,3 +156,4 @@ class ContactTableViewController: UITableViewController {
     */
 
 }
+

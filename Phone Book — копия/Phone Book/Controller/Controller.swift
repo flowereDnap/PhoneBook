@@ -8,7 +8,11 @@
 import Foundation
 import UIKit
 
-class Controller: UIViewController{
+//  FIXME: What does it mean class Controller?
+
+
+
+class Controller {
     
     var currentContactId:Int{
         set(newId){
@@ -22,18 +26,20 @@ class Controller: UIViewController{
         return Model.data.count
     }
     
-    public func AddContact(contact:Contact)->(){
+    //  FIXME: as usual, we don't name methods from the uppercase letter
+    public func addContact(contact:Contact)->(){
         Model.data.append(contact)
     }
     
-    func getContact(Id: Int = currentContactId)->Contact{
+    func getContact(Id: Int) -> Contact{
         return Model.data[Id]
     }
+
     func updCurrentContact(contact: Contact){
         Model.data[Model.currentContactId] = contact
     }
+    
     func deleteCurrentContact(){
         Model.data.remove(at: Model.currentContactId)
     }
-    
 }
