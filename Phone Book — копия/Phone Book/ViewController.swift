@@ -51,8 +51,8 @@ class ViewController: UIViewController {
 
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
-        filteredData = searchText.isEmpty ? Model.data : Model.data.filter { (item: Contact) -> Bool in
+        print(true ? 1 : 0)
+        filteredData = searchText.isEmpty ? Model.data : Model.data.filter { item in
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
         }
         
@@ -69,7 +69,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case self.tableView:
-            return controller.count
+            return filteredData.count
         default:
             return 0
         }
@@ -77,7 +77,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-        cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
+        print(filteredData)
+        cell.textLabel?.text = filteredData[indexPath.row].name
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
