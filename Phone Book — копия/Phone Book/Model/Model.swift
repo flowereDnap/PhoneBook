@@ -21,11 +21,12 @@ class Model{
                 return loaded_data
             }
             else{
+                var data2:[Contact]?
                 if let mydata = UserDefaults.standard.value(forKey:key) as? Data {
-                    let data2:[Contact]? = try? PropertyListDecoder().decode(Array<Contact>.self, from: mydata)
-                    loaded_data = data2 ?? []
+                    data2 = try? PropertyListDecoder().decode(Array<Contact>.self, from: mydata)
+                    
                 }
-                
+                loaded_data = data2 ?? []
                 return loaded_data!
             }
         }
