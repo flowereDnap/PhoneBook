@@ -57,10 +57,11 @@ class ContactTableViewController: UITableViewController {
     @objc func createButtonPressed(_ sender: UIButton){
         if nameField.text != nil{
             let contact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "")
-            controller.addContact(contact: contact)
+            if controller.addContact(contact: contact){
             controller.currentContactId = controller.count
             selectedType = .view
             viewWillAppear(false)
+            }
         }
         else{
             

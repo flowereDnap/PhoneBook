@@ -26,20 +26,62 @@ class Controller {
         return Model.data.count
     }
     
-    //  FIXME: as usual, we don't name methods from the uppercase letter
-    public func addContact(contact:Contact)->(){
-        Model.data.append(contact)
+    
+    public func addContact(contact:Contact)->(Bool){
+        if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(contact.number.dropFirst(1)))) && contact.number.first == "+"{
+            Model.data.append(contact)
+            return true
+        }
+        else{
+            /*let alert = UIAlertController(title: "wrong number ", message: "(use only digits)", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            UIApplication.getTopViewController()?.present(alert, animated: true, completion: nil)*/
+            print("case 1")
+            return false
+        }
+        
     }
     
     func getContact(Id: Int) -> Contact{
         return Model.data[Id]
     }
 
-    func updCurrentContact(contact: Contact){
-        Model.data[Model.currentContactId] = contact
+    func updCurrentContact(contact: Contact)->(Bool){
+        if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(contact.number.dropFirst(1)))) && contact.number.first == "+"{
+            Model.data[Model.currentContactId] = contact
+            return true
+        }
+        else{
+            /*let alert = UIAlertController(title: "wrong number ", message: "(use only digits)", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            UIApplication.getTopViewController()?.present(alert, animated: true, completion: nil)*/
+            print("case 1")
+            return false
+        }
+        
     }
     
     func deleteCurrentContact(){
         Model.data.remove(at: Model.currentContactId)
     }
 }
+
+
+extension UIApplication {
+
+    static func getTopViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+
+        if let nav = base as? UINavigationController {
+            return getTopViewController(base: nav.visibleViewController)
+
+        } else if let tab = base as? UITabBarController, let selected = tab.selectedViewController {
+            return getTopViewController(base: selected)
+
+        } else if let presented = base?.presentedViewController {
+            return getTopViewController(base: presented)
+        }
+        return base
+    }
+}
+// How to use
+
