@@ -7,23 +7,28 @@
 
 import UIKit
 
+// FIXME: why we use this initialize 3 times? What the reason of it?
 var controller:Controller = Controller()
 
 
-
 class ViewController: UIViewController {
-
+    
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
     
     var filteredData: [Contact]!
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+        self.tableView.reloadData()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
+        title = "Phone Book"
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -32,48 +37,60 @@ class ViewController: UIViewController {
     }
     
     
+    @IBAction func addButton(_ sender: UIButton){
+       
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
+        //vc.currentContact = controller.getContact(Id: indexPath.row)
+        vc.selectedType = .create
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
 }
+
 
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            // When there is no text, filteredData is the same as the original data
-            // When user has entered text into the search box
-            // Use the filter method to iterate over all items in the data array
-            // For each item, return true if the item should be included and false if the
-            // item should NOT be included
+       
         filteredData = searchText.isEmpty ? Model.data : Model.data.filter { (item: Contact) -> Bool in
-                // If dataItem matches the searchText, return true to include it
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-            }
-        
-            tableView.reloadData()
         }
+        
+        tableView.reloadData()
+    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return controller.count
-        }
-        
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       switch tableView {
-       case self.tableView:
-           return controller.count
-        default:
-          return 0
-       }
+        return 1
     }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-            cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
-            return cell
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch tableView {
+        case self.tableView:
+            return controller.count
+        default:
+            return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
+        cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
+        return cell
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
+        //vc.currentContact = controller.getContact(Id: indexPath.row)
+        vc.currentContact = controller.getContact(Id: indexPath.row)
         controller.currentContactId = indexPath.row
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let newViewController = storyBoard.instantiateViewController(withIdentifier: "newViewController")
-                self.present(newViewController, animated: true, completion: nil)
+        vc.selectedType = .view
+        self.navigationController?.pushViewController(vc, animated: true)
+        //self.present(vc, animated: true, completion: nil)
+    
     }
 }
+

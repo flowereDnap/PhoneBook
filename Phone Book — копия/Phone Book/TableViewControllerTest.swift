@@ -1,4 +1,11 @@
 //
+//  TableViewControllerTest.swift
+//  Phone Book
+//
+//  Created by User on 10.12.2021.
+//
+
+//
 //  AddTableViewController.swift
 //  Phone Book
 //
@@ -7,7 +14,7 @@
 
 import UIKit
 
-class AddTableViewController: UITableViewController {
+class TableViewControllerTest: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +31,16 @@ class AddTableViewController: UITableViewController {
     @IBOutlet var numberField: UITextField!
     @IBAction func saveButton(_ sender: UIButton){
         let newContact: Contact = Contact(name: nameField.text ?? "", number: numberField.text ?? "")
-        controller.AddContact(contact: newContact)
+        controller.addContact(contact: newContact)
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 2
     }
 
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return 1
+    }
 }
