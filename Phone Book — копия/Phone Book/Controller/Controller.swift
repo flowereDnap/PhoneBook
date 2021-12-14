@@ -25,40 +25,25 @@ class Controller {
     var count:Int{
         return Model.data.count
     }
-    
-    
-    public func addContact(contact:Contact)->(Bool){
-        if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(contact.number.dropFirst(1)))) && contact.number.first == "+"{
-            Model.data.append(contact)
+    func numberCheck(number:String)->Bool{
+        if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(number.dropFirst(1)))) && (number.first == "+" || number.first?.isNumber ?? true){
             return true
         }
         else{
-            /*let alert = UIAlertController(title: "wrong number ", message: "(use only digits)", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            UIApplication.getTopViewController()?.present(alert, animated: true, completion: nil)*/
-            print("case 1")
             return false
         }
-        
+    }
+    
+     func addContact(contact:Contact){
+            Model.data.append(contact)
     }
     
     func getContact(Id: Int) -> Contact{
         return Model.data[Id]
     }
 
-    func updCurrentContact(contact: Contact)->(Bool){
-        if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(contact.number.dropFirst(1)))) && contact.number.first == "+"{
-            Model.data[Model.currentContactId] = contact
-            return true
-        }
-        else{
-            /*let alert = UIAlertController(title: "wrong number ", message: "(use only digits)", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            UIApplication.getTopViewController()?.present(alert, animated: true, completion: nil)*/
-            print("case 1")
-            return false
-        }
-        
+    func updCurrentContact(contact: Contact){
+            Model.data[Model.currentContactId] = contact     
     }
     
     func deleteContact(Id:Int){
