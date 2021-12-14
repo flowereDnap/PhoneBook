@@ -61,8 +61,8 @@ class Controller {
         
     }
     
-    func deleteCurrentContact(){
-        Model.data.remove(at: Model.currentContactId)
+    func deleteContact(Id:Int){
+        Model.data.remove(at: Id)
     }
 }
 

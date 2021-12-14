@@ -56,7 +56,7 @@ class ContactTableViewController: UITableViewController {
     
     @objc func createButtonPressed(_ sender: UIButton){
         if nameField.text != nil{
-            let contact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "")
+            let contact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "", id: 3, creationDate: NSDate() as Date)
             if controller.addContact(contact: contact){
             controller.currentContactId = controller.count
             selectedType = .view
@@ -76,7 +76,7 @@ class ContactTableViewController: UITableViewController {
     
     @objc func saveButtonPressed(_ sender: UIButton){
         guard let name = nameField.text else{
-            controller.deleteCurrentContact()
+            controller.deleteContact(Id: controller.currentContactId)
             return
         }
         let editedContact: Contact = Contact(name: name, number: numberField.text ?? "")

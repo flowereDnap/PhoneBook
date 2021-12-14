@@ -23,7 +23,7 @@ class ViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
         self.tableView.reloadData()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -38,20 +38,20 @@ class ViewController: UIViewController {
     
     
     @IBAction func addButton(_ sender: UIButton){
-       
+        
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
         //vc.currentContact = controller.getContact(Id: indexPath.row)
         vc.selectedType = .create
         self.navigationController?.pushViewController(vc, animated: true)
     }
-
+    
 }
 
 
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
+        
         filteredData = searchText.isEmpty ? Model.data : Model.data.filter { (item: Contact) -> Bool in
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
         }
@@ -80,8 +80,37 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
         return cell
     }
+    
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)-> UISwipeActionsConfiguration?{
+        let action = UIContextualAction(style: .normal,
+                                        title: "Delete") { [weak self] (action, view, completionHandler) in
+            
+            
+            // create the alert
+            let alert = UIAlertController(title: "Delete", message: "Are you sure about that?", preferredStyle: UIAlertController.Style.alert)
+            
+            // add the actions (buttons)
+            
+            
+            
+            alert.addAction(UIAlertAction(title: "Cansel", style: UIAlertAction.Style.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Continue", style: UIAlertAction.Style.destructive, handler: { action in
+                controller.deleteContact(Id: indexPath.row)
+                tableView.reloadData()
+            }))
+            
+            
+            // show the alert
+            self?.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = .black
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
         //vc.currentContact = controller.getContact(Id: indexPath.row)
@@ -90,7 +119,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         vc.selectedType = .view
         self.navigationController?.pushViewController(vc, animated: true)
         //self.present(vc, animated: true, completion: nil)
-    
+        
     }
 }
 

@@ -10,6 +10,8 @@ import Foundation
 public struct Contact: Codable{
     public var name: String
     public var number: String
+    public let id:Int
+    public var creationDate: Date
 }
 
 class Model{
