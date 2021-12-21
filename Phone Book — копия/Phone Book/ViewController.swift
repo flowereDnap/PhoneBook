@@ -8,58 +8,90 @@
 import UIKit
 
 // FIXME: why we use this initialize 3 times? What the reason of it?
-var controller:Controller = Controller()
 
 
-class ViewController: UIViewController {
+protocol Observer: AnyObject {
+
+    func update(subject: ContactManager)
+}
+
+enum FilterMode{
+    case alf
+    case date
+}
+
+var controller:ContactManager = ContactManager()
+var filterMode:FilterMode = .alf
+
+
+class ViewController: UIViewController, Observer {
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    func update(subject: ContactManager) {
+        self.dataToShow = subject.data
+        tableView.reloadData()
+    }
     
-    var filteredData: [Contact]!
+   
+    var dataToShow: [Contact]! = []
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
-        self.tableView.reloadData()
+        let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+        let leftButt = UIBarButtonItem.init(title: "Sort by alf", style: .done, target: self, action: #selector(filterButtonPressed))
+        
+        self.navigationItem.rightBarButtonItems = [ rightBtt, leftButt ]
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
+        self.tableView.register(MyCell.self, forCellReuseIdentifier: "myCell")
         title = "Phone Book"
         tableView.dataSource = self
         tableView.delegate = self
-        
-        filteredData = Model.data
         searchBar.delegate = self
+        controller.attach(self)
+        dataToShow = controller.data
     }
     
     
     @IBAction func addButton(_ sender: UIButton){
         
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
-        //vc.currentContact = controller.getContact(Id: indexPath.row)
-        vc.selectedType = .create
+        let vc = ContactTableViewController.getView(viewMode: .create, controller: controller)
+        
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc func filterButtonPressed(_ sender: UIBarButtonItem){
+        switch filterMode {
+        case .alf:
+            dataToShow.sort(by: {$0.name < $1.name})
+            tableView.reloadData()
+            sender.title = "Sort by date"
+            filterMode = .date
+        case .date:
+            dataToShow.sort(by: {$0.creationDate < $1.creationDate})
+            tableView.reloadData()
+            sender.title = "Sort by alf"
+            filterMode = .alf
+        }
+    }
 }
 
-
+//SEARCH
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        filteredData = searchText.isEmpty ? Model.data : Model.data.filter { (item: Contact) -> Bool in
-            return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        dataToShow = searchText.isEmpty ? controller.data : controller.data.filter { (item: Contact) -> Bool in
+            
+            return (item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil || item.number.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil)
         }
-        
         tableView.reloadData()
     }
 }
 
+//TABLEVIEW
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -69,39 +101,29 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case self.tableView:
-            return controller.count
+            return dataToShow.count
         default:
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-        cell.textLabel?.text = controller.getContact(Id:indexPath.row).name
+        let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! MyCell
+        cell.textLabel?.text = dataToShow[indexPath.row].name
+        cell.contactId = dataToShow[indexPath.row].id
         return cell
     }
-    
+    //DELETE with swipe
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)-> UISwipeActionsConfiguration?{
         let action = UIContextualAction(style: .normal,
                                         title: "Delete") { [weak self] (action, view, completionHandler) in
-            
-            
-            // create the alert
             let alert = UIAlertController(title: "Delete", message: "Are you sure about that?", preferredStyle: UIAlertController.Style.alert)
-            
-            // add the actions (buttons)
-            
-            
-            
             alert.addAction(UIAlertAction(title: "Cansel", style: UIAlertAction.Style.default, handler: nil))
             alert.addAction(UIAlertAction(title: "Continue", style: UIAlertAction.Style.destructive, handler: { action in
-                controller.deleteContact(Id: indexPath.row)
+                controller.deleteContact(Id: (self!.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!)
                 tableView.reloadData()
             }))
-            
-            
-            // show the alert
             self?.present(alert, animated: true, completion: nil)
             completionHandler(true)
         }
@@ -109,17 +131,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         return UISwipeActionsConfiguration(actions: [action])
     }
     
+    
+    //CELL CHOSEN
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
-        //vc.currentContact = controller.getContact(Id: indexPath.row)
-        vc.currentContact = controller.getContact(Id: indexPath.row)
-        controller.currentContactId = indexPath.row
-        vc.selectedType = .view
-        self.navigationController?.pushViewController(vc, animated: true)
-        //self.present(vc, animated: true, completion: nil)
+        controller.currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
         
+        let vc = ContactTableViewController.getView(viewMode: .view, controller: controller)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
+class MyCell : UITableViewCell {
+    var contactId: Int? = nil
+}
