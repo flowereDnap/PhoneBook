@@ -9,6 +9,12 @@ import Foundation
 import UIKit
 
 //  FIXME: What does it mean class Controller?
+class Weak<T: AnyObject> {
+  weak var value : T?
+  init (value: T) {
+    self.value = value
+  }
+}
 
 
 

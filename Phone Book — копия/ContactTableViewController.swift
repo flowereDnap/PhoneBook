@@ -60,7 +60,7 @@ class ContactTableViewController: UITableViewController {
             nameField.text = contact.name
             numberField.text = contact.number
         }
-        numberField.addTarget(self, action: #selector(nuberFieldInputControl), for: UIControl.Event.editingChanged)
+        numberField.delegate = self
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Back", style: .done, target: self, action: #selector(backButtonPressed))
 
     }
@@ -136,7 +136,7 @@ class ContactTableViewController: UITableViewController {
      override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
      
-     // Configure the cell...
+     cell.isSelected = false
      
      return cell
      }
@@ -189,5 +189,27 @@ class ContactTableViewController: UITableViewController {
     
 }
 extension ContactTableViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if textField.text?.first != "+"{
+            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
+            if charsNotNumb.count == 0{
+                return true
+            } else if charsNotNumb.count > 1 {
+                return false
+            } else if charsNotNumb.first == "+" {
+                if range.location == 0 {
+                    return true
+                }
+                return false
+            }
+        } else {
+            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
+            if charsNotNumb.count == 0{
+                return true
+            }
+        }
     
+        return false
+    }
 }

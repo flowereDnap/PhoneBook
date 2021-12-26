@@ -10,7 +10,7 @@ import UIKit
 // FIXME: why we use this initialize 3 times? What the reason of it?
 
 
-protocol Observer: AnyObject {
+protocol Observer: AnyObject{
 
     func update(subject: ContactManager)
 }
@@ -39,7 +39,8 @@ class ViewController: UIViewController, Observer {
     
     override func viewWillAppear(_ animated: Bool) {
         let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
-        let leftButt = UIBarButtonItem.init(title: "Sort by alf", style: .done, target: self, action: #selector(filterButtonPressed))
+        let image = UIImage(named: "sort_icon")?.withRenderingMode(.alwaysOriginal)
+        let leftButt = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(filterButtonPressed))
         
         self.navigationItem.rightBarButtonItems = [ rightBtt, leftButt ]
     }
@@ -64,7 +65,32 @@ class ViewController: UIViewController, Observer {
     }
     
     @objc func filterButtonPressed(_ sender: UIBarButtonItem){
-        switch filterMode {
+        let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
+               
+           // 2
+        let deleteAction = UIAlertAction(title: "Sort by alf", style: .default, handler:{ [self] (UIAlertAction)in
+                self.dataToShow.sort(by: {$0.name < $1.name})
+               tableView.reloadData()
+           })
+           let saveAction = UIAlertAction(title: "Sort by date", style: .default, handler:{ [self] (UIAlertAction)in
+               self.dataToShow.sort(by: {$0.creationDate < $1.creationDate})
+               tableView.reloadData()
+           })
+               
+           // 3
+           let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+               
+           // 4
+           optionMenu.addAction(deleteAction)
+           optionMenu.addAction(saveAction)
+           optionMenu.addAction(cancelAction)
+               
+           // 5
+           self.present(optionMenu, animated: true, completion: nil)
+        
+        
+        
+        /*switch filterMode {
         case .alf:
             dataToShow.sort(by: {$0.name < $1.name})
             tableView.reloadData()
@@ -74,8 +100,8 @@ class ViewController: UIViewController, Observer {
             dataToShow.sort(by: {$0.creationDate < $1.creationDate})
             tableView.reloadData()
             sender.title = "Sort by alf"
-            filterMode = .alf
-        }
+            filterMode = .alf*
+        }*/
     }
 }
 
@@ -111,6 +137,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! MyCell
         cell.textLabel?.text = dataToShow[indexPath.row].name
         cell.contactId = dataToShow[indexPath.row].id
+        cell.isSelected = false
         return cell
     }
     //DELETE with swipe
@@ -135,11 +162,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     //CELL CHOSEN
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        
         controller.currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
         
         let vc = ContactTableViewController.getView(viewMode: .view, controller: controller)
         
         self.navigationController?.pushViewController(vc, animated: true)
+        self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0))?.isSelected = false
     }
 }
 
