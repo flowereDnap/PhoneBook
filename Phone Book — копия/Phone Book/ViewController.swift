@@ -39,10 +39,18 @@ class ViewController: UIViewController, Observer {
     
     override func viewWillAppear(_ animated: Bool) {
         let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
-        let image = UIImage(named: "sort_icon")?.withRenderingMode(.alwaysOriginal)
-        let leftButt = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(filterButtonPressed))
-        
-        self.navigationItem.rightBarButtonItems = [ rightBtt, leftButt ]
+        let menuBtn = UIButton(type: .custom)
+            menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
+            menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
+        menuBtn.addTarget(self, action: #selector(filterButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+
+            let leftBarItem = UIBarButtonItem(customView: menuBtn)
+            let currWidth = leftBarItem.customView?.widthAnchor.constraint(equalToConstant: 24)
+            currWidth?.isActive = true
+            let currHeight = leftBarItem.customView?.heightAnchor.constraint(equalToConstant: 24)
+            currHeight?.isActive = true
+
+        self.navigationItem.rightBarButtonItems = [ rightBtt,leftBarItem]
     }
     
     override func viewDidLoad() {
