@@ -9,7 +9,28 @@ import UIKit
 
 class ContactTableViewController: UITableViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet var nameField: UITextField!
+    @IBOutlet var numberField: UITextField!
+    @IBOutlet var tableView2: UITableView!
     @IBOutlet var profilePicture: UIImageView!
+    
+    enum ViewMode{
+        case edit
+        case view
+        case create
+    }
+    
+    var viewMode:ViewMode = .view
+    weak var controller:ContactManager?
+    
+    static func getView(viewMode:ViewMode,controller:ContactManager)->ContactTableViewController{
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
+        vc.viewMode = viewMode
+        vc.controller = controller
+        
+        return vc
+    }
     var picker = UIImagePickerController ()
     @IBAction func chooseProfilePicBtnClicked(sender: AnyObject) {
         let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
@@ -52,89 +73,128 @@ class ContactTableViewController: UITableViewController,UIImagePickerControllerD
         self.present(picker, animated: true, completion: nil)
     }
     //MARK:UIImagePickerControllerDelegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
         picker.dismiss(animated: true, completion: nil)
         profilePicture.image=info[UIImagePickerController.InfoKey.originalImage.rawValue] as? UIImage
-        let editedContact: Contact = Contact(name: nameField.text!, number: numberField.text ?? "", image: profilePicture.image)
-        controller.updCurrentContact(contact: editedContact)
+        var editedContact: Contact = controller!.getContact(Id: controller!.currentContactId)
+        editedContact.image = profilePicture.image
         
+        /*controller!.updContact(Id: <#T##Int#>, name: <#T##String?#>, number: <#T##String?#>)*/
     }
     func imagePickerControllerDidCancel(picker: UIImagePickerController){
         print("picker cancel.")
     }
     
-    @IBOutlet var nameField: UITextField!
-    @IBOutlet var numberField: UITextField!
-    @IBOutlet var imageView: UIImageView!
+   
     
-    var controller: Controller = Controller()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        var rightButton: UIBarButtonItem
+        switch viewMode {
+        case .edit:
+            rightButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveButtonPressed))
+            nameField.isUserInteractionEnabled = true
+            numberField.isUserInteractionEnabled = true
+        case .view:
+            rightButton = UIBarButtonItem.init(title: "Edit", style: .done, target: self, action: #selector(editButtonPressed))
+            nameField.isUserInteractionEnabled = false
+            numberField.isUserInteractionEnabled = false
+        case .create:
+            rightButton = UIBarButtonItem.init(title: "Create", style: .done, target: self, action: #selector(createButtonPressed))
+            nameField.isUserInteractionEnabled = true
+            numberField.isUserInteractionEnabled = true
+        }
+        
+        self.navigationItem.rightBarButtonItem = rightButton
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentContact = controller.getContact()
-        nameField.text = currentContact.name
-        numberField.text = currentContact.number
-        if let contactImage = currentContact.image{
-            imageView.image = contactImage
+        if viewMode == .view {
+            let contact = controller!.getContact(Id: controller!.currentContactId)
+            nameField.text = contact.name
+            numberField.text = contact.number
         }
+        numberField.delegate = self
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Back", style: .done, target: self, action: #selector(backButtonPressed))
+
     }
     
-    
-    @IBAction func EditButtonPressed(_ sender: UIButton){
-        if sender.title(for: .normal) == "Edit"{
-            self.navigationItem.leftBarButtonItem?.title = "Cansel"
-            self.navigationItem.rightBarButtonItem?.title = "Save"
-            nameField.isUserInteractionEnabled = true
-            numberField.isUserInteractionEnabled = true
-        }else if sender.title(for: .normal) == "Save"{
-            self.navigationItem.leftBarButtonItem?.title = "Cansel"
-            self.navigationItem.rightBarButtonItem?.title = "Save"
-            nameField.isUserInteractionEnabled = false
-            numberField.isUserInteractionEnabled = false
+    @objc func nuberFieldInputControl(){
+        if !controller!.numberCheck(number: numberField.text ?? ""){
+            numberField.text?.remove(at: (numberField.text?.firstIndex(where: {!$0.isNumber})!)!)
             
-            guard let name = nameField.text else{
-                controller.deleteCurrentContact()
-                return
-            }
-            let editedContact: Contact = Contact(name: name, number: numberField.text ?? "", image: profilePicture.image)
-            controller.updCurrentContact(contact: editedContact)
+            let alert = UIAlertController(title: "wrong input", message: "only 0-9 allowed", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
-    @IBAction func BackButtonPressed(_ sender: UIButton){
-        if sender.title(for: .normal) == "Back"{
-            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let newViewController = storyBoard.instantiateViewController(withIdentifier: "Main")
-            self.present(newViewController, animated: true, completion: nil)
-        }else if sender.title(for: .normal) == "Cansel"{
-            self.navigationItem.leftBarButtonItem?.title = "Back"
-            self.navigationItem.rightBarButtonItem?.title = "Edit"
-            nameField.isUserInteractionEnabled = false
-            numberField.isUserInteractionEnabled = false
+    @objc func backButtonPressed(_ sender: UIButton){
+        if viewMode != .view {
+            let alert = UIAlertController(title: "Changes not saved", message: "discard all changes?", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Cansel", style: UIAlertAction.Style.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Continue", style: UIAlertAction.Style.destructive, handler: { _ in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }else{
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+    }
+    
+    @objc func createButtonPressed(_ sender: UIButton){
+        if nameField.text != nil{
+         
+            let contact: Contact = Contact( name: nameField.text!, number: numberField.text ?? "", creationDate: Date())
+            controller!.addContact(contact: contact)
+            controller!.currentContactId = controller!.count - 1
+            viewMode = .view
+            viewWillAppear(false)
+        }
+        else{
             
-            let currentContact = controller.getContact()
-            nameField.text = currentContact.name
-            numberField.text = currentContact.number
         }
     }
+    
+    @IBAction func editButtonPressed(_ sender: UIButton){
+        viewMode = .edit
+        viewWillAppear(false)
+    }
+    
+    
+    @objc func saveButtonPressed(_ sender: UIButton){
+        controller!.updContact(Id: controller!.currentContactId , name: nameField.text , number : numberField.text)
+        viewMode = .view
+        viewWillAppear(false)
+    }
+    
+    
+    
+    
     // MARK: - Table view data source
     
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 1
     }
     
     /*
      override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
      
+<<<<<<< HEAD
      // Configure the cell...
+=======
+     cell.isSelected = false
+>>>>>>> first
      
      return cell
      }
@@ -185,4 +245,31 @@ class ContactTableViewController: UITableViewController,UIImagePickerControllerD
      }
      */
     
+
+}
+extension ContactTableViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if textField.text?.first != "+"{
+            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
+            if charsNotNumb.count == 0{
+                return true
+            } else if charsNotNumb.count > 1 {
+                return false
+            } else if charsNotNumb.first == "+" {
+                if range.location == 0 {
+                    return true
+                }
+                return false
+            }
+        } else {
+            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
+            if charsNotNumb.count == 0{
+                return true
+            }
+        }
+    
+        return false
+    }
+
 }
