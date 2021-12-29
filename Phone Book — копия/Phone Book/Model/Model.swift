@@ -18,29 +18,29 @@ public struct SomeImage: Codable {
 }
 var test1 = SomeImage(photo: UIImage(named: "sort_icon")!)
 
-public struct Contact: Codable{
-    public var name: String
-    public var number: String
-    private var imgData:Data
-    
-    /*public var image: UIImage?{
-        get{
-            if let imgData = imgData{
+struct Contact: Codable {
+    var name: String
+    var number: String
+    var creationDate: Date
+    var id: Int?
+    var imgData: Data?
+    var image: UIImage? {
+        get {
+            if let imgData = imgData {
                 return UIImage(data: imgData)
             }
             return nil
         }
-        set{
-            guard let img = newValue else{
+        set {
+            guard let img = newValue else {
                 imgData = nil
                 return
             }
             imgData = img.pngData()!
         }
-    }*/
-    public var id:Int? = nil
-    public var creationDate: Date
+    }
 }
+
 
 class Model{
     private static var loaded_data:[Contact]? = nil
