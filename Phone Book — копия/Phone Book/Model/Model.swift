@@ -6,13 +6,41 @@
 //
 
 import Foundation
+import UIKit
 
-public struct Contact: Codable{
-    public var name: String
-    public var number: String
-    public var id:Int? = nil
-    public var creationDate: Date
+public struct SomeImage: Codable {
+
+    public let photo: Data
+    
+    public init(photo: UIImage) {
+        self.photo = photo.pngData()!
+    }
 }
+var test1 = SomeImage(photo: UIImage(named: "sort_icon")!)
+
+struct Contact: Codable {
+    var name: String
+    var number: String
+    var creationDate: Date
+    var id: Int?
+    var imgData: Data?
+    var image: UIImage? {
+        get {
+            if let imgData = imgData {
+                return UIImage(data: imgData)
+            }
+            return nil
+        }
+        set {
+            guard let img = newValue else {
+                imgData = nil
+                return
+            }
+            imgData = img.pngData()!
+        }
+    }
+}
+
 
 class Model{
     private static var loaded_data:[Contact]? = nil

@@ -66,12 +66,15 @@ class ContactManager {
         return data[data.firstIndex(where: {$0.id == Id})!]
     }
     
-    func updContact(Id:Int , name:String? , number:String?){
+    func updContact(Id:Int , name:String? , number:String?, image: UIImage?){
         if let name = name{
             data[data.firstIndex(where: {$0.id == Id})!].name = name
         }
         if let number = number {
             data[data.firstIndex(where: {$0.id == Id})!].number = number
+        }
+        if let image = image {
+            data[data.firstIndex(where: {$0.id == Id})!].image = image
         }
         save()
     }
