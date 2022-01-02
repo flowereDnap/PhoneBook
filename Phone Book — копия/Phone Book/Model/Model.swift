@@ -24,12 +24,13 @@ struct Contact: Codable {
     var creationDate: Date
     var id: Int?
     var imgData: Data?
+    static private let contactDefaultImage: UIImage = UIImage(named: "contactDefaultImage")!
     var image: UIImage? {
         get {
             if let imgData = imgData {
                 return UIImage(data: imgData)
             }
-            return nil
+            return Contact.contactDefaultImage
         }
         set {
             guard let img = newValue else {

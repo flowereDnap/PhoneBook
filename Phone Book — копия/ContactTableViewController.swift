@@ -7,12 +7,9 @@
 
 import UIKit
 
-class ContactTableViewController: UITableViewController, UINavigationControllerDelegate {
-    
-    @IBOutlet var nameField: UITextField!
-    @IBOutlet var numberField: UITextField!
-    @IBOutlet var tableView2: UITableView!
-    @IBOutlet var profilePicture: UIImageView!
+
+
+class ContactTableViewController: UITableViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     enum ViewMode{
         case edit
@@ -20,65 +17,19 @@ class ContactTableViewController: UITableViewController, UINavigationControllerD
         case create
     }
     
+    @IBOutlet var nameField: UITextField!
+    @IBOutlet var numberField: UITextField!
+    @IBOutlet var profilePicture: UIImageView!
+    
+    
     var viewMode:ViewMode = .view
     weak var controller:ContactManager?
+    var imagePicker: ImagePicker!
     
-    static func getView(viewMode:ViewMode,controller:ContactManager)->ContactTableViewController{
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc : ContactTableViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactTableViewController
-        vc.viewMode = viewMode
-        vc.controller = controller
-        return vc
-    }
-    var picker = UIImagePickerController ()
-    @IBAction func chooseProfilePicBtnClicked(sender: AnyObject) {
-        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertAction.Style.default)
-        {
-            UIAlertAction in
-            self.openCamera()
+    @IBAction func showImagePicker(_ sender: UIButton) {
+            self.imagePicker.present(from: sender)
         }
-        let gallaryAction = UIAlertAction(title: "Gallary", style: UIAlertAction.Style.default)
-        {
-            UIAlertAction in
-            self.openGallary()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
-        {
-            UIAlertAction in
-        }
-        
-        // Add the actions
-        picker.delegate = self
-        alert.addAction(cameraAction)
-        alert.addAction(gallaryAction)
-        alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
-    }
-    func openCamera(){
-        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
-            picker.sourceType = UIImagePickerController.SourceType.camera
-            self.present(picker, animated: true, completion: nil)
-        }else{
-            let alert = UIAlertView()
-            alert.title = "Warning"
-            alert.message = "You don't have camera"
-            alert.addButton(withTitle: "OK")
-            alert.show()
-        }
-    }
-    func openGallary(){
-        picker.sourceType = UIImagePickerController.SourceType.photoLibrary
-        picker.delegate = self
-        self.present(picker, animated: true, completion: nil)
-    }
-    //MARK:UIImagePickerControllerDelegate
-    
-    
-    
-   
-    
-    
+
     override func viewWillAppear(_ animated: Bool) {
         var rightButton: UIBarButtonItem
         switch viewMode {
@@ -95,12 +46,15 @@ class ContactTableViewController: UITableViewController, UINavigationControllerD
             nameField.isUserInteractionEnabled = true
             numberField.isUserInteractionEnabled = true
         }
-        
+        if self.controller != nil {
+            print("yes")
+        }
         self.navigationItem.rightBarButtonItem = rightButton
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    /*
         if viewMode == .view {
             let contact = controller!.getContact(Id: controller!.currentContactId)
             nameField.text = contact.name
@@ -108,12 +62,13 @@ class ContactTableViewController: UITableViewController, UINavigationControllerD
             profilePicture.image = contact.image
         }
         numberField.delegate = self
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(chooseProfilePicBtnClicked))
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
         profilePicture.isUserInteractionEnabled = true
         profilePicture.addGestureRecognizer(tapGestureRecognizer)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Back", style: .done, target: self, action: #selector(backButtonPressed))
-
+*/
     }
     
     @objc func nuberFieldInputControl(){
@@ -158,91 +113,24 @@ class ContactTableViewController: UITableViewController, UINavigationControllerD
         viewMode = .edit
         viewWillAppear(false)
     }
-    
-    
+       
     @objc func saveButtonPressed(_ sender: UIButton){
         controller!.updContact(Id: controller!.currentContactId , name: nameField.text , number : numberField.text, image: nil)
         viewMode = .view
         viewWillAppear(false)
     }
     
-    
-    
-    
     // MARK: - Table view data source
-    
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 3
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return 1
     }
-    
-    /*
-     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-     
-<<<<<<< HEAD
-     // Configure the cell...
-=======
-     cell.isSelected = false
->>>>>>> first
-     
-     return cell
-     }
-     */
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
-
 }
+
+
 extension ContactTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
@@ -270,15 +158,12 @@ extension ContactTableViewController: UITextFieldDelegate {
 
 }
 
-extension ContactTableViewController: UIImagePickerControllerDelegate {
-    override func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                pictureImageView.contentMode = .scaleToFill
-                pictureImageView.image = pickedImage
-            }
 
-            picker.dismiss(animated: true, completion: nil)
-        }
+extension ContactTableViewController: ImagePickerDelegate {
+
+    func didSelect(image: UIImage?) {
+        self.profilePicture.image = image
+        controller!.updContact(Id: controller!.currentContactId,name: nil, number: nil, image: profilePicture.image)
+        
     }
 }

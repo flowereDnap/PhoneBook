@@ -52,6 +52,43 @@
             </objects>
             <point key="canvasLocation" x="-871" y="-46"/>
         </scene>
+        <!--Contact View Controller-->
+        <scene sceneID="X6H-9y-Arx">
+            <objects>
+                <viewController storyboardIdentifier="ContactScene" id="SkV-Q3-g8C" customClass="ContactViewController" customModule="Phone_Book" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2pf-F1-lzU">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="contactDefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="YGZ-Lv-ith">
+                                <rect key="frame" x="87" y="94" width="240" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="CW4-Dh-5EF"/>
+                                    <constraint firstAttribute="height" constant="250" id="DM4-4G-sTS"/>
+                                </constraints>
+                            </imageView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4HU-ws-hMn">
+                                <rect key="frame" x="0.0" y="456" width="414" height="406"/>
+                                <connections>
+                                    <segue destination="OE8-4l-mLM" kind="show" identifier="toContactTableView" id="tgM-Ab-FE1"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="sPJ-Di-A9K"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sPJ-Di-A9K" firstAttribute="bottom" secondItem="4HU-ws-hMn" secondAttribute="bottom" id="P6J-cG-IHt"/>
+                            <constraint firstItem="4HU-ws-hMn" firstAttribute="top" secondItem="YGZ-Lv-ith" secondAttribute="bottom" constant="112" id="YVR-uV-n9l"/>
+                            <constraint firstItem="YGZ-Lv-ith" firstAttribute="top" secondItem="sPJ-Di-A9K" secondAttribute="top" constant="50" id="hg0-Xs-zhE"/>
+                            <constraint firstItem="sPJ-Di-A9K" firstAttribute="trailing" secondItem="4HU-ws-hMn" secondAttribute="trailing" id="nbx-DV-CBi"/>
+                            <constraint firstItem="4HU-ws-hMn" firstAttribute="leading" secondItem="sPJ-Di-A9K" secondAttribute="leading" id="yVx-OS-fEj"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bj0-gY-xER" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-130" y="-27"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="HYq-hG-yyt">
             <objects>
@@ -71,7 +108,8 @@
         <!--Contact Table View Controller-->
         <scene sceneID="il0-hI-m2c">
             <objects>
-                <tableViewController storyboardIdentifier="ContactScene" wantsFullScreenLayout="YES" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OE8-4l-mLM" customClass="ContactTableViewController" customModule="Phone_Book" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ept-Qg-7oB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tableViewController wantsFullScreenLayout="YES" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OE8-4l-mLM" customClass="ContactTableViewController" customModule="Phone_Book" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="T89-BK-Ivs">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -162,19 +200,19 @@
                             <outlet property="delegate" destination="OE8-4l-mLM" id="pKJ-kc-2KU"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="fyS-PO-ota"/>
                     <connections>
-                        <outlet property="nameField" destination="6CU-eu-trf" id="vPd-eI-bgs"/>
-                        <outlet property="numberField" destination="e6z-eF-vt5" id="qvw-uQ-Wv2"/>
-                        <outlet property="profilePicture" destination="xX0-yc-DkR" id="Qck-qV-Uhp"/>
-                        <outlet property="tableView2" destination="T89-BK-Ivs" id="mgQ-2V-4e1"/>
+                        <outlet property="nameField" destination="6CU-eu-trf" id="5ev-NJ-uTt"/>
+                        <outlet property="numberField" destination="e6z-eF-vt5" id="IeD-YB-Gt5"/>
+                        <outlet property="profilePicture" destination="xX0-yc-DkR" id="FOI-ZA-Otl"/>
                     </connections>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ept-Qg-7oB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-159" y="-46"/>
+            <point key="canvasLocation" x="680" y="-46"/>
         </scene>
     </scenes>
     <resources>
+        <image name="contactDefaultImage" width="240" height="210"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

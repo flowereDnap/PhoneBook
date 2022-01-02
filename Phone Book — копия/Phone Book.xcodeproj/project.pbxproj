@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE6E1D0A2782122700ECAA83 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E1D092782122700ECAA83 /* ImagePicker.swift */; };
+		CE6E1D0C2782294100ECAA83 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */; };
 		CEBC4372272EFA7E00AFDB8E /* ContactManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC4371272EFA7E00AFDB8E /* ContactManager.swift */; };
 		CEBC4374272EFA8B00AFDB8E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC4373272EFA8B00AFDB8E /* Model.swift */; };
 		CEBC437827302AAB00AFDB8E /* ContactTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */; };
-		CEC1E31627611B9900AB7C6C /* ContactTableViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC1E31527611B9900AB7C6C /* ContactTableViewControllerTest.swift */; };
 		CEDE1A43272AE9ED00D60F73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE1A42272AE9ED00D60F73 /* AppDelegate.swift */; };
 		CEDE1A45272AE9ED00D60F73 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE1A44272AE9ED00D60F73 /* SceneDelegate.swift */; };
 		CEDE1A47272AE9ED00D60F73 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE1A46272AE9ED00D60F73 /* ViewController.swift */; };
@@ -20,10 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE6E1D092782122700ECAA83 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		CEBC4371272EFA7E00AFDB8E /* ContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactManager.swift; sourceTree = "<group>"; };
 		CEBC4373272EFA8B00AFDB8E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactTableViewController.swift; path = ../ContactTableViewController.swift; sourceTree = "<group>"; };
-		CEC1E31527611B9900AB7C6C /* ContactTableViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewControllerTest.swift; sourceTree = "<group>"; };
 		CEDE1A3F272AE9ED00D60F73 /* Phone Book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Phone Book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE1A42272AE9ED00D60F73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEDE1A44272AE9ED00D60F73 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -64,7 +66,7 @@
 		CEDE1A36272AE9ED00D60F73 = {
 			isa = PBXGroup;
 			children = (
-				CEC1E31527611B9900AB7C6C /* ContactTableViewControllerTest.swift */,
+				CE6E1D092782122700ECAA83 /* ImagePicker.swift */,
 				CEDE1A41272AE9ED00D60F73 /* Phone Book */,
 				CEDE1A40272AE9ED00D60F73 /* Products */,
 			);
@@ -81,8 +83,6 @@
 		CEDE1A41272AE9ED00D60F73 /* Phone Book */ = {
 			isa = PBXGroup;
 			children = (
-				CEBC4370272EFA4500AFDB8E /* Controller */,
-				CEBC436F272EFA1F00AFDB8E /* Model */,
 				CEDE1A42272AE9ED00D60F73 /* AppDelegate.swift */,
 				CEDE1A44272AE9ED00D60F73 /* SceneDelegate.swift */,
 				CEDE1A48272AE9ED00D60F73 /* Main.storyboard */,
@@ -90,7 +90,10 @@
 				CEDE1A4D272AE9F000D60F73 /* LaunchScreen.storyboard */,
 				CEDE1A50272AE9F000D60F73 /* Info.plist */,
 				CEDE1A46272AE9ED00D60F73 /* ViewController.swift */,
+				CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */,
 				CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */,
+				CEBC4370272EFA4500AFDB8E /* Controller */,
+				CEBC436F272EFA1F00AFDB8E /* Model */,
 			);
 			path = "Phone Book";
 			sourceTree = "<group>";
@@ -167,10 +170,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEBC4372272EFA7E00AFDB8E /* ContactManager.swift in Sources */,
+				CE6E1D0C2782294100ECAA83 /* ContactViewController.swift in Sources */,
 				CEDE1A47272AE9ED00D60F73 /* ViewController.swift in Sources */,
-				CEC1E31627611B9900AB7C6C /* ContactTableViewControllerTest.swift in Sources */,
 				CEDE1A43272AE9ED00D60F73 /* AppDelegate.swift in Sources */,
 				CEBC4374272EFA8B00AFDB8E /* Model.swift in Sources */,
+				CE6E1D0A2782122700ECAA83 /* ImagePicker.swift in Sources */,
 				CEBC437827302AAB00AFDB8E /* ContactTableViewController.swift in Sources */,
 				CEDE1A45272AE9ED00D60F73 /* SceneDelegate.swift in Sources */,
 			);

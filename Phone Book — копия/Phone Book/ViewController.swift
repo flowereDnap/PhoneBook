@@ -67,7 +67,7 @@ class ViewController: UIViewController, Observer {
     
     @IBAction func addButton(_ sender: UIButton){
         
-        let vc = ContactTableViewController.getView(viewMode: .create, controller: controller)
+        let vc = ContactViewController.getView(viewMode: .create, controller: controller)
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -173,8 +173,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         
         controller.currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
         
-        let vc = ContactTableViewController.getView(viewMode: .view, controller: controller)
-        
+        let vc = ContactViewController.getView(viewMode: .view, controller: controller)
         self.navigationController?.pushViewController(vc, animated: true)
         self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0))?.isSelected = false
     }
