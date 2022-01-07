@@ -8,18 +8,20 @@
 import Foundation
 import UIKit
 
-public struct SomeImage: Codable {
 
+public struct SomeImage: Codable {
+    
     public let photo: Data
     
     public init(photo: UIImage) {
         self.photo = photo.pngData()!
     }
 }
+
 var test1 = SomeImage(photo: UIImage(named: "sort_icon")!)
 
 struct Contact: Codable {
-    var name: String
+    var name:String
     var number: String
     var creationDate: Date
     var id: Int?
@@ -59,7 +61,7 @@ class Model{
     }
     static public var data:[Contact]{
         get{
-    
+            
             if let loaded_data = loaded_data{
                 return loaded_data
             }
@@ -74,7 +76,7 @@ class Model{
             }
         }
         set{
-        
+            
             loaded_data = newValue
             UserDefaults.standard.set(try? PropertyListEncoder().encode(newValue), forKey:contactListKey)
             
