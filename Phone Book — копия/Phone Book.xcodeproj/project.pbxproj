@@ -25,7 +25,7 @@
 		CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		CEBC4371272EFA7E00AFDB8E /* ContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactManager.swift; sourceTree = "<group>"; };
 		CEBC4373272EFA8B00AFDB8E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContactTableViewController.swift; path = ../ContactTableViewController.swift; sourceTree = "<group>"; };
+		CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewController.swift; sourceTree = "<group>"; };
 		CEDE1A3F272AE9ED00D60F73 /* Phone Book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Phone Book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE1A42272AE9ED00D60F73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEDE1A44272AE9ED00D60F73 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +47,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE77B2DB278981CB0008783C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CEDE1A46272AE9ED00D60F73 /* ViewController.swift */,
+				CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */,
+				CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		CEBC436F272EFA1F00AFDB8E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,9 +99,7 @@
 				CEDE1A4B272AE9F000D60F73 /* Assets.xcassets */,
 				CEDE1A4D272AE9F000D60F73 /* LaunchScreen.storyboard */,
 				CEDE1A50272AE9F000D60F73 /* Info.plist */,
-				CEDE1A46272AE9ED00D60F73 /* ViewController.swift */,
-				CE6E1D0B2782294100ECAA83 /* ContactViewController.swift */,
-				CEBC437727302AAB00AFDB8E /* ContactTableViewController.swift */,
+				CE77B2DB278981CB0008783C /* View */,
 				CEBC4370272EFA4500AFDB8E /* Controller */,
 				CEBC436F272EFA1F00AFDB8E /* Model */,
 			);

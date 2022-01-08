@@ -1,9 +1,4 @@
-//
-//  AppDelegate.swift
-//  Phone Book
-//
-//  Created by User on 28.10.2021.
-//
+
 
 import UIKit
 

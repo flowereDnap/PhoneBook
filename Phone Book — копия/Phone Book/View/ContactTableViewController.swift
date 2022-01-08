@@ -1,17 +1,8 @@
-//
-//  ContactTableViewController.swift
-//  Phone Book
-//
-//  Created by User on 01.11.2021.
-//
-
 import UIKit
 
 
-
 class ContactTableViewController: UITableViewController {
-    
-    enum ViewMode{
+    enum ViewMode {
         case edit
         case view
         case create
@@ -20,12 +11,10 @@ class ContactTableViewController: UITableViewController {
     @IBOutlet var nameField: UITextField!
     @IBOutlet var numberField: UITextField!
 
-    
-    var viewMode:ViewMode = .view
-    weak var controller:ContactManager?
+    var viewMode: ViewMode = .view
+    weak var controller: ContactManager?
     
     override func viewWillAppear(_ animated: Bool) {
-        var rightButton: UIBarButtonItem
         switch viewMode {
         case .edit:
             nameField.isUserInteractionEnabled = true
@@ -37,7 +26,6 @@ class ContactTableViewController: UITableViewController {
             nameField.isUserInteractionEnabled = true
             numberField.isUserInteractionEnabled = true
         }
-  
     }
     
     override func viewDidLoad() {
@@ -50,19 +38,23 @@ class ContactTableViewController: UITableViewController {
         numberField.delegate = self
     }
     
-    @objc func nuberFieldInputControl(){
-        if !controller!.numberCheck(number: numberField.text ?? ""){
-            numberField.text?.remove(at: (numberField.text?.firstIndex(where: {!$0.isNumber})!)!)
-            
-            let alert = UIAlertController(title: "wrong input", message: "only 0-9 allowed", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil))
+    @objc func nuberFieldInputControl() {
+        if !controller!.numberCheck(number: numberField.text ?? "") {
+          numberField.text?.remove(at: (numberField.text?.firstIndex
+                                        { !$0.isNumber }!)!)
+            let alert = UIAlertController(title: "wrong input",
+                                          message: "only 0-9 allowed",
+                                          preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "ok",
+                                          style: UIAlertAction.Style.default,
+                                          handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 5
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,13 +62,12 @@ class ContactTableViewController: UITableViewController {
     }
 }
 
-
 extension ContactTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if textField.text?.first != "+"{
-            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
-            if charsNotNumb.count == 0{
+        if textField.text?.first != "+" {
+            let charsNotNumb = string.filter{(char: Character) in return !char.isNumber
+            }
+            if charsNotNumb.count == 0 {
                 return true
             } else if charsNotNumb.count > 1 {
                 return false
@@ -92,7 +83,6 @@ extension ContactTableViewController: UITextFieldDelegate {
                 return true
             }
         }
-    
         return false
     }
 
