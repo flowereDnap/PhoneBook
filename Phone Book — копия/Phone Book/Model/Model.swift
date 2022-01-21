@@ -79,6 +79,14 @@ struct Contact: Codable {
       imgData = img.pngData()!
     }
   }
+  init(name:String, number:String, image:UIImage?, creationDate:Date){
+    self.name = name
+    self.number = number
+    self.creationDate = creationDate
+    self.image = image
+    self.id = Model.id
+  }
+  
 }
 
 class Model {

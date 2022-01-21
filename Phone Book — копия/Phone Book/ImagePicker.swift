@@ -2,6 +2,7 @@ import UIKit
 
 public protocol ImagePickerDelegate: AnyObject {
     func didSelect(image: UIImage?)
+    func deleteImage(in sender: UIImageView)
 }
 
 open class ImagePicker: NSObject {
@@ -34,7 +35,7 @@ open class ImagePicker: NSObject {
         }
     }
 
-    public func present(from sourceView: UIView) {
+  public func present(from sourceView: UIImageView, imageExist:Bool) {
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
@@ -46,6 +47,12 @@ open class ImagePicker: NSObject {
         }
         if let action = self.action(for: .photoLibrary, title: "Photo library") {
             alertController.addAction(action)
+        }
+        if imageExist{
+          let myAct = UIAlertAction(title: "Delete", style: .destructive){_ in
+            self.delegate?.deleteImage(in:sourceView)
+          }
+          alertController.addAction(myAct)
         }
 
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -83,4 +90,12 @@ extension ImagePicker: UIImagePickerControllerDelegate {
 
 extension ImagePicker: UINavigationControllerDelegate {
 
+}
+
+extension UIImage {
+    func isEqualToImage(image: UIImage) -> Bool {
+      let data1: NSData = self.pngData()! as NSData
+      let data2: NSData = image.pngData()! as NSData
+      return data1.isEqual(data2)
+    }
 }

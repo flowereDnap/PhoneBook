@@ -50,7 +50,6 @@ class ContactManager {
 
   func addContact(contact: Contact) {
     data.append(contact)
-    data[count-1].id = Model.id
     save()
   }
   
