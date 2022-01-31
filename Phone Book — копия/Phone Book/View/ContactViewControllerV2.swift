@@ -1,11 +1,9 @@
 
+
 import UIKit
 
-class ContactViewController: UIViewController{
+class ContactViewControllerV2: UITableViewController{
   typealias ViewMode = ContactTableViewController.ViewMode
-  enum Segues {
-    static let toContactTableView = "toContactTableView"
-  }
   enum TextFields{
     static let nameField = "nameField"
     static let numberField = "numberField"
@@ -14,7 +12,7 @@ class ContactViewController: UIViewController{
   var viewMode: ViewMode = .view
   weak var controller: ContactManager?
   var currentContact :Contact?
-  var imagePicker: ImagePicker!
+ 
   var ContactTableView: ContactTableViewController?
   var dataChanged: Bool = false {
     didSet{
@@ -25,11 +23,10 @@ class ContactViewController: UIViewController{
       }
     }
   }
-  @IBOutlet var profilePicture: UIImageView!
   
-  static func getView(viewMode: ViewMode, controller: ContactManager, currentContact: Contact?) -> ContactViewController {
+  static func getView(viewMode: ViewMode, controller: ContactManager, currentContact: Contact?) -> ContactViewControllerV2 {
     let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-    let vc: ContactViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactViewController
+    let vc: ContactViewControllerV2 = mainStoryboard.instantiateViewController(withIdentifier: "ContactSceneV2") as! ContactViewControllerV2
     vc.viewMode = viewMode
     vc.controller = controller
     vc.currentContact = currentContact
@@ -53,7 +50,7 @@ class ContactViewController: UIViewController{
                                         style: .done,
                                         target: self,
                                         action: #selector(editCancelButtonPressed))
-      profilePicture.isUserInteractionEnabled = true
+  
      
     case .view:
       rightButton = UIBarButtonItem.init(title: "Edit",
@@ -64,7 +61,7 @@ class ContactViewController: UIViewController{
                                         style: .done,
                                         target: self,
                                         action: #selector(backButtonPressed))
-      profilePicture.isUserInteractionEnabled = false
+ 
     case .create:
       rightButton = UIBarButtonItem.init(title: "Create",
                                          style: .done,
@@ -74,38 +71,17 @@ class ContactViewController: UIViewController{
                                         style: .done,
                                         target: self,
                                         action: #selector(backButtonPressed))
-      profilePicture.isUserInteractionEnabled = true
+      
       
     }
     self.navigationItem.rightBarButtonItem = rightButton
     self.navigationItem.leftBarButtonItem = leftButton
-    ContactTableView?.viewMode = viewMode
-    ContactTableView?.viewWillAppear(false)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.imagePicker = ImagePicker(presentationController: self, delegate: self)
-    let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
     
-    profilePicture.addGestureRecognizer(tapGestureRecognizer)
-    profilePicture.layer.cornerRadius = profilePicture.frame.size.height / 2
-    guard let image = currentContact?.image else {
-      profilePicture.image = UIImage(named: "contactDefaultImage")
-      return
-    }
-    profilePicture.image = image
-  }
   
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == Segues.toContactTableView {
-      self.ContactTableView = segue.destination as? ContactTableViewController
-      ContactTableView!.viewMode = viewMode
-      ContactTableView!.controller = controller
-      ContactTableView!.currentContact = currentContact
-      ContactTableView!.textFieldDelegate = self
-      
-    }
   }
   
   //MARK: -nav bar button actions
@@ -172,72 +148,63 @@ class ContactViewController: UIViewController{
   }
 }
 
-extension ContactViewController: ImagePickerDelegate {
-  
-  func didSelect(image: UIImage?) {
-    if !(profilePicture.image?.isEqualToImage(image: image!) ?? true){
-      dataChanged = true
-    }
-    self.profilePicture.image = image
-  }
-  func deleteImage(in sender: UIImageView) {
-    sender.image = UIImage(named: "contactDefaultImage")
-    dataChanged = true
-  }
-}
 
-extension ContactViewController: UIImagePickerControllerDelegate {
-  @IBAction func showImagePicker(tapGestureRecognizer: UITapGestureRecognizer) {
-    let tappedImage = tapGestureRecognizer.view as! UIImageView
-    let imageExist = !(profilePicture.image?.isEqualToImage(image: UIImage(named: "contactDefaultImage")!) ?? true)
-    
-    self.imagePicker.present(from: tappedImage, imageExist: imageExist)
-  }
-}
 
-extension ContactViewController: UITextFieldDelegate {
-  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    
-    func callWrongInputAllert() {
-      let alert = UIAlertController(title: "wrong input",
-                                    message: "only 0-9 allowed (first character mqay be \"+\")",
-                                    preferredStyle: UIAlertController.Style.alert)
-      alert.addAction(UIAlertAction(title: "ok",
-                                    style: UIAlertAction.Style.default,
-                                    handler: nil))
-      self.present(alert, animated: true, completion: nil)
-    }
 
-    switch textField.accessibilityIdentifier {
-    case TextFields.nameField:
-      return true
-    case TextFields.numberField:
-      if textField.text?.first != "+" {
-        let charsNotNumb = string.filter{(char: Character) in
-          return !char.isNumber
-        }
-        if charsNotNumb.count == 0 {
-          return true
-        } else if charsNotNumb.count > 1 {
-          callWrongInputAllert()
-          return false
-        } else if charsNotNumb.first == "+" {
-          if range.location == 0 {
-            return true
-          }
-          callWrongInputAllert()
-          return false
-        }
-      } else {
-        let charsNotNumb = string.filter{(char: Character) in return !char.isNumber}
-        if charsNotNumb.count == 0{
-          return true
-        }
-      }
-      callWrongInputAllert()
-      return false
+
+
+extension ContactViewControllerV2 {
+  override func numberOfSections(in tableView: UITableView) -> Int {
+     return 2
+   }
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     switch section{
+     case 0:
+       return 3
+       return 0
+     case 1:
+       return currentContact?.fields.filter{$0.toShow}.count ?? 3 - 3
+     default:
+       return 0
+     }
+   }
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     let item = currentContact?.fields.filter{$0.toShow}.first{$0.position == indexPath.row}
+     switch item?.type{
+     case .mail:
+       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
+       cell.setUpCell(parentView: self, item: item!)
+       return cell
+     case .dateOfBirth:
+       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
+       cell.setUpCell(parentView: self, item: item!)
+       return cell
+     case .name:
+       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
+       cell.setUpCell(parentView: self, item: item!)
+       return cell
+     case .number:
+       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
+       cell.setUpCell(parentView: self, item: item!)
+       return cell
+     case .image:
+       let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageTableViewCell.identifier, for: indexPath) as! ProfileImageTableViewCell
+       cell.setUpCell(parentView: self, item: item!)
+       return cell
+     default:
+       return UITableViewCell()
+   }
+   }
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    switch section{
+    case 0:
+      return "Main info"
+    case 1:
+      return "Additional"
     default:
-      return false
+      return ""
     }
   }
+   
+  
 }

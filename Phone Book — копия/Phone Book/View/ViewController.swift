@@ -21,7 +21,7 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
 
-  
+ 
   lazy var contacts = controller.data
   var filteredContacts:[Contact]! = controller.data {
     didSet{
@@ -70,7 +70,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     title = "Phone Book"
-    
+
     tableView.dataSource = self
     tableView.delegate = self
     tableView.backgroundView = nil
@@ -169,13 +169,10 @@ class ViewController: UIViewController {
     return searchController.searchBar.text?.isEmpty ?? true
   }
   
+  //MARK: -search
   func filterContentForSearchText(_ searchText: String) {
     filteredContacts = contacts.filter { (contact: Contact) -> Bool in
-      if isSearchBarEmpty {
-        return contact.name.lowercased().contains(searchText.lowercased())
-      } else {
-        return contact.name.lowercased().contains(searchText.lowercased())
-      }
+        return contact.name.lowercased().contains(searchText.lowercased()) || contact.number.lowercased().contains(searchText.lowercased())
     }
     
     tableView.reloadData()
@@ -253,7 +250,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
     
-    let vc = ContactViewController.getView(viewMode: .view,
+    let vc = ContactViewControllerV2.getView(viewMode: .view,
                                            controller: controller,
                                            currentContact: controller.getContact(Id: currentContactId))
     self.navigationController?.pushViewController(vc, animated: true)
