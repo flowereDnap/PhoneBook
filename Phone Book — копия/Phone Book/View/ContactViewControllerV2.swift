@@ -116,7 +116,6 @@ class ContactViewControllerV2: UITableViewController {
   
   @objc func createButtonPressed(_ sender: UIButton) {
     if dataChanged {
-      print(currentContact?.mainFields)
       let contact: Contact = Contact(name: currentContact?.name ?? "",
                                      number: currentContact?.number ?? "",
                                      image: currentContact?.image,
