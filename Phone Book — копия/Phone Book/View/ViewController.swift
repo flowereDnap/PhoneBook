@@ -268,7 +268,7 @@ extension ViewController: Observer {
 
 //MARK: -Custom UITableViewCell
 class MyCell: UITableViewCell {
-  var contactId: Int? = nil
+  var contactId: String? = nil
 }
 
 extension ViewController{

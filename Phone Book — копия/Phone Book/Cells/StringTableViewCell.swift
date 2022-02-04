@@ -71,11 +71,9 @@ class StringTableViewCell: UITableViewCell {
     }
     
     if case .name(_) = item?.value {
-      print(".name case")
         if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
         {
         parentView?.currentContact?.mainFields[id].value = .name(textField.text!)
-          print(".name case in iflet")
         }
       }
     if case .number(_) = item?.value {

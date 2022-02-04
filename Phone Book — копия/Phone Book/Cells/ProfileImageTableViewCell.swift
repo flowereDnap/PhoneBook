@@ -48,14 +48,25 @@ class ProfileImageTableViewCell: UITableViewCell {
 
 extension ProfileImageTableViewCell: ImagePickerDelegate {
   func didSelect(image: UIImage?) {
-    if !(profilePicture.image?.isEqualToImage(image: image!) ?? true){
+    guard let image = image else {
+      return
+    }
+    if !(profilePicture.image?.isEqualToImage(image: image) ?? true){
       parentView?.dataChanged = true
     }
     self.profilePicture.image = image
+    if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+    {
+    parentView?.currentContact?.mainFields[id].value = .image(ImageWrapper(image: image))
+    }
   }
   func deleteImage(in sender: UIImageView) {
     sender.image = UIImage(named: "contactDefaultImage")
     parentView?.dataChanged = true
+    if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+    {
+    parentView?.currentContact?.mainFields[id].value = .image(ImageWrapper(image: nil))
+    }
   }
 }
 extension ProfileImageTableViewCell: UIImagePickerControllerDelegate {

@@ -25,7 +25,7 @@ public struct ImageWrapper: Codable {
 }
 
 public enum ContactFieldValue: Codable {
-  case id(Int)
+  case id(String)
   case name(String)
   case number(String)
   case mail(String)
@@ -84,10 +84,12 @@ class Model {
   private static var loaded_data: [Contact]? = nil
   static let contactListKey = "contactsList2"
   static let idKey = "id"
-  static var id: Int {
-    let mydata = UserDefaults.standard.value(forKey: idKey) as? NSInteger
-    UserDefaults.standard.set((mydata ?? 0) + 1, forKey: idKey)
-    return mydata ?? 0
+  static var id: String = {
+      UserDefaults.standard.register(defaults: ["uuid" : UUID().uuidString])
+      return UserDefaults.standard.string(forKey: "uuid") ?? ""
+  }()
+  {
+      didSet {UserDefaults.standard.set(id, forKey: "uuid")}
   }
   static public var data: [Contact] {
     get {
@@ -118,7 +120,7 @@ struct Contact: Codable {
   var name: String
   var number: String
   var creationDate: Date
-  var id: Int?
+  var id: String?
   var imgData: Data?
   static private let contactDefaultImage: UIImage = UIImage(named: "contactDefaultImage")!
   var image: UIImage? {

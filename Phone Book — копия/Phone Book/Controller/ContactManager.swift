@@ -53,11 +53,11 @@ class ContactManager {
     save()
   }
   
-  func getContact(Id: Int) -> Contact {
+  func getContact(Id: String) -> Contact {
     return data[data.firstIndex(where: {$0.id == Id})!]
   }
   
-  func updContact(Id: Int, name: String?, number: String?, image: UIImage?, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
+  func updContact(Id: String, name: String?, number: String?, image: UIImage?, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
     if let name = name {
       data[data.firstIndex(where: {$0.id == Id})!].name = name
     }
@@ -76,7 +76,7 @@ class ContactManager {
     save()
   }
   
-  func deleteContact(Id: Int) {
+  func deleteContact(Id: String) {
     
     data.remove(at: data.firstIndex(where: {$0.id == Id})!)
     save()
