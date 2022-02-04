@@ -69,10 +69,14 @@ public struct ContactField:Codable{
       return false
     }
   }
-  var position: Int {
-    return 1
-  }
+  var position: Int = -1
   var value: ContactFieldValue?
+  init (lable: String?, type: Labels, position:Int = -1, value: ContactFieldValue?){
+    self.lable = lable
+    self.position = position
+    self.value = value
+    self.type = type
+  }
 }
 
 class Model {
@@ -109,7 +113,8 @@ class Model {
 }
 
 struct Contact: Codable {
-  var fields: [ContactField]
+  var mainFields: [ContactField]
+  var additionalFields: [ContactField]
   var name: String
   var number: String
   var creationDate: Date
@@ -132,33 +137,41 @@ struct Contact: Codable {
     }
   }
   
-  init(name:String, number:String, image:UIImage?, fields:[ContactField]){
-    self.name = name
-    self.number = number
+  init(name:String?, number:String?, image:UIImage?, mainFields:[ContactField]? = nil, additionalFields: [ContactField] = []){
+    self.name = name ?? ""
+    self.number = number ?? ""
     self.creationDate = Date()
     self.id = Model.id
-    self.fields = []
+    self.additionalFields = []
+    if let mainFields = mainFields {
+      self.mainFields = mainFields
+    } else {
+    self.mainFields = []
     let nameField = ContactField(lable: Labels.name.rawValue,
                                  type: Labels.name,
-                                 value: ContactFieldValue.name(name))
-    self.fields.append(nameField)
+                                 position: 1,
+                                 value: ContactFieldValue.name(name ?? ""))
+    self.mainFields.append(nameField)
     let numberField = ContactField(lable: Labels.number.rawValue,
                                    type: Labels.number,
-                                   value: ContactFieldValue.number(number))
-    self.fields.append(nameField)
+                                   position: 2,
+                                   value: ContactFieldValue.number(number ?? ""))
+    self.mainFields.append(numberField)
     let imageField = ContactField(lable: Labels.image.rawValue,
                                   type: Labels.image,
+                                  position: 0,
                                   value: ContactFieldValue.image(ImageWrapper(image: image)))
-    self.fields.append(nameField)
+    self.mainFields.append(imageField)
     let dateField = ContactField(lable: Labels.dateOfCreation.rawValue,
                                  type: Labels.dateOfCreation,
                                  value: ContactFieldValue.date(Date()))
-    self.fields.append(dateField)
+    self.mainFields.append(dateField)
     let idField = ContactField(lable: Labels.id.rawValue,
                                type: Labels.id,
                                value: ContactFieldValue.id(self.id!))
-    self.fields.append(idField)
-    self.fields.append(contentsOf: fields)
+    self.mainFields.append(idField)
+    }
+    self.additionalFields.append(contentsOf: additionalFields)
     self.image = image
   }
   

@@ -9,8 +9,9 @@ import UIKit
 
 class ProfileImageTableViewCell: UITableViewCell {
   
+  
+  @IBOutlet var profilePicture: UIImageView!
   var imagePicker: ImagePicker!
-  public static let identifier = "ProfileImageTableViewCell"
   private var parentView: ContactViewControllerV2?
   private var item: ContactField? {
         didSet {
@@ -22,10 +23,6 @@ class ProfileImageTableViewCell: UITableViewCell {
           
           profilePicture.addGestureRecognizer(tapGestureRecognizer)
           profilePicture.layer.cornerRadius = profilePicture.frame.size.height / 2
-            guard let image = image else {
-            profilePicture.image = UIImage(named: "contactDefaultImage")
-            return
-          }
           profilePicture.image = image
         }
         }
@@ -35,8 +32,7 @@ class ProfileImageTableViewCell: UITableViewCell {
     self.parentView = parentView
     self.item = item
   }
-  
-  @IBOutlet var profilePicture: UIImageView!
+
   override func awakeFromNib() {
     super.awakeFromNib()
     
@@ -68,6 +64,13 @@ extension ProfileImageTableViewCell: UIImagePickerControllerDelegate {
     let imageExist = !(profilePicture.image?.isEqualToImage(image: UIImage(named: "contactDefaultImage")!) ?? true)
     
     self.imagePicker.present(from: tappedImage, imageExist: imageExist)
+  }
+  static var nib:UINib {
+      return UINib(nibName: identifier, bundle: nil)
+  }
+  
+  static var identifier: String {
+      return String(describing: self)
   }
 }
 

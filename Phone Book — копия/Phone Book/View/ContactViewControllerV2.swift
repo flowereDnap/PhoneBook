@@ -2,18 +2,16 @@
 
 import UIKit
 
-class ContactViewControllerV2: UITableViewController{
-  typealias ViewMode = ContactTableViewController.ViewMode
-  enum TextFields{
-    static let nameField = "nameField"
-    static let numberField = "numberField"
+class ContactViewControllerV2: UITableViewController {
+  enum ViewMode {
+    case edit
+    case view
+    case create
   }
-  
+
   var viewMode: ViewMode = .view
   weak var controller: ContactManager?
   var currentContact :Contact?
- 
-  var ContactTableView: ContactTableViewController?
   var dataChanged: Bool = false {
     didSet{
       if dataChanged {
@@ -29,7 +27,12 @@ class ContactViewControllerV2: UITableViewController{
     let vc: ContactViewControllerV2 = mainStoryboard.instantiateViewController(withIdentifier: "ContactSceneV2") as! ContactViewControllerV2
     vc.viewMode = viewMode
     vc.controller = controller
-    vc.currentContact = currentContact
+    if let currentContact = currentContact {
+      vc.currentContact = currentContact
+    } else {
+      vc.currentContact = Contact(name: nil, number: nil, image: nil)
+    }
+    
     return vc
   }
   
@@ -76,12 +79,14 @@ class ContactViewControllerV2: UITableViewController{
     }
     self.navigationItem.rightBarButtonItem = rightButton
     self.navigationItem.leftBarButtonItem = leftButton
+    tableView.reloadData()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-  
+    tableView?.register(StringTableViewCell.nib, forCellReuseIdentifier: StringTableViewCell.identifier)
+    tableView?.register(ProfileImageTableViewCell.nib, forCellReuseIdentifier: ProfileImageTableViewCell.identifier)
+   
   }
   
   //MARK: -nav bar button actions
@@ -111,10 +116,12 @@ class ContactViewControllerV2: UITableViewController{
   
   @objc func createButtonPressed(_ sender: UIButton) {
     if dataChanged {
-      let contact: Contact = Contact(name: ContactTableView!.nameField.text!,
-                                     number: ContactTableView!.numberField.text ?? "",
-                                     image: profilePicture.image,
-                                     fields: [])
+      print(currentContact?.mainFields)
+      let contact: Contact = Contact(name: currentContact?.name ?? "",
+                                     number: currentContact?.number ?? "",
+                                     image: currentContact?.image,
+                                     mainFields: currentContact?.mainFields ?? [],
+                                     additionalFields: currentContact?.additionalFields ?? [])
       controller!.addContact(contact: contact)
       currentContact = contact
       viewMode = .view
@@ -139,11 +146,12 @@ class ContactViewControllerV2: UITableViewController{
   
   @objc func saveButtonPressed(_ sender: UIButton) {
     controller!.updContact(Id: (currentContact?.id)!,
-                           name: ContactTableView!.nameField.text,
-                           number: ContactTableView!.numberField.text,
-                           image: profilePicture.image)
+                           name: currentContact?.name,
+                           number: currentContact?.number,
+                           image: currentContact?.image,
+                           mainFields: currentContact?.mainFields,
+                           additionalFields: currentContact?.additionalFields)
     viewMode = .view
-    currentContact = controller!.getContact(Id: (currentContact?.id)!)
     viewWillAppear(false)
   }
 }
@@ -160,16 +168,24 @@ extension ContactViewControllerV2 {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
      switch section{
      case 0:
-       return 3
-       return 0
+       return currentContact?.mainFields.filter{$0.toShow}.count ?? 0
      case 1:
-       return currentContact?.fields.filter{$0.toShow}.count ?? 3 - 3
+       return currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
      default:
        return 0
      }
    }
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     let item = currentContact?.fields.filter{$0.toShow}.first{$0.position == indexPath.row}
+    var item: ContactField?
+    switch indexPath.section{
+    case 0:
+      item = currentContact?.mainFields.filter{$0.toShow}.first{$0.position == indexPath.row}
+    case 1:
+      item = currentContact?.additionalFields.filter{$0.toShow}.first{$0.position == indexPath.row}
+    default:
+      break
+    }
+     
      switch item?.type{
      case .mail:
        let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell

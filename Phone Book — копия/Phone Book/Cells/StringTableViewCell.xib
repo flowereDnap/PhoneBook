@@ -9,20 +9,23 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="stringTableViewCell" customModule="Phone_Book" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="StringTableViewCell" customModule="Phone_Book" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM" customClass="StringTableViewCell" customModule="Phone_Book" customModuleProvider="target">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pKB-Gi-zhI">
-                        <rect key="frame" x="58" y="8" width="254" height="44"/>
+                        <rect key="frame" x="76" y="8" width="236" height="44"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qTX-Y0-9XP">
-                        <rect key="frame" x="8" y="8" width="42" height="44"/>
+                        <rect key="frame" x="8" y="8" width="60" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="60" id="hUo-7h-XvB"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -30,18 +33,25 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="qTX-Y0-9XP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="12t-B4-v1E"/>
-                    <constraint firstItem="pKB-Gi-zhI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="3SI-me-8A7"/>
-                    <constraint firstAttribute="bottom" secondItem="pKB-Gi-zhI" secondAttribute="bottom" constant="8" id="EhO-Q2-rtF"/>
+                    <constraint firstAttribute="bottom" secondItem="pKB-Gi-zhI" secondAttribute="bottom" constant="8" id="5dv-9W-dsi"/>
+                    <constraint firstItem="pKB-Gi-zhI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="886-qs-3kI"/>
                     <constraint firstAttribute="bottom" secondItem="qTX-Y0-9XP" secondAttribute="bottom" constant="8" id="Jaa-4a-mbE"/>
                     <constraint firstItem="qTX-Y0-9XP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="T9q-0d-9qW"/>
-                    <constraint firstItem="pKB-Gi-zhI" firstAttribute="leading" secondItem="qTX-Y0-9XP" secondAttribute="trailing" constant="8" id="U6O-KL-Egz"/>
-                    <constraint firstAttribute="trailing" secondItem="pKB-Gi-zhI" secondAttribute="trailing" constant="8" id="twa-xQ-OPf"/>
+                    <constraint firstItem="qTX-Y0-9XP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="Yiu-2m-Rcz"/>
+                    <constraint firstAttribute="trailing" secondItem="pKB-Gi-zhI" secondAttribute="trailing" constant="8" id="aGp-xo-vrG"/>
+                    <constraint firstItem="pKB-Gi-zhI" firstAttribute="leading" secondItem="qTX-Y0-9XP" secondAttribute="trailing" constant="8" id="cjk-9W-Dfq"/>
+                    <constraint firstItem="qTX-Y0-9XP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="ref-3c-fd7"/>
+                    <constraint firstAttribute="bottom" secondItem="qTX-Y0-9XP" secondAttribute="bottom" constant="8" id="tGZ-EP-yD6"/>
                 </constraints>
+                <connections>
+                    <outlet property="label" destination="qTX-Y0-9XP" id="x6h-zi-HKG"/>
+                    <outlet property="textField" destination="pKB-Gi-zhI" id="Vha-RW-3ld"/>
+                </connections>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="label" destination="qTX-Y0-9XP" id="hzh-3M-SRZ"/>
-                <outlet property="textField" destination="pKB-Gi-zhI" id="IFm-tR-aYs"/>
+                <outlet property="textField" destination="pKB-Gi-zhI" id="fjA-R2-IU3"/>
             </connections>
             <point key="canvasLocation" x="131.8840579710145" y="57.589285714285708"/>
         </tableViewCell>

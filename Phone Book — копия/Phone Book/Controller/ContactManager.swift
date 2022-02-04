@@ -57,7 +57,7 @@ class ContactManager {
     return data[data.firstIndex(where: {$0.id == Id})!]
   }
   
-  func updContact(Id: Int, name: String?, number: String?, image: UIImage?) {
+  func updContact(Id: Int, name: String?, number: String?, image: UIImage?, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
     if let name = name {
       data[data.firstIndex(where: {$0.id == Id})!].name = name
     }
@@ -66,6 +66,12 @@ class ContactManager {
     }
     if let image = image {
       data[data.firstIndex(where: {$0.id == Id})!].image = image
+    }
+    if let mainFields = mainFields {
+      data[data.firstIndex(where: {$0.id == Id})!].mainFields = mainFields
+    }
+    if let additionalFields = additionalFields {
+      data[data.firstIndex(where: {$0.id == Id})!].additionalFields = additionalFields
     }
     save()
   }
@@ -76,16 +82,6 @@ class ContactManager {
     save()
   }
   
-  //check of input data
-  func numberCheck(number: String)->(Bool) {
-    if CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: String(number.dropFirst(1)))) &&
-        (number.first == "+" || number.first?.isNumber ?? true){
-      return true
-    }
-    else {
-      return false
-    }
-  }
   //upd of model
   func save() {
     Model.data = self.data

@@ -59,7 +59,6 @@ class ViewController: UIViewController {
     currHeight?.isActive = true
     
     self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
-    print(2)
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
@@ -81,7 +80,6 @@ class ViewController: UIViewController {
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
-    print(1)
     navigationItem.hidesSearchBarWhenScrolling = false
     navigationItem.searchController = searchController
     definesPresentationContext = true
@@ -119,7 +117,7 @@ class ViewController: UIViewController {
   }
   
   @IBAction func addButton(_ sender: UIButton) {
-    let vc = ContactViewController.getView(viewMode: .create, controller: controller, currentContact: nil)
+    let vc = ContactViewControllerV2.getView(viewMode: .create, controller: controller, currentContact: nil)
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -200,15 +198,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! MyCell
-    var name = dataToShow[indexPath.row].name
-    name = name == "" ? "Unnamed" : name
-    let number = dataToShow[indexPath.row].number
+    var name:String = ""
+    if case let .name(text) = dataToShow[indexPath.row].mainFields.first(where: {$0.type == .name})?.value {
+       name = text == "" ? "Unnamed" : text
+    }
     cell.textLabel?.text = name
-    
-    if name == "Unnamed" && number != "" {
-      cell.detailTextLabel?.text = "Number: " + number
-    } else {
-      cell.detailTextLabel?.text = nil
+    if case let .number(text) = dataToShow[indexPath.row].mainFields.first(where: {$0.type == .number})?.value {
+      if name == "Unnamed" && text != "" {
+        cell.detailTextLabel?.text = "Number: " + text
+      } else {
+        cell.detailTextLabel?.text = nil
+      }
     }
     cell.contactId = dataToShow[indexPath.row].id
     cell.isSelected = false

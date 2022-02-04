@@ -9,7 +9,7 @@ import UIKit
 
 class StringTableViewCell: UITableViewCell {
   
-  public static let identifier = "StringTableViewCell"
+
   @IBOutlet var label: UILabel!
   @IBOutlet var textField: UITextField!
   
@@ -26,7 +26,8 @@ class StringTableViewCell: UITableViewCell {
           if case let .number(text) = item?.value {
             textField.text = text
             delegate = NumberFieldDelegate(parentView: parentView!)
-            textField.isUserInteractionEnabled = (parentView!.viewMode == .edit)
+            textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
+    
           }
           if case let .date(date) = item?.value {
             let dateFormatter = DateFormatter()
@@ -64,10 +65,53 @@ class StringTableViewCell: UITableViewCell {
       val = myVal
     }
     if textField.text != val {
-      (textField.delegate as! ContactViewController).dataChanged = true
+      parentView?.dataChanged = true
     } else {
-      (textField.delegate as! ContactViewController).dataChanged = false
+      parentView?.dataChanged = false
     }
-  }
     
+    if case .name(_) = item?.value {
+      print(".name case")
+        if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+        {
+        parentView?.currentContact?.mainFields[id].value = .name(textField.text!)
+          print(".name case in iflet")
+        }
+      }
+    if case .number(_) = item?.value {
+        if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+        {
+        parentView?.currentContact?.mainFields[id].value = .number(textField.text!)
+        }
+      }
+  }
+  
+  static var nib:UINib {
+      return UINib(nibName: identifier, bundle: nil)
+  }
+  
+  static var identifier: String {
+      return String(describing: self)
+  }
+}
+
+
+extension UITableViewCell {
+    var tableView: UITableView? {
+        return self.next(of: UITableView.self)
+    }
+
+    var indexPath: IndexPath? {
+        return self.tableView?.indexPath(for: self)
+    }
+}
+
+extension UIResponder {
+    /**
+     * Returns the next responder in the responder chain cast to the given type, or
+     * if nil, recurses the chain until the next responder is nil or castable.
+     */
+    func next<U: UIResponder>(of type: U.Type = U.self) -> U? {
+        return self.next.flatMap({ $0 as? U ?? $0.next() })
+    }
 }

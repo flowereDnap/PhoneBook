@@ -1,12 +1,8 @@
-import UIKit
+/*import UIKit
 
 
 class ContactTableViewController: UITableViewController {
-  enum ViewMode {
-    case edit
-    case view
-    case create
-  }
+ 
   
   @IBOutlet var nameField: UITextField!
   @IBOutlet var numberField: UITextField!
@@ -73,3 +69,4 @@ class ContactTableViewController: UITableViewController {
 
 
 
+*/

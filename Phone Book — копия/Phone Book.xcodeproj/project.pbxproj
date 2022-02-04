@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE0DBF4227A716DE00BD06B8 /* stringTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DBF4027A716DE00BD06B8 /* stringTableViewCell.swift */; };
-		CE0DBF4327A716DE00BD06B8 /* stringTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0DBF4127A716DE00BD06B8 /* stringTableViewCell.xib */; };
-		CE0DBF4C27A71E7700BD06B8 /* profileImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DBF4A27A71E7700BD06B8 /* profileImageTableViewCell.swift */; };
-		CE0DBF4D27A71E7700BD06B8 /* profileImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0DBF4B27A71E7700BD06B8 /* profileImageTableViewCell.xib */; };
+		CE0DBF4227A716DE00BD06B8 /* StringTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DBF4027A716DE00BD06B8 /* StringTableViewCell.swift */; };
+		CE0DBF4327A716DE00BD06B8 /* StringTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0DBF4127A716DE00BD06B8 /* StringTableViewCell.xib */; };
+		CE0DBF4C27A71E7700BD06B8 /* ProfileImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DBF4A27A71E7700BD06B8 /* ProfileImageTableViewCell.swift */; };
+		CE0DBF4D27A71E7700BD06B8 /* ProfileImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0DBF4B27A71E7700BD06B8 /* ProfileImageTableViewCell.xib */; };
 		CE0DBF4F27A7537400BD06B8 /* textFieldDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DBF4E27A7537400BD06B8 /* textFieldDelegates.swift */; };
 		CE59320C27A4C0A2003B386E /* ContactViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59320B27A4C0A2003B386E /* ContactViewControllerV2.swift */; };
 		CE6E1D0A2782122700ECAA83 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E1D092782122700ECAA83 /* ImagePicker.swift */; };
@@ -28,10 +28,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CE0DBF4027A716DE00BD06B8 /* stringTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stringTableViewCell.swift; sourceTree = "<group>"; };
-		CE0DBF4127A716DE00BD06B8 /* stringTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = stringTableViewCell.xib; sourceTree = "<group>"; };
-		CE0DBF4A27A71E7700BD06B8 /* profileImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = profileImageTableViewCell.swift; sourceTree = "<group>"; };
-		CE0DBF4B27A71E7700BD06B8 /* profileImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = profileImageTableViewCell.xib; sourceTree = "<group>"; };
+		CE0DBF4027A716DE00BD06B8 /* StringTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTableViewCell.swift; sourceTree = "<group>"; };
+		CE0DBF4127A716DE00BD06B8 /* StringTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StringTableViewCell.xib; sourceTree = "<group>"; };
+		CE0DBF4A27A71E7700BD06B8 /* ProfileImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageTableViewCell.swift; sourceTree = "<group>"; };
+		CE0DBF4B27A71E7700BD06B8 /* ProfileImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileImageTableViewCell.xib; sourceTree = "<group>"; };
 		CE0DBF4E27A7537400BD06B8 /* textFieldDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textFieldDelegates.swift; sourceTree = "<group>"; };
 		CE59320B27A4C0A2003B386E /* ContactViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewControllerV2.swift; sourceTree = "<group>"; };
 		CE6E1D092782122700ECAA83 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -64,10 +64,10 @@
 		CE0DBF3B27A7154900BD06B8 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				CE0DBF4027A716DE00BD06B8 /* stringTableViewCell.swift */,
-				CE0DBF4127A716DE00BD06B8 /* stringTableViewCell.xib */,
-				CE0DBF4A27A71E7700BD06B8 /* profileImageTableViewCell.swift */,
-				CE0DBF4B27A71E7700BD06B8 /* profileImageTableViewCell.xib */,
+				CE0DBF4027A716DE00BD06B8 /* StringTableViewCell.swift */,
+				CE0DBF4127A716DE00BD06B8 /* StringTableViewCell.xib */,
+				CE0DBF4A27A71E7700BD06B8 /* ProfileImageTableViewCell.swift */,
+				CE0DBF4B27A71E7700BD06B8 /* ProfileImageTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -194,9 +194,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDE1A4F272AE9F000D60F73 /* LaunchScreen.storyboard in Resources */,
-				CE0DBF4D27A71E7700BD06B8 /* profileImageTableViewCell.xib in Resources */,
+				CE0DBF4D27A71E7700BD06B8 /* ProfileImageTableViewCell.xib in Resources */,
 				CEDE1A4C272AE9F000D60F73 /* Assets.xcassets in Resources */,
-				CE0DBF4327A716DE00BD06B8 /* stringTableViewCell.xib in Resources */,
+				CE0DBF4327A716DE00BD06B8 /* StringTableViewCell.xib in Resources */,
 				CEDE1A4A272AE9ED00D60F73 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,11 +209,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEB8A54E279B17870053F995 /* searchBarFooter.swift in Sources */,
-				CE0DBF4227A716DE00BD06B8 /* stringTableViewCell.swift in Sources */,
+				CE0DBF4227A716DE00BD06B8 /* StringTableViewCell.swift in Sources */,
 				CEBC4372272EFA7E00AFDB8E /* ContactManager.swift in Sources */,
 				CE6E1D0C2782294100ECAA83 /* ContactViewController.swift in Sources */,
 				CEDE1A47272AE9ED00D60F73 /* ViewController.swift in Sources */,
-				CE0DBF4C27A71E7700BD06B8 /* profileImageTableViewCell.swift in Sources */,
+				CE0DBF4C27A71E7700BD06B8 /* ProfileImageTableViewCell.swift in Sources */,
 				CEDE1A43272AE9ED00D60F73 /* AppDelegate.swift in Sources */,
 				CEBC4374272EFA8B00AFDB8E /* Model.swift in Sources */,
 				CE0DBF4F27A7537400BD06B8 /* textFieldDelegates.swift in Sources */,
