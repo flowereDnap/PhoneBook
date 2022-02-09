@@ -8,7 +8,7 @@ class ContactViewControllerV2: UITableViewController {
     case view
     case create
   }
-
+  
   var viewMode: ViewMode = .view
   weak var controller: ContactManager?
   var currentContact :Contact?
@@ -53,8 +53,8 @@ class ContactViewControllerV2: UITableViewController {
                                         style: .done,
                                         target: self,
                                         action: #selector(editCancelButtonPressed))
-  
-     
+      
+      
     case .view:
       rightButton = UIBarButtonItem.init(title: "Edit",
                                          style: .done,
@@ -64,7 +64,7 @@ class ContactViewControllerV2: UITableViewController {
                                         style: .done,
                                         target: self,
                                         action: #selector(backButtonPressed))
- 
+      
     case .create:
       rightButton = UIBarButtonItem.init(title: "Create",
                                          style: .done,
@@ -84,9 +84,12 @@ class ContactViewControllerV2: UITableViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView?.register(StringTableViewCell.nib, forCellReuseIdentifier: StringTableViewCell.identifier)
+    
+    tableView?.register(StringTableViewCellV2.nib, forCellReuseIdentifier: StringTableViewCellV2.identifier)
     tableView?.register(ProfileImageTableViewCell.nib, forCellReuseIdentifier: ProfileImageTableViewCell.identifier)
-   
+    tableView.rowHeight = UITableView.automaticDimension
+         tableView.estimatedRowHeight = 44
+    
   }
   
   //MARK: -nav bar button actions
@@ -135,7 +138,7 @@ class ContactViewControllerV2: UITableViewController {
       self.present(alert, animated: true, completion: nil)
     }
     
-   
+    
   }
   
   @IBAction func editButtonPressed(_ sender: UIButton) {
@@ -162,18 +165,18 @@ class ContactViewControllerV2: UITableViewController {
 
 extension ContactViewControllerV2 {
   override func numberOfSections(in tableView: UITableView) -> Int {
-     return 2
-   }
+    return 2
+  }
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     switch section{
-     case 0:
-       return currentContact?.mainFields.filter{$0.toShow}.count ?? 0
-     case 1:
-       return currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
-     default:
-       return 0
-     }
-   }
+    switch section{
+    case 0:
+      return currentContact?.mainFields.filter{$0.toShow}.count ?? 0
+    case 1:
+      return currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
+    default:
+      return 0
+    }
+  }
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     var item: ContactField?
     switch indexPath.section{
@@ -184,32 +187,32 @@ extension ContactViewControllerV2 {
     default:
       break
     }
-     
-     switch item?.type{
-     case .mail:
-       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
-       cell.setUpCell(parentView: self, item: item!)
-       return cell
-     case .dateOfBirth:
-       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
-       cell.setUpCell(parentView: self, item: item!)
-       return cell
-     case .name:
-       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
-       cell.setUpCell(parentView: self, item: item!)
-       return cell
-     case .number:
-       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCell.identifier, for: indexPath) as! StringTableViewCell
-       cell.setUpCell(parentView: self, item: item!)
-       return cell
-     case .image:
-       let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageTableViewCell.identifier, for: indexPath) as! ProfileImageTableViewCell
-       cell.setUpCell(parentView: self, item: item!)
-       return cell
-     default:
-       return UITableViewCell()
-   }
-   }
+    
+    switch item?.type{
+    case .mail:
+      let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
+      cell.setUpCell(parentView: self, item: item!)
+      return cell
+    case .dateOfBirth:
+      let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
+      cell.setUpCell(parentView: self, item: item!)
+      return cell
+    case .name:
+      let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
+      cell.setUpCell(parentView: self, item: item!)
+      return cell
+    case .number:
+      let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
+      cell.setUpCell(parentView: self, item: item!)
+      return cell
+    case .image:
+      let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageTableViewCell.identifier, for: indexPath) as! ProfileImageTableViewCell
+      cell.setUpCell(parentView: self, item: item!)
+      return cell
+    default:
+      return UITableViewCell()
+    }
+  }
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     switch section{
     case 0:
@@ -220,6 +223,4 @@ extension ContactViewControllerV2 {
       return ""
     }
   }
-   
-  
 }

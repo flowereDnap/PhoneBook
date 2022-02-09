@@ -23,11 +23,7 @@ class ViewController: UIViewController {
 
  
   lazy var contacts = controller.data
-  var filteredContacts:[Contact]! = controller.data {
-    didSet{
-      
-    }
-  }
+  var filteredContacts:[Contact]!
   var dataToShow: [Contact]! {
     if isFiltering {
       return filteredContacts
@@ -63,13 +59,14 @@ class ViewController: UIViewController {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
     self.navigationItem.searchController = searchController
+    filtersOn = false
     reloadTableViewData(with: "No contacts yet")
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     title = "Phone Book"
-
+    filteredContacts = contacts
     tableView.dataSource = self
     tableView.delegate = self
     tableView.backgroundView = nil
@@ -129,25 +126,50 @@ class ViewController: UIViewController {
     
     let action1 = UIAlertAction(title: "Sort by alf",
                                      style: .default) { [self] (UIAlertAction) in
-      self.filteredContacts.sort { $0.name < $1.name }
+      self.filteredContacts.sort { if case let .name(value) = $0.mainFields.first(where: {$0.type == .name})?.value {
+        if case let .name(value2) = $1.mainFields.first(where: {$0.type == .name})?.value {
+          return value < value2
+        }
+      }
+        return false
+      }
       filtersOn = true
       reloadTableViewData(with: "No contacts yet")
     }
     let action2 = UIAlertAction(title: "Sort by date",
                                    style: .default) { [self] (UIAlertAction) in
-      self.filteredContacts.sort { $0.creationDate < $1.creationDate }
+      self.filteredContacts.sort {  if case let .date(value) = $0.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
+        if case let .date(value2) = $1.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
+          return value < value2
+        }
+      }
+        return false
+      }
       filtersOn = true
       reloadTableViewData(with: "No contacts yet")
     }
     let action1_reversed = UIAlertAction(title: "Sort by alf reversed",
                                    style: .default) { [self] (UIAlertAction) in
-      self.filteredContacts.sort { $0.name > $1.name }
+      self.filteredContacts.sort {  if case let .name(value) = $0.mainFields.first(where: {$0.type == .name})?.value {
+        if case let .name(value2) = $1.mainFields.first(where: {$0.type == .name})?.value {
+          return value > value2
+        }
+      }
+        return false
+      }
       filtersOn = true
       reloadTableViewData(with: "No contacts yet")
     }
     let action2_reversed = UIAlertAction(title: "Sort by date reversed",
                                    style: .default) { [self] (UIAlertAction) in
-      self.filteredContacts.sort { $0.creationDate > $1.creationDate }
+      self.filteredContacts.sort {  if case let .date(value) = $0.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
+        if case let .date(value2) = $1.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
+          return value > value2
+        }
+      }
+        return false
+        
+      }
       filtersOn = true
       reloadTableViewData(with: "No contacts yet")
     }
@@ -170,10 +192,23 @@ class ViewController: UIViewController {
   //MARK: -search
   func filterContentForSearchText(_ searchText: String) {
     filteredContacts = contacts.filter { (contact: Contact) -> Bool in
-        return contact.name.lowercased().contains(searchText.lowercased()) || contact.number.lowercased().contains(searchText.lowercased())
+      var result = false
+      for field in contact.mainFields.filter{$0.type == .name} {
+        if case let .name(myValue) = field.value {
+          result = result || myValue.contains(searchText.lowercased())
+        }
+      }
+      for field in contact.mainFields.filter{$0.type == .number} {
+        if case let .number(myValue) = field.value {
+          result = result || myValue.contains(searchText.lowercased())
+        }
+      }
+      
+      
+        return result
     }
     
-    tableView.reloadData()
+    reloadTableViewData(with: "-")
   }
 }
 
@@ -262,6 +297,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 extension ViewController: Observer {
   func update(subject: ContactManager) {
     self.contacts = subject.data
+    if isFiltering{
+    self.filteredContacts = Array(Set(self.filteredContacts).intersection(Set(self.contacts)))
+    }
+    else {
+      self.filteredContacts = contacts
+    }
     reloadTableViewData(with: "No contacts yet")
   }
 }
@@ -284,7 +325,9 @@ extension ViewController{
     else{
       tableView.backgroundView = nil
     }
-     tableView.reloadData()
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
   }
 }
 

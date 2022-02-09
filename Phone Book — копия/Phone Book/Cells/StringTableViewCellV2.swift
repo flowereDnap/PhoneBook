@@ -1,43 +1,43 @@
 //
-//  stringTableViewCell.swift
+//  StringTableViewCellV2.swift
 //  Phone Book
 //
-//  Created by User on 30.01.2022.
+//  Created by User on 04.02.2022.
 //
 
 import UIKit
 
-class StringTableViewCell: UITableViewCell {
+class StringTableViewCellV2: UITableViewCell {
   
-
+  
   @IBOutlet var label: UILabel!
   @IBOutlet var textField: UITextField!
   
   var delegate: UITextFieldDelegate?
   private var parentView: ContactViewControllerV2?
   private var item: ContactField? {
-        didSet {
-          label.text = item?.lable
-          if case let .name(text) = item?.value {
-            textField.text = text
-            delegate = NameFieldDelegate(parentView: parentView!)
-            textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
-          }
-          if case let .number(text) = item?.value {
-            textField.text = text
-            delegate = NumberFieldDelegate(parentView: parentView!)
-            textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
-    
-          }
-          if case let .date(date) = item?.value {
-            let dateFormatter = DateFormatter()
-            textField.text = dateFormatter.string(from: date)
-            delegate = NumberFieldDelegate(parentView: parentView!)
-            textField.isUserInteractionEnabled = false
-          }
-          textField.delegate = delegate
-        }
-     }
+    didSet {
+      label.text = item?.lable
+      if case let .name(text) = item?.value {
+        textField.text = text
+        delegate = NameFieldDelegate(parentView: parentView!)
+        textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
+      }
+      if case let .number(text) = item?.value {
+        textField.text = text
+        delegate = NumberFieldDelegate(parentView: parentView!)
+        textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
+        
+      }
+      if case let .date(date) = item?.value {
+        let dateFormatter = DateFormatter()
+        textField.text = dateFormatter.string(from: date)
+        delegate = NumberFieldDelegate(parentView: parentView!)
+        textField.isUserInteractionEnabled = false
+      }
+      textField.delegate = delegate
+    }
+  }
   
   func setUpCell(parentView:ContactViewControllerV2, item: ContactField) {
     self.parentView = parentView
@@ -45,16 +45,16 @@ class StringTableViewCell: UITableViewCell {
     textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
   }
   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-      
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    
+    // Configure the view for the selected state
+  }
   
   @objc func textFieldDidChange(_ textField: UITextField) {
     var val: String? = nil
@@ -71,28 +71,27 @@ class StringTableViewCell: UITableViewCell {
     }
     
     if case .name(_) = item?.value {
-        if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-        {
+      if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+      {
         parentView?.currentContact?.mainFields[id].value = .name(textField.text!)
-        }
       }
+    }
     if case .number(_) = item?.value {
-        if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-        {
+      if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
+      {
         parentView?.currentContact?.mainFields[id].value = .number(textField.text!)
-        }
       }
+    }
   }
   
   static var nib:UINib {
-      return UINib(nibName: identifier, bundle: nil)
+    return UINib(nibName: identifier, bundle: nil)
   }
   
   static var identifier: String {
-      return String(describing: self)
+    return String(describing: self)
   }
 }
-
 
 extension UITableViewCell {
     var tableView: UITableView? {

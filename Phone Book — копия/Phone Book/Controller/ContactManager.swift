@@ -36,14 +36,7 @@ class ContactManager {
   }
   
   //Contact manegment
-  var currentContactId: Int {
-    set(newId){
-      Model.currentContactId = newId
-    }
-    get{
-      return Model.currentContactId
-    }
-  }
+  
   var count: Int {
     return data.count
   }
