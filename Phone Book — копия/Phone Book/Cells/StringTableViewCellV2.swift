@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StringTableViewCellV2: UITableViewCell {
+class StringTableViewCellV2: UITableViewCell, saveCell {
   
   
   @IBOutlet var label: UILabel!
@@ -71,16 +71,18 @@ class StringTableViewCellV2: UITableViewCell {
     }
     
     if case .name(_) = item?.value {
-      if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-      {
-        parentView?.currentContact?.mainFields[id].value = .name(textField.text!)
-      }
+        item?.value = .name(textField.text!)
     }
     if case .number(_) = item?.value {
-      if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-      {
-        parentView?.currentContact?.mainFields[id].value = .number(textField.text!)
-      }
+         item?.value = .number(textField.text!)
+    }
+  }
+  
+  func save(){
+    if let new = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentContact?.mainFields[new] = item!
+    } else if let new = parentView?.currentContact?.additionalFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentContact?.additionalFields[new] = item!
     }
   }
   
@@ -111,4 +113,8 @@ extension UIResponder {
     func next<U: UIResponder>(of type: U.Type = U.self) -> U? {
         return self.next.flatMap({ $0 as? U ?? $0.next() })
     }
+}
+
+protocol saveCell: UITableViewCell {
+  func save()
 }

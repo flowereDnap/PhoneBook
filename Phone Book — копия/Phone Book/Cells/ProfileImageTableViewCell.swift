@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileImageTableViewCell: UITableViewCell {
+class ProfileImageTableViewCell: UITableViewCell, saveCell {
   
   
   @IBOutlet var profilePicture: UIImageView!
@@ -43,7 +43,11 @@ class ProfileImageTableViewCell: UITableViewCell {
     
     // Configure the view for the selected state
   }
-  
+  func save(){
+    if let new = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentContact?.mainFields[new] = item!
+    }
+  }
 }
 
 extension ProfileImageTableViewCell: ImagePickerDelegate {
@@ -57,7 +61,7 @@ extension ProfileImageTableViewCell: ImagePickerDelegate {
     self.profilePicture.image = image
     if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
     {
-    parentView?.currentContact?.mainFields[id].value = .image(ImageWrapper(image: image))
+      item?.value = .image(ImageWrapper(image: image))
     }
   }
   func deleteImage(in sender: UIImageView) {
@@ -65,7 +69,7 @@ extension ProfileImageTableViewCell: ImagePickerDelegate {
     parentView?.dataChanged = true
     if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
     {
-    parentView?.currentContact?.mainFields[id].value = .image(ImageWrapper(image: nil))
+      item?.value = .image(ImageWrapper(image: nil))
     }
   }
 }

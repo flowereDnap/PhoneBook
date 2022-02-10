@@ -245,7 +245,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.detailTextLabel?.text = nil
       }
     }
-    cell.contactId = dataToShow[indexPath.row].id
+    cell.contactId = dataToShow[indexPath.row].mainFields.first{$0.type == .id}?.value?.value() as! String
     cell.isSelected = false
     return cell
   }

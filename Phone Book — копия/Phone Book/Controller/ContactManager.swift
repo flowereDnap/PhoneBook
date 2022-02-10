@@ -47,31 +47,26 @@ class ContactManager {
   }
   
   func getContact(Id: String) -> Contact {
-    return data[data.firstIndex(where: {$0.id == Id})!]
+    return data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
+    })!]
   }
   
-  func updContact(Id: String, name: String?, number: String?, image: UIImage?, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
-    if let name = name {
-      data[data.firstIndex(where: {$0.id == Id})!].name = name
-    }
-    if let number = number {
-      data[data.firstIndex(where: {$0.id == Id})!].number = number
-    }
-    if let image = image {
-      data[data.firstIndex(where: {$0.id == Id})!].image = image
-    }
+  func updContact(Id: String, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
     if let mainFields = mainFields {
-      data[data.firstIndex(where: {$0.id == Id})!].mainFields = mainFields
+      data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
+      })!].mainFields = mainFields
     }
     if let additionalFields = additionalFields {
-      data[data.firstIndex(where: {$0.id == Id})!].additionalFields = additionalFields
+      data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
+      })!].additionalFields = additionalFields
     }
     save()
   }
   
   func deleteContact(Id: String) {
     
-    data.remove(at: data.firstIndex(where: {$0.id == Id})!)
+    data.remove(at: data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
+    })!)
     save()
   }
   

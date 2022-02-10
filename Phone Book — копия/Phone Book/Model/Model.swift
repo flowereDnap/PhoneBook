@@ -44,6 +44,29 @@ enum Labels:String, Codable, Hashable{
   
 }
 
+extension ContactFieldValue {
+  func value() -> Any{
+    if case let .id(value) = self{
+      return value
+    }
+    if case let .name(value) = self{
+      return value
+    }
+    if case let .number(value) = self{
+      return value
+    }
+    if case let .mail(value) = self{
+      return value
+    }
+    if case let .image(value) = self{
+      return value
+    }
+    if case let .date(value) = self{
+      return value
+    }
+    return 0
+  }
+}
 
 
 public struct ContactField: Codable, Hashable{
@@ -83,12 +106,9 @@ class Model {
   static let contactListKey = "contactsList3"
   static let idKey = "id"
   static var id: String = {
-    UserDefaults.standard.register(defaults: ["uuid" : UUID().uuidString])
-    return UserDefaults.standard.string(forKey: "uuid") ?? ""
+
+    return UUID().uuidString
   }()
-  {
-    didSet {UserDefaults.standard.set(id, forKey: "uuid")}
-  }
   static public var data: [Contact] {
     get {
       
@@ -114,33 +134,8 @@ class Model {
 struct Contact: Codable, Hashable{
   var mainFields: [ContactField]
   var additionalFields: [ContactField]
-  var name: String
-  var number: String
-  var creationDate: Date
-  var id: String?
-  var imgData: Data?
-  static private let contactDefaultImage: UIImage = UIImage(named: "contactDefaultImage")!
-  var image: UIImage? {
-    get {
-      if let imgData = imgData {
-        return UIImage(data: imgData)
-      }
-      return Contact.contactDefaultImage
-    }
-    set {
-      guard let img = newValue else {
-        imgData = nil
-        return
-      }
-      imgData = img.pngData()!
-    }
-  }
   
-  init(name:String?, number:String?, image:UIImage?, mainFields:[ContactField]? = nil, additionalFields: [ContactField] = []){
-    self.name = name ?? ""
-    self.number = number ?? ""
-    self.creationDate = Date()
-    self.id = Model.id
+  init(mainFields:[ContactField]? = nil, additionalFields: [ContactField] = []){
     self.additionalFields = []
     if let mainFields = mainFields {
       self.mainFields = mainFields
@@ -149,17 +144,17 @@ struct Contact: Codable, Hashable{
       let nameField = ContactField(lable: Labels.name.rawValue,
                                    type: Labels.name,
                                    position: 1,
-                                   value: ContactFieldValue.name(name ?? ""))
+                                   value: ContactFieldValue.name(""))
       self.mainFields.append(nameField)
       let numberField = ContactField(lable: Labels.number.rawValue,
                                      type: Labels.number,
                                      position: 2,
-                                     value: ContactFieldValue.number(number ?? ""))
+                                     value: ContactFieldValue.number(""))
       self.mainFields.append(numberField)
       let imageField = ContactField(lable: Labels.image.rawValue,
                                     type: Labels.image,
                                     position: 0,
-                                    value: ContactFieldValue.image(ImageWrapper(image: image)))
+                                    value: ContactFieldValue.image(ImageWrapper(image:nil)))
       self.mainFields.append(imageField)
       let dateField = ContactField(lable: Labels.dateOfCreation.rawValue,
                                    type: Labels.dateOfCreation,
@@ -167,11 +162,10 @@ struct Contact: Codable, Hashable{
       self.mainFields.append(dateField)
       let idField = ContactField(lable: Labels.id.rawValue,
                                  type: Labels.id,
-                                 value: ContactFieldValue.id(self.id!))
+                                 value: ContactFieldValue.id(Model.id))
       self.mainFields.append(idField)
     }
     self.additionalFields.append(contentsOf: additionalFields)
-    self.image = image
   }
   
 }

@@ -30,7 +30,7 @@ class ContactViewControllerV2: UITableViewController {
     if let currentContact = currentContact {
       vc.currentContact = currentContact
     } else {
-      vc.currentContact = Contact(name: nil, number: nil, image: nil)
+      vc.currentContact = Contact()
     }
     
     return vc
@@ -119,11 +119,18 @@ class ContactViewControllerV2: UITableViewController {
   
   @objc func createButtonPressed(_ sender: UIButton) {
     if dataChanged {
-      let contact: Contact = Contact(name: currentContact?.name ?? "",
-                                     number: currentContact?.number ?? "",
-                                     image: currentContact?.image,
-                                     mainFields: currentContact?.mainFields ?? [],
-                                     additionalFields: currentContact?.additionalFields ?? [])
+      let totalSection = tableView.numberOfSections
+      for section in 0..<totalSection
+      {
+          let totalRows = tableView.numberOfRows(inSection: section)
+          for row in 0..<totalRows
+          {
+            (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
+          }
+      }
+      let contact: Contact = Contact(
+        mainFields: currentContact?.mainFields ?? [],
+        additionalFields: currentContact?.additionalFields ?? [])
       controller!.addContact(contact: contact)
       currentContact = contact
       viewMode = .view
@@ -147,10 +154,16 @@ class ContactViewControllerV2: UITableViewController {
   }
   
   @objc func saveButtonPressed(_ sender: UIButton) {
-    controller!.updContact(Id: (currentContact?.id)!,
-                           name: currentContact?.name,
-                           number: currentContact?.number,
-                           image: currentContact?.image,
+    let totalSection = tableView.numberOfSections
+    for section in 0..<totalSection
+    {
+        let totalRows = tableView.numberOfRows(inSection: section)
+        for row in 0..<totalRows
+        {
+          (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
+        }
+    }
+    controller!.updContact(Id: (currentContact?.mainFields.first{$0.type == .id}?.value?.value() as! String),
                            mainFields: currentContact?.mainFields,
                            additionalFields: currentContact?.additionalFields)
     viewMode = .view
