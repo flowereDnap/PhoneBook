@@ -78,11 +78,10 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
   }
   
   func save(){
-    if let new = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
-      parentView?.currentContact?.mainFields[new] = item!
-      print("saved in")
-    } else if let new = parentView?.currentContact?.additionalFields.firstIndex(where: {$0.position == item?.position}){
-      parentView?.currentContact?.additionalFields[new] = item!
+    if let new = parentView?.currentEditingContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentEditingContact?.mainFields[new] = item!
+    } else if let new = parentView?.currentEditingContact?.additionalFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentEditingContact?.additionalFields[new] = item!
     }
   }
   

@@ -25,7 +25,7 @@ class AddTableViewCell: UITableViewCell {
   @IBOutlet var button:UIButton!
   private var type: cellType!
   var parentView: ContactViewControllerV2!
-  var currentContact: Contact!
+  var currentEditingContact: Contact!
   var delegate:UITextFieldDelegate?
   
   
@@ -40,10 +40,10 @@ class AddTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
   
-  func setUpCell(type:cellType, parentView: ContactViewControllerV2, currentContact: Contact){
+  func setUpCell(type:cellType, parentView: ContactViewControllerV2){
     self.type = type
     self.parentView = parentView
-    self .currentContact = currentContact
+    self .currentEditingContact = parentView.currentEditingContact
   }
   
   @IBAction func addButtonPressed(_ sender: UIButton){
@@ -120,7 +120,7 @@ class AddTableViewCell: UITableViewCell {
       let lable = fields[0].text
       let value = fields[1].text
       if isMain {
-      let positionOfLast = (self.currentContact.mainFields.last(where: {$0.type == type})?.position ?? 0)
+      let positionOfLast = (self.currentEditingContact.mainFields.last(where: {$0.type == type})?.position ?? 0)
       var newField: ContactField
       switch type {
         case .name:
@@ -132,18 +132,18 @@ class AddTableViewCell: UITableViewCell {
       }
       
       self.parentView.saveBeforeReload()
-      for index in 0..<self.currentContact.mainFields.count {
-          if self.currentContact.mainFields[index].position > positionOfLast{
-            self.currentContact.mainFields[index].move()
+      for index in 0..<self.currentEditingContact.mainFields.count {
+          if self.currentEditingContact.mainFields[index].position > positionOfLast{
+            self.currentEditingContact.mainFields[index].move()
         }
       }
-      self.currentContact.mainFields.append(newField)
-      self.currentContact.sort()
+      self.currentEditingContact.mainFields.append(newField)
+      self.currentEditingContact.sort()
 
       self.parentView.tableView.reloadData()
       self.parentView.dataChanged = true
       } else {
-        let positionOfLast = (self.currentContact.additionalFields.last(where: {$0.type == type})?.position ?? -1)
+        let positionOfLast = (self.currentEditingContact.additionalFields.last(where: {$0.type == type})?.position ?? -1)
           
         var newField: ContactField
         switch type {
@@ -157,13 +157,13 @@ class AddTableViewCell: UITableViewCell {
         }
         
         self.parentView.saveBeforeReload()
-        for index in 0..<self.currentContact.additionalFields.count {
-          if self.currentContact.additionalFields[index].position > positionOfLast{
-            self.currentContact.additionalFields[index].move()
+        for index in 0..<self.currentEditingContact.additionalFields.count {
+          if self.currentEditingContact.additionalFields[index].position > positionOfLast{
+            self.currentEditingContact.additionalFields[index].move()
           }
         }
-        self.currentContact.additionalFields.append(newField)
-        self.currentContact.sort()
+        self.currentEditingContact.additionalFields.append(newField)
+        self.currentEditingContact.sort()
         self.parentView.tableView.reloadData()
         self.parentView.dataChanged = true
       }

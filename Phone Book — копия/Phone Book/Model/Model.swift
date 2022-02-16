@@ -141,7 +141,7 @@ class Model {
   }
 }
 
-class Contact: Codable{
+class Contact: Codable,Copyable{
   
   private enum CodingKeys: String, CodingKey {
           case mainFields, additionalFields
@@ -191,6 +191,12 @@ class Contact: Codable{
     self.additionalFields.append(contentsOf: additionalFields)
     self.sort()
   }
+  required init(instance: Contact) {
+          self.mainFields = instance.mainFields
+          self.additionalFields = instance.additionalFields
+          self.searchFoundIn = instance.searchFoundIn
+    print(self.mainFields)
+    }
   
 }
 
@@ -209,6 +215,8 @@ extension Contact: Equatable {
     return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
   }
 }
+ 
+
 
 protocol ProfileViewModelItem {
   var type: ProfileViewModelItemType { get }
@@ -448,3 +456,12 @@ class CoreDataProvider: ContactsDataProtocol {
  }
  }
  */
+protocol Copyable {
+    init(instance: Self)
+}
+
+extension Copyable {
+    func copy() -> Self {
+        return Self.init(instance: self)
+    }
+}

@@ -44,8 +44,8 @@ class ProfileImageTableViewCell: UITableViewCell, saveCell {
     // Configure the view for the selected state
   }
   func save(){
-    if let new = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
-      parentView?.currentContact?.mainFields[new] = item!
+    if let new = parentView?.currentEditingContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
+      parentView?.currentEditingContact?.mainFields[new] = item!
     }
   }
 }
@@ -59,20 +59,15 @@ extension ProfileImageTableViewCell: ImagePickerDelegate {
       parentView?.dataChanged = true
     }
     self.profilePicture.image = image
-    if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-    {
-      item?.value = .image(ImageWrapper(image: image))
-    }
+    item?.value = .image(ImageWrapper(image: image))
   }
   func deleteImage(in sender: UIImageView) {
     sender.image = UIImage(named: "contactDefaultImage")
     parentView?.dataChanged = true
-    if let id = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == self.indexPath?.row})
-    {
-      item?.value = .image(ImageWrapper(image: nil))
-    }
+    item?.value = .image(ImageWrapper(image: nil))
   }
 }
+
 extension ProfileImageTableViewCell: UIImagePickerControllerDelegate {
   @IBAction func showImagePicker(tapGestureRecognizer: UITapGestureRecognizer) {
     let tappedImage = tapGestureRecognizer.view as! UIImageView

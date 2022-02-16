@@ -11,7 +11,8 @@ class ContactViewControllerV2: UITableViewController {
   
   var viewMode: ViewMode = .view
   weak var controller: ContactManager?
-  var currentContact :Contact?
+  var currentContact: Contact?
+  var currentEditingContact: Contact?
   var dataChanged: Bool = false {
     didSet{
       if dataChanged {
@@ -32,7 +33,7 @@ class ContactViewControllerV2: UITableViewController {
     } else {
       vc.currentContact = Contact()
     }
-    
+    vc.currentEditingContact = vc.currentContact?.copy()
     return vc
   }
   
@@ -96,6 +97,7 @@ class ContactViewControllerV2: UITableViewController {
   //MARK: -nav bar button actions
   @objc func editCancelButtonPressed(_ sender: UIButton){
     self.viewMode = .view
+    currentEditingContact = currentContact?.copy()
     viewWillAppear(false)
   }
   
@@ -130,10 +132,11 @@ class ContactViewControllerV2: UITableViewController {
         }
       }
       let contact: Contact = Contact(
-        mainFields: currentContact?.mainFields ?? [],
-        additionalFields: currentContact?.additionalFields ?? [])
+        mainFields: currentEditingContact?.mainFields ?? [],
+        additionalFields: currentEditingContact?.additionalFields ?? [])
       controller!.addContact(contact: contact)
       currentContact = contact
+      currentEditingContact = contact.copy()
       viewMode = .view
       viewWillAppear(false)
     } else {
@@ -164,9 +167,9 @@ class ContactViewControllerV2: UITableViewController {
         (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
       }
     }
-    controller!.updContact(Id: (currentContact?.mainFields.first{$0.type == .id}?.value?.value() as! String),
-                           mainFields: currentContact?.mainFields,
-                           additionalFields: currentContact?.additionalFields)
+    controller!.updContact(Id: (currentEditingContact?.mainFields.first{$0.type == .id}?.value?.value() as! String),
+                           mainFields: currentEditingContact?.mainFields,
+                           additionalFields: currentEditingContact?.additionalFields)
     viewMode = .view
     viewWillAppear(false)
   }
@@ -181,7 +184,6 @@ class ContactViewControllerV2: UITableViewController {
         (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
       }
     }
-    print("saved")
   }
 }
 
@@ -197,13 +199,13 @@ extension ContactViewControllerV2 {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     switch section{
     case 0:
-      var result = currentContact?.mainFields.filter{$0.toShow}.count ?? 0
+      var result = currentEditingContact?.mainFields.filter{$0.toShow}.count ?? 0
       if !(self.viewMode == .view) {
         result = result + 1
       }
       return result
     case 1:
-      var result = currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
+      var result = currentEditingContact?.additionalFields.filter{$0.toShow}.count ?? 0
       if !(self.viewMode == .view) {
         result = result + 1
       }
@@ -216,9 +218,9 @@ extension ContactViewControllerV2 {
     var item: ContactField?
     switch indexPath.section{
     case 0:
-      item = currentContact?.mainFields.filter{$0.toShow}.first{$0.position == indexPath.row}
+      item = currentEditingContact?.mainFields.filter{$0.toShow}.first{$0.position == indexPath.row}
     case 1:
-      item = currentContact?.additionalFields.filter{$0.toShow}.first{$0.position == indexPath.row}
+      item = currentEditingContact?.additionalFields.filter{$0.toShow}.first{$0.position == indexPath.row}
     default:
       break
     }
@@ -249,8 +251,7 @@ extension ContactViewControllerV2 {
       let type: AddTableViewCell.cellType
       if indexPath.section == 0{type = .main} else{type = .add}
       cell.setUpCell(type: type,
-                     parentView: self,
-                     currentContact: self.currentContact!)
+                     parentView: self)
       return cell
     }
   }
@@ -298,17 +299,17 @@ extension ContactViewControllerV2 {
                                       handler: { action in
           switch indexPath.section {
           case 0:
-            self.currentContact?.mainFields.remove(at: (self.currentContact?.mainFields.firstIndex{$0.position == position})!)
-            for index in 0..<self.currentContact!.mainFields.count {
-              if self.currentContact!.mainFields[index].position > position{
-                self.currentContact!.mainFields[index].move(back: true)
+            self.currentEditingContact?.mainFields.remove(at: (self.currentEditingContact?.mainFields.firstIndex{$0.position == position})!)
+            for index in 0..<self.currentEditingContact!.mainFields.count {
+              if self.currentEditingContact!.mainFields[index].position > position{
+                self.currentEditingContact!.mainFields[index].move(back: true)
               }
             }
           case 1:
-            self.currentContact?.additionalFields.remove(at: (self.currentContact?.additionalFields.firstIndex{$0.position == position})!)
-            for index in 0..<self.currentContact!.additionalFields.count {
-              if self.currentContact!.additionalFields[index].position > position{
-                self.currentContact!.additionalFields[index].move(back: true)
+            self.currentEditingContact?.additionalFields.remove(at: (self.currentEditingContact?.additionalFields.firstIndex{$0.position == position})!)
+            for index in 0..<self.currentEditingContact!.additionalFields.count {
+              if self.currentEditingContact!.additionalFields[index].position > position{
+                self.currentEditingContact!.additionalFields[index].move(back: true)
               }
             }
           default:

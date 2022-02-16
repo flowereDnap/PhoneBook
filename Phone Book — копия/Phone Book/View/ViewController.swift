@@ -204,7 +204,6 @@ class ViewController: UIViewController {
             let color: UIColor = .red
             attributeTxt.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
             contact.searchFoundIn = attributeTxt
-            print(attributeTxt)
             return result
           }
         }
@@ -218,7 +217,6 @@ class ViewController: UIViewController {
             let color: UIColor = .red
             attributeTxt.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
             contact.searchFoundIn = attributeTxt
-            print(attributeTxt)
             return result
           }
         }
@@ -257,7 +255,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     let contact = dataToShow[indexPath.row]
     //contact name ("Unnamed" if none)
     if case let .name(data) = contact.mainFields.first(where: {$0.type == .name})?.value {
-      print("1")
       text = data == "" ? "Unnamed" : data
     }
     //set name text
