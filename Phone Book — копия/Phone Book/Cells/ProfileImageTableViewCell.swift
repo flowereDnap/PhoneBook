@@ -13,7 +13,7 @@ class ProfileImageTableViewCell: UITableViewCell, saveCell {
   @IBOutlet var profilePicture: UIImageView!
   var imagePicker: ImagePicker!
   private var parentView: ContactViewControllerV2?
-  private var item: ContactField? {
+  internal var item: ContactField? {
         didSet {
           if case let .image(wrappedImage) = item?.value {
           let image = wrappedImage.image

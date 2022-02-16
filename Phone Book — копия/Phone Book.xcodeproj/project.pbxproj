@@ -13,7 +13,10 @@
 		CE18409827AD40BB00881A7D /* StringTableViewCellV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18409627AD40BB00881A7D /* StringTableViewCellV2.swift */; };
 		CE18409927AD40BB00881A7D /* StringTableViewCellV2.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18409727AD40BB00881A7D /* StringTableViewCellV2.xib */; };
 		CE59320C27A4C0A2003B386E /* ContactViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59320B27A4C0A2003B386E /* ContactViewControllerV2.swift */; };
+		CE6AF72827BBFDD800E2A939 /* AddTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AF72627BBFDD800E2A939 /* AddTableViewCell.swift */; };
+		CE6AF72927BBFDD800E2A939 /* AddTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6AF72727BBFDD800E2A939 /* AddTableViewCell.xib */; };
 		CE6E1D0A2782122700ECAA83 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E1D092782122700ECAA83 /* ImagePicker.swift */; };
+		CE94295327B843BB0056AFC6 /* PhoneBook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE94295127B843BB0056AFC6 /* PhoneBook.xcdatamodeld */; };
 		CEB8A54E279B17870053F995 /* searchBarFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB8A54D279B17870053F995 /* searchBarFooter.swift */; };
 		CEBC4372272EFA7E00AFDB8E /* ContactManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC4371272EFA7E00AFDB8E /* ContactManager.swift */; };
 		CEBC4374272EFA8B00AFDB8E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC4373272EFA8B00AFDB8E /* Model.swift */; };
@@ -32,7 +35,10 @@
 		CE18409627AD40BB00881A7D /* StringTableViewCellV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTableViewCellV2.swift; sourceTree = "<group>"; };
 		CE18409727AD40BB00881A7D /* StringTableViewCellV2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StringTableViewCellV2.xib; sourceTree = "<group>"; };
 		CE59320B27A4C0A2003B386E /* ContactViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewControllerV2.swift; sourceTree = "<group>"; };
+		CE6AF72627BBFDD800E2A939 /* AddTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTableViewCell.swift; sourceTree = "<group>"; };
+		CE6AF72727BBFDD800E2A939 /* AddTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddTableViewCell.xib; sourceTree = "<group>"; };
 		CE6E1D092782122700ECAA83 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		CE94295227B843BB0056AFC6 /* PhoneBook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PhoneBook.xcdatamodel; sourceTree = "<group>"; };
 		CEB8A54D279B17870053F995 /* searchBarFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchBarFooter.swift; sourceTree = "<group>"; };
 		CEBC4371272EFA7E00AFDB8E /* ContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactManager.swift; sourceTree = "<group>"; };
 		CEBC4373272EFA8B00AFDB8E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -64,6 +70,8 @@
 				CE0DBF4B27A71E7700BD06B8 /* ProfileImageTableViewCell.xib */,
 				CE18409627AD40BB00881A7D /* StringTableViewCellV2.swift */,
 				CE18409727AD40BB00881A7D /* StringTableViewCellV2.xib */,
+				CE6AF72627BBFDD800E2A939 /* AddTableViewCell.swift */,
+				CE6AF72727BBFDD800E2A939 /* AddTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -125,6 +133,7 @@
 				CE77B2DB278981CB0008783C /* View */,
 				CEBC4370272EFA4500AFDB8E /* Controller */,
 				CEBC436F272EFA1F00AFDB8E /* Model */,
+				CE94295127B843BB0056AFC6 /* PhoneBook.xcdatamodeld */,
 			);
 			path = "Phone Book";
 			sourceTree = "<group>";
@@ -190,6 +199,7 @@
 				CE18409927AD40BB00881A7D /* StringTableViewCellV2.xib in Resources */,
 				CEDE1A4F272AE9F000D60F73 /* LaunchScreen.storyboard in Resources */,
 				CE0DBF4D27A71E7700BD06B8 /* ProfileImageTableViewCell.xib in Resources */,
+				CE6AF72927BBFDD800E2A939 /* AddTableViewCell.xib in Resources */,
 				CEDE1A4C272AE9F000D60F73 /* Assets.xcassets in Resources */,
 				CEDE1A4A272AE9ED00D60F73 /* Main.storyboard in Resources */,
 			);
@@ -203,12 +213,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE18409827AD40BB00881A7D /* StringTableViewCellV2.swift in Sources */,
+				CE6AF72827BBFDD800E2A939 /* AddTableViewCell.swift in Sources */,
 				CEB8A54E279B17870053F995 /* searchBarFooter.swift in Sources */,
 				CEBC4372272EFA7E00AFDB8E /* ContactManager.swift in Sources */,
 				CEDE1A47272AE9ED00D60F73 /* ViewController.swift in Sources */,
 				CE0DBF4C27A71E7700BD06B8 /* ProfileImageTableViewCell.swift in Sources */,
 				CEDE1A43272AE9ED00D60F73 /* AppDelegate.swift in Sources */,
 				CEBC4374272EFA8B00AFDB8E /* Model.swift in Sources */,
+				CE94295327B843BB0056AFC6 /* PhoneBook.xcdatamodeld in Sources */,
 				CE0DBF4F27A7537400BD06B8 /* textFieldDelegates.swift in Sources */,
 				CE6E1D0A2782122700ECAA83 /* ImagePicker.swift in Sources */,
 				CEDE1A45272AE9ED00D60F73 /* SceneDelegate.swift in Sources */,
@@ -430,6 +442,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CE94295127B843BB0056AFC6 /* PhoneBook.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CE94295227B843BB0056AFC6 /* PhoneBook.xcdatamodel */,
+			);
+			currentVersion = CE94295227B843BB0056AFC6 /* PhoneBook.xcdatamodel */;
+			path = PhoneBook.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CEDE1A37272AE9ED00D60F73 /* Project object */;
 }

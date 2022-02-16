@@ -87,8 +87,9 @@ class ContactViewControllerV2: UITableViewController {
     
     tableView?.register(StringTableViewCellV2.nib, forCellReuseIdentifier: StringTableViewCellV2.identifier)
     tableView?.register(ProfileImageTableViewCell.nib, forCellReuseIdentifier: ProfileImageTableViewCell.identifier)
+    tableView?.register(AddTableViewCell.nib, forCellReuseIdentifier: AddTableViewCell.identifier)
     tableView.rowHeight = UITableView.automaticDimension
-         tableView.estimatedRowHeight = 44
+    tableView.estimatedRowHeight = 44
     
   }
   
@@ -122,11 +123,11 @@ class ContactViewControllerV2: UITableViewController {
       let totalSection = tableView.numberOfSections
       for section in 0..<totalSection
       {
-          let totalRows = tableView.numberOfRows(inSection: section)
-          for row in 0..<totalRows
-          {
-            (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
-          }
+        let totalRows = tableView.numberOfRows(inSection: section)
+        for row in 0..<totalRows - 1
+        {
+          (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
+        }
       }
       let contact: Contact = Contact(
         mainFields: currentContact?.mainFields ?? [],
@@ -157,17 +158,30 @@ class ContactViewControllerV2: UITableViewController {
     let totalSection = tableView.numberOfSections
     for section in 0..<totalSection
     {
-        let totalRows = tableView.numberOfRows(inSection: section)
-        for row in 0..<totalRows
-        {
-          (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
-        }
+      let totalRows = tableView.numberOfRows(inSection: section)
+      for row in 0..<totalRows - 1
+      {
+        (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
+      }
     }
     controller!.updContact(Id: (currentContact?.mainFields.first{$0.type == .id}?.value?.value() as! String),
                            mainFields: currentContact?.mainFields,
                            additionalFields: currentContact?.additionalFields)
     viewMode = .view
     viewWillAppear(false)
+  }
+  
+  func saveBeforeReload(){
+    let totalSection = tableView.numberOfSections
+    for section in 0..<totalSection
+    {
+      let totalRows = tableView.numberOfRows(inSection: section)
+      for row in 0..<totalRows - 1
+      {
+        (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
+      }
+    }
+    print("saved")
   }
 }
 
@@ -183,9 +197,17 @@ extension ContactViewControllerV2 {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     switch section{
     case 0:
-      return currentContact?.mainFields.filter{$0.toShow}.count ?? 0
+      var result = currentContact?.mainFields.filter{$0.toShow}.count ?? 0
+      if !(self.viewMode == .view) {
+        result = result + 1
+      }
+      return result
     case 1:
-      return currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
+      var result = currentContact?.additionalFields.filter{$0.toShow}.count ?? 0
+      if !(self.viewMode == .view) {
+        result = result + 1
+      }
+      return result
     default:
       return 0
     }
@@ -223,9 +245,16 @@ extension ContactViewControllerV2 {
       cell.setUpCell(parentView: self, item: item!)
       return cell
     default:
-      return UITableViewCell()
+      let cell = tableView.dequeueReusableCell(withIdentifier: AddTableViewCell.identifier, for: indexPath) as! AddTableViewCell
+      let type: AddTableViewCell.cellType
+      if indexPath.section == 0{type = .main} else{type = .add}
+      cell.setUpCell(type: type,
+                     parentView: self,
+                     currentContact: self.currentContact!)
+      return cell
     }
   }
+  
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     switch section{
     case 0:
@@ -235,5 +264,67 @@ extension ContactViewControllerV2 {
     default:
       return ""
     }
+  }
+  
+  override func tableView(_ tableView: UITableView,
+                          trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+  ) -> UISwipeActionsConfiguration? {
+    if !(viewMode == .view) {
+      let action = UIContextualAction(style: .normal,
+                                      title: "Delete") { [weak self] (action, view, completionHandler) in
+        guard let self = self else {
+          return
+        }
+        guard let position =  (self.tableView.cellForRow(at: IndexPath(
+          row: indexPath.row,section: 0)) as? saveCell)?.item?.position else {
+            let alert = UIAlertController(title: "Error",
+                                          message: "You cant delete this",
+                                          preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok",
+                                          style: UIAlertAction.Style.default,
+                                          handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+          }
+        
+        let alert = UIAlertController(title: "Delete",
+                                      message: "Are you sure about that?",
+                                      preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Cancel",
+                                      style: UIAlertAction.Style.default,
+                                      handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes",
+                                      style: UIAlertAction.Style.destructive,
+                                      handler: { action in
+          switch indexPath.section {
+          case 0:
+            self.currentContact?.mainFields.remove(at: (self.currentContact?.mainFields.firstIndex{$0.position == position})!)
+            for index in 0..<self.currentContact!.mainFields.count {
+              if self.currentContact!.mainFields[index].position > position{
+                self.currentContact!.mainFields[index].move(back: true)
+              }
+            }
+          case 1:
+            self.currentContact?.additionalFields.remove(at: (self.currentContact?.additionalFields.firstIndex{$0.position == position})!)
+            for index in 0..<self.currentContact!.additionalFields.count {
+              if self.currentContact!.additionalFields[index].position > position{
+                self.currentContact!.additionalFields[index].move(back: true)
+              }
+            }
+          default:
+            return
+          }
+          self.dataChanged = true
+          self.tableView.reloadData()
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+        completionHandler(true)
+      }
+      action.backgroundColor = .black
+      return UISwipeActionsConfiguration(actions: [action])
+    }
+    return .none
+    
   }
 }

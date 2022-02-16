@@ -31,6 +31,7 @@ public enum ContactFieldValue: Codable , Hashable{
   case mail(String)
   case date(Date)
   case image(ImageWrapper)
+  
 }
 
 enum Labels:String, Codable, Hashable{
@@ -91,6 +92,14 @@ public struct ContactField: Codable, Hashable{
     }
   }
   var position: Int = -1
+  
+  mutating func move(back:Bool = false){
+    if back {
+      position = position - 1
+    } else {
+      position = position + 1
+    }
+  }
   var value: ContactFieldValue?
   init (lable: String?, type: Labels, position:Int = -1, value: ContactFieldValue?){
     self.lable = lable
@@ -105,10 +114,11 @@ class Model {
   private static var loaded_data: [Contact]? = nil
   static let contactListKey = "contactsList3"
   static let idKey = "id"
-  static var id: String = {
-
-    return UUID().uuidString
-  }()
+  static var id: String{
+    get{
+      return UUID().uuidString
+    }
+  }
   static public var data: [Contact] {
     get {
       
@@ -131,11 +141,24 @@ class Model {
   }
 }
 
-struct Contact: Codable, Hashable{
+class Contact: Codable{
+  
+  private enum CodingKeys: String, CodingKey {
+          case mainFields, additionalFields
+      }
   var mainFields: [ContactField]
   var additionalFields: [ContactField]
+  var searchFoundIn: NSAttributedString?
   
-  init(mainFields:[ContactField]? = nil, additionalFields: [ContactField] = []){
+  func sort (){
+    self.mainFields.sort { first, second in
+      first.position < second.position
+    }
+    self.additionalFields.sort { first, second in
+      first.position < second.position
+    }
+  }
+  init(mainFields:[ContactField]? = nil, additionalFields: [ContactField] = []) {
     self.additionalFields = []
     if let mainFields = mainFields {
       self.mainFields = mainFields
@@ -166,10 +189,26 @@ struct Contact: Codable, Hashable{
       self.mainFields.append(idField)
     }
     self.additionalFields.append(contentsOf: additionalFields)
+    self.sort()
   }
   
 }
 
+// MARK: - <Hashable>
+extension Contact: Hashable {
+  
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(ObjectIdentifier(self))
+  }
+}
+
+// MARK: - <Equatable>
+extension Contact: Equatable {
+  
+  public static func ==(lhs: Contact, rhs: Contact) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+  }
+}
 
 protocol ProfileViewModelItem {
   var type: ProfileViewModelItemType { get }
@@ -285,7 +324,7 @@ class UserDefaultsDataProvide: ContactsDataProtocol {
 }
 
 class FileDataProvider: ContactsDataProtocol {
-
+  
   static private let fileURL: String = "allContacts"
   let fileManager = FilesManager()
   var id: String = {
@@ -316,7 +355,7 @@ class FileDataProvider: ContactsDataProtocol {
       loaded_data = newValue
       let data = withUnsafeBytes(of: loaded_data) { Data($0) }
       do {
-          try fileManager.save(fileNamed: FileDataProvider.fileURL, data: data)
+        try fileManager.save(fileNamed: FileDataProvider.fileURL, data: data)
       } catch {
         print("save to file failed")
       }
@@ -326,52 +365,52 @@ class FileDataProvider: ContactsDataProtocol {
 }
 
 class FilesManager {
-    enum Error: Swift.Error {
-        case fileAlreadyExists
-        case invalidDirectory
-        case writtingFailed
-        case fileNotExists
-        case readingFailed
+  enum Error: Swift.Error {
+    case fileAlreadyExists
+    case invalidDirectory
+    case writtingFailed
+    case fileNotExists
+    case readingFailed
+  }
+  let fileManager: FileManager
+  init(fileManager: FileManager = .default) {
+    self.fileManager = fileManager
+  }
+  func save(fileNamed: String, data: Data) throws {
+    guard let url = makeURL(forFileNamed: fileNamed) else {
+      throw Error.invalidDirectory
     }
-    let fileManager: FileManager
-    init(fileManager: FileManager = .default) {
-        self.fileManager = fileManager
+    if fileManager.fileExists(atPath: url.absoluteString) {
+      throw Error.fileAlreadyExists
     }
-    func save(fileNamed: String, data: Data) throws {
-        guard let url = makeURL(forFileNamed: fileNamed) else {
-            throw Error.invalidDirectory
-        }
-        if fileManager.fileExists(atPath: url.absoluteString) {
-            throw Error.fileAlreadyExists
-        }
-        do {
-            try data.write(to: url)
-        } catch {
-            debugPrint(error)
-            throw Error.writtingFailed
-        }
+    do {
+      try data.write(to: url)
+    } catch {
+      debugPrint(error)
+      throw Error.writtingFailed
     }
-    private func makeURL(forFileNamed fileName: String) -> URL? {
-        guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        return url.appendingPathComponent(fileName)
+  }
+  private func makeURL(forFileNamed fileName: String) -> URL? {
+    guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+      return nil
     }
-    func read(fileNamed: String) throws -> Data {
-         guard let url = makeURL(forFileNamed: fileNamed) else {
-             throw Error.invalidDirectory
-         }
-         guard fileManager.fileExists(atPath: url.absoluteString) else {
-             throw Error.fileNotExists
-         }
-         do {
-             return try Data(contentsOf: url)
-         } catch {
-             debugPrint(error)
-             throw Error.readingFailed
-         }
-     }
-    
+    return url.appendingPathComponent(fileName)
+  }
+  func read(fileNamed: String) throws -> Data {
+    guard let url = makeURL(forFileNamed: fileNamed) else {
+      throw Error.invalidDirectory
+    }
+    guard fileManager.fileExists(atPath: url.absoluteString) else {
+      throw Error.fileNotExists
+    }
+    do {
+      return try Data(contentsOf: url)
+    } catch {
+      debugPrint(error)
+      throw Error.readingFailed
+    }
+  }
+  
 }
 
 class CoreDataProvider: ContactsDataProtocol {
@@ -390,22 +429,22 @@ class CoreDataProvider: ContactsDataProtocol {
 }
 
 /*class CoreDataManager {
-    static let shared = CoreDataManager()
-    private init() {}
-    private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Contacts")
-        container.loadPersistentStores(completionHandler: { _, error in
-            _ = error.map { fatalError("Unresolved error \($0)") }
-        })
-        return container
-    }()
-    
-    var mainContext: NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
-    
-    func backgroundContext() -> NSManagedObjectContext {
-        return persistentContainer.newBackgroundContext()
-    }
-}
-*/
+ static let shared = CoreDataManager()
+ private init() {}
+ private lazy var persistentContainer: NSPersistentContainer = {
+ let container = NSPersistentContainer(name: "Contacts")
+ container.loadPersistentStores(completionHandler: { _, error in
+ _ = error.map { fatalError("Unresolved error \($0)") }
+ })
+ return container
+ }()
+ 
+ var mainContext: NSManagedObjectContext {
+ return persistentContainer.viewContext
+ }
+ 
+ func backgroundContext() -> NSManagedObjectContext {
+ return persistentContainer.newBackgroundContext()
+ }
+ }
+ */

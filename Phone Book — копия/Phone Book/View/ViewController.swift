@@ -20,10 +20,11 @@ class ViewController: UIViewController {
   @IBOutlet var tableView: UITableView!
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
-
- 
+  
+  
   lazy var contacts = controller.data
-  var filteredContacts:[Contact]!
+  var filteredContacts: [Contact]!
+  var searchFoundInField: [Int]!
   var dataToShow: [Contact]! {
     if isFiltering {
       return filteredContacts
@@ -67,6 +68,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     title = "Phone Book"
     filteredContacts = contacts
+    searchFoundInField = []
     tableView.dataSource = self
     tableView.delegate = self
     tableView.backgroundView = nil
@@ -84,10 +86,10 @@ class ViewController: UIViewController {
     let notificationCenter = NotificationCenter.default
     notificationCenter.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification,
                                    object: nil, queue: .main) { (notification) in
-                                    self.handleKeyboard(notification: notification) }
+      self.handleKeyboard(notification: notification) }
     notificationCenter.addObserver(forName: UIResponder.keyboardWillHideNotification,
                                    object: nil, queue: .main) { (notification) in
-                                    self.handleKeyboard(notification: notification) }
+      self.handleKeyboard(notification: notification) }
   }
   
   func handleKeyboard(notification: Notification) {
@@ -97,14 +99,14 @@ class ViewController: UIViewController {
       view.layoutIfNeeded()
       return
     }
-
+    
     guard
       let info = notification.userInfo,
       let keyboardFrame = info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-      else {
-        return
+    else {
+      return
     }
-
+    
     // 2
     let keyboardHeight = keyboardFrame.cgRectValue.size.height
     UIView.animate(withDuration: 0.1, animations: { () -> Void in
@@ -125,7 +127,7 @@ class ViewController: UIViewController {
                                        preferredStyle: .actionSheet)
     
     let action1 = UIAlertAction(title: "Sort by alf",
-                                     style: .default) { [self] (UIAlertAction) in
+                                style: .default) { [self] (UIAlertAction) in
       self.filteredContacts.sort { if case let .name(value) = $0.mainFields.first(where: {$0.type == .name})?.value {
         if case let .name(value2) = $1.mainFields.first(where: {$0.type == .name})?.value {
           return value < value2
@@ -137,7 +139,7 @@ class ViewController: UIViewController {
       reloadTableViewData(with: "No contacts yet")
     }
     let action2 = UIAlertAction(title: "Sort by date",
-                                   style: .default) { [self] (UIAlertAction) in
+                                style: .default) { [self] (UIAlertAction) in
       self.filteredContacts.sort {  if case let .date(value) = $0.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
         if case let .date(value2) = $1.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
           return value < value2
@@ -149,7 +151,7 @@ class ViewController: UIViewController {
       reloadTableViewData(with: "No contacts yet")
     }
     let action1_reversed = UIAlertAction(title: "Sort by alf reversed",
-                                   style: .default) { [self] (UIAlertAction) in
+                                         style: .default) { [self] (UIAlertAction) in
       self.filteredContacts.sort {  if case let .name(value) = $0.mainFields.first(where: {$0.type == .name})?.value {
         if case let .name(value2) = $1.mainFields.first(where: {$0.type == .name})?.value {
           return value > value2
@@ -161,7 +163,7 @@ class ViewController: UIViewController {
       reloadTableViewData(with: "No contacts yet")
     }
     let action2_reversed = UIAlertAction(title: "Sort by date reversed",
-                                   style: .default) { [self] (UIAlertAction) in
+                                         style: .default) { [self] (UIAlertAction) in
       self.filteredContacts.sort {  if case let .date(value) = $0.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
         if case let .date(value2) = $1.mainFields.first(where: {$0.type == .dateOfCreation})?.value {
           return value > value2
@@ -191,21 +193,37 @@ class ViewController: UIViewController {
   
   //MARK: -search
   func filterContentForSearchText(_ searchText: String) {
-    filteredContacts = contacts.filter { (contact: Contact) -> Bool in
+    filteredContacts = contacts.filter{ (contact: Contact) -> Bool in
       var result = false
-      for field in contact.mainFields.filter{$0.type == .name} {
+      for field in contact.mainFields.filter({$0.type == .name}) {
         if case let .name(myValue) = field.value {
           result = result || myValue.contains(searchText.lowercased())
+          if result {
+            let attributeTxt = NSMutableAttributedString(string: myValue)
+            let range: NSRange = attributeTxt.mutableString.range(of: searchText, options: .caseInsensitive)
+            let color: UIColor = .red
+            attributeTxt.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+            contact.searchFoundIn = attributeTxt
+            print(attributeTxt)
+            return result
+          }
         }
       }
-      for field in contact.mainFields.filter{$0.type == .number} {
+      for field in contact.mainFields.filter({$0.type == .number}) {
         if case let .number(myValue) = field.value {
           result = result || myValue.contains(searchText.lowercased())
+          if result {
+            let attributeTxt = NSMutableAttributedString(string: myValue)
+            let range: NSRange = attributeTxt.mutableString.range(of: searchText, options: .caseInsensitive)
+            let color: UIColor = .red
+            attributeTxt.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+            contact.searchFoundIn = attributeTxt
+            print(attributeTxt)
+            return result
+          }
         }
       }
-      
-      
-        return result
+      return result
     }
     
     reloadTableViewData(with: "-")
@@ -222,30 +240,43 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if isFilteringBySearchBar {
-        searchFooter.setIsFilteringToShow(filteredItemCount:
-          filteredContacts.count, of: contacts.count)
-        return dataToShow.count
-      }
-      
-      searchFooter.setNotFiltering()
+      searchFooter.setIsFilteringToShow(filteredItemCount:
+                                          filteredContacts.count, of: contacts.count)
       return dataToShow.count
+    }
+    
+    searchFooter.setNotFiltering()
+    return dataToShow.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //new cell
     let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! MyCell
-    var name:String = ""
-    if case let .name(text) = dataToShow[indexPath.row].mainFields.first(where: {$0.type == .name})?.value {
-       name = text == "" ? "Unnamed" : text
+    var text: String = ""
+    //contact
+    let contact = dataToShow[indexPath.row]
+    //contact name ("Unnamed" if none)
+    if case let .name(data) = contact.mainFields.first(where: {$0.type == .name})?.value {
+      print("1")
+      text = data == "" ? "Unnamed" : data
     }
-    cell.textLabel?.text = name
-    if case let .number(text) = dataToShow[indexPath.row].mainFields.first(where: {$0.type == .number})?.value {
-      if name == "Unnamed" && text != "" {
-        cell.detailTextLabel?.text = "Number: " + text
-      } else {
-        cell.detailTextLabel?.text = nil
+    //set name text
+    cell.textLabel?.text = text
+    if isFiltering{
+      let string = NSMutableAttributedString(string: "found in: ")
+      string.append(contact.searchFoundIn!)
+      cell.detailTextLabel?.attributedText = string
+    } else {
+      //if no name show additional data
+      if case let .number(data) = contact.mainFields.first(where: {$0.type == .number})?.value {
+        if text == "Unnamed" && data != "" {
+          cell.detailTextLabel?.text = "Number: " + data
+        } else {
+          cell.detailTextLabel?.text = nil
+        }
       }
     }
-    cell.contactId = dataToShow[indexPath.row].mainFields.first{$0.type == .id}?.value?.value() as! String
+    cell.contactId = contact.mainFields.first{$0.type == .id}?.value?.value() as! String
     cell.isSelected = false
     return cell
   }
@@ -256,22 +287,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   ) -> UISwipeActionsConfiguration? {
     let action = UIContextualAction(style: .normal,
                                     title: "Delete") { [weak self] (action, view, completionHandler) in
-    guard let self = self else {
+      guard let self = self else {
         return
       }
-    let alert = UIAlertController(title: "Delete",
-                                  message: "Are you sure about that?",
-                                  preferredStyle: UIAlertController.Style.alert)
-    alert.addAction(UIAlertAction(title: "Cancel",
-                                  style: UIAlertAction.Style.default,
-                                  handler: nil))
-    alert.addAction(UIAlertAction(title: "Yes",
-                                  style: UIAlertAction.Style.destructive,
-                                  handler: { action in
-      let id = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row,
-                                                        section: 0)) as! MyCell).contactId!
-      controller.deleteContact(Id: id)
-      self.reloadTableViewData(with: "No contacts yet")
+      let alert = UIAlertController(title: "Delete",
+                                    message: "Are you sure about that?",
+                                    preferredStyle: UIAlertController.Style.alert)
+      alert.addAction(UIAlertAction(title: "Cancel",
+                                    style: UIAlertAction.Style.default,
+                                    handler: nil))
+      alert.addAction(UIAlertAction(title: "Yes",
+                                    style: UIAlertAction.Style.destructive,
+                                    handler: { action in
+        let id = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row,
+                                                          section: 0)) as! MyCell).contactId!
+        controller.deleteContact(Id: id)
+        self.reloadTableViewData(with: "No contacts yet")
       }))
       
       self.present(alert, animated: true, completion: nil)
@@ -283,11 +314,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   //CELL CHOSEN
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
     
+    let currentContactId = (self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0)) as! MyCell).contactId!
     let vc = ContactViewControllerV2.getView(viewMode: .view,
-                                           controller: controller,
-                                           currentContact: controller.getContact(Id: currentContactId))
+                                             controller: controller,
+                                             currentContact: controller.getContact(Id: currentContactId))
     self.navigationController?.pushViewController(vc, animated: true)
     self.tableView.cellForRow(at: IndexPath(row: indexPath.row, section: 0))?.isSelected = false
   }
@@ -298,7 +329,7 @@ extension ViewController: Observer {
   func update(subject: ContactManager) {
     self.contacts = subject.data
     if isFiltering{
-    self.filteredContacts = Array(Set(self.filteredContacts).intersection(Set(self.contacts)))
+      self.filteredContacts = Array(Set(self.filteredContacts).intersection(Set(self.contacts)))
     }
     else {
       self.filteredContacts = contacts
@@ -339,10 +370,10 @@ extension ViewController: UISearchResultsUpdating {
 }
 
 /*extension ViewController: UISearchBarDelegate {
-  func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-    let category = Candy.Category(rawValue:
-      searchBar.scopeButtonTitles![selectedScope])
-    filterContentForSearchText(searchBar.text!, category: category)
-  }
-}
-*/
+ func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+ let category = Candy.Category(rawValue:
+ searchBar.scopeButtonTitles![selectedScope])
+ filterContentForSearchText(searchBar.text!, category: category)
+ }
+ }
+ */

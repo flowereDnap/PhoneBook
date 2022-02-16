@@ -8,14 +8,13 @@
 import UIKit
 
 class StringTableViewCellV2: UITableViewCell, saveCell {
-  
-  
+
   @IBOutlet var label: UILabel!
   @IBOutlet var textField: UITextField!
   
   var delegate: UITextFieldDelegate?
   private var parentView: ContactViewControllerV2?
-  private var item: ContactField? {
+  internal var item: ContactField? {
     didSet {
       label.text = item?.lable
       if case let .name(text) = item?.value {
@@ -81,6 +80,7 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
   func save(){
     if let new = parentView?.currentContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
       parentView?.currentContact?.mainFields[new] = item!
+      print("saved in")
     } else if let new = parentView?.currentContact?.additionalFields.firstIndex(where: {$0.position == item?.position}){
       parentView?.currentContact?.additionalFields[new] = item!
     }
@@ -117,4 +117,5 @@ extension UIResponder {
 
 protocol saveCell: UITableViewCell {
   func save()
+  var item: ContactField? {get set}
 }
