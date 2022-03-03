@@ -29,16 +29,16 @@ class AddTableViewCell: UITableViewCell {
   var delegate:UITextFieldDelegate?
   
   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    
+    // Configure the view for the selected state
+  }
   
   func setUpCell(type:cellType, parentView: ContactViewControllerV2){
     self.type = type
@@ -53,12 +53,12 @@ class AddTableViewCell: UITableViewCell {
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
       let action1 = UIAlertAction(title: "new name",
-                                       style: .default) { [self] (UIAlertAction2) in
+                                  style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .name, isMain: true)
         return
       }
       let action2 = UIAlertAction(title: "new number",
-                                       style: .default) { [self] (UIAlertAction2) in
+                                  style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .number, isMain: true)
         return
       }
@@ -70,12 +70,12 @@ class AddTableViewCell: UITableViewCell {
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
       let action1 = UIAlertAction(title: "new mail",
-                                       style: .default) { [self] (UIAlertAction2) in
+                                  style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .mail, isMain: false)
         return
       }
       let action2 = UIAlertAction(title: "new date of birth",
-                                       style: .default) { [self] (UIAlertAction2) in
+                                  style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .dateOfBirth, isMain: false)
         return
       }
@@ -83,7 +83,7 @@ class AddTableViewCell: UITableViewCell {
       optionMenu.addAction(action2)
       parentView.present(optionMenu, animated: true, completion: nil)
     default:
-        return
+      return
     }
   }
   
@@ -107,7 +107,7 @@ class AddTableViewCell: UITableViewCell {
       field.placeholder = "\(type.rawValue)"
       field.returnKeyType = .continue
       if self.delegate != nil {
-      field.delegate = self.delegate
+        field.delegate = self.delegate
       }
     }
     alert.addAction(UIAlertAction(title: "Cancel",
@@ -120,31 +120,31 @@ class AddTableViewCell: UITableViewCell {
       let lable = fields[0].text
       let value = fields[1].text
       if isMain {
-      let positionOfLast = (self.currentEditingContact.mainFields.last(where: {$0.type == type})?.position ?? 0)
-      var newField: ContactField
-      switch type {
+        let positionOfLast = (self.currentEditingContact.mainFields.last(where: {$0.type == type})?.position ?? 0)
+        var newField: ContactField
+        switch type {
         case .name:
           newField = ContactField(lable: lable, type: type, position: positionOfLast + 1, value: .name(value ?? ""))
         case .number:
           newField = ContactField(lable: lable, type: type, position: positionOfLast + 1, value: .number(value ?? ""))
         default:
           return
-      }
-      
-      self.parentView.saveBeforeReload()
-      for index in 0..<self.currentEditingContact.mainFields.count {
+        }
+        
+        self.parentView.saveBeforeReload()
+        for index in 0..<self.currentEditingContact.mainFields.count {
           if self.currentEditingContact.mainFields[index].position > positionOfLast{
             self.currentEditingContact.mainFields[index].move()
+          }
         }
-      }
-      self.currentEditingContact.mainFields.append(newField)
-      self.currentEditingContact.sort()
-
-      self.parentView.tableView.reloadData()
-      self.parentView.dataChanged = true
+        self.currentEditingContact.mainFields.append(newField)
+        self.currentEditingContact.sort()
+        
+        self.parentView.tableView.reloadData()
+        self.parentView.dataChanged = true
       } else {
         let positionOfLast = (self.currentEditingContact.additionalFields.last(where: {$0.type == type})?.position ?? -1)
-          
+        
         var newField: ContactField
         switch type {
         case .mail:

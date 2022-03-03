@@ -167,7 +167,7 @@ class ContactViewControllerV2: UITableViewController {
         (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
       }
     }
-    controller!.updContact(Id: (currentEditingContact?.mainFields.first{$0.type == .id}?.value?.value() as! String),
+    controller!.updContact(Id: (currentEditingContact?.mainFields.first{$0.type == .id}?.value?.getEmbeddedValue() as! String),
                            mainFields: currentEditingContact?.mainFields,
                            additionalFields: currentEditingContact?.additionalFields)
     viewMode = .view

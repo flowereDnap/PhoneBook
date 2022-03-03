@@ -1,4 +1,5 @@
 import UIKit
+import CloudKit
 
 //  FIXME: What does it mean class Controller?
 class Weak<T: AnyObject> {
@@ -12,8 +13,25 @@ class Weak<T: AnyObject> {
 
 class ContactManager {
   
+  private static var model:Model = Model(dataSaveType: .usdefault)
+  //MARK: -Model management
+  static func getModel() -> Model {
+    return ContactManager.model
+  }
+  func setupModel(dataSaveType: Model.DataSaveType) {
+    print("setup called")
+    let model = Model(dataSaveType: dataSaveType)
+    ContactManager.model = model
+    print("model data: ", model.data)
+    self.data = model.data
+  }
+  
+  
   //Notifier of contact list changed
-  var data: [Contact] = Model.data {
+  var data: [Contact] = getModel().data {
+    willSet{
+      print("will set")
+    }
     didSet{
       notify()
     }
@@ -35,44 +53,33 @@ class ContactManager {
     observers.forEach({ $0.update(subject: self)})
   }
   
-  //Contact manegment
+ 
   
   var count: Int {
     return data.count
   }
-
+  
+ 
+  //MARK: -Contact managment
   func addContact(contact: Contact) {
-    data.append(contact)
-    save()
+    ContactManager.model.dataProvider.addContact(contact: contact)
   }
   
   func getContact(Id: String) -> Contact {
-    return data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
-    })!]
+    ContactManager.model.dataProvider.getContact(Id: Id)
   }
   
   func updContact(Id: String, mainFields: [ContactField]? = nil , additionalFields:[ContactField]?) {
-    if let mainFields = mainFields {
-      data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
-      })!].mainFields = mainFields
-    }
-    if let additionalFields = additionalFields {
-      data[ data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
-      })!].additionalFields = additionalFields
-    }
-    save()
+    ContactManager.model.dataProvider.updContact(Id: Id, mainFields: mainFields, additionalFields: additionalFields)
   }
   
   func deleteContact(Id: String) {
-    
-    data.remove(at: data.firstIndex(where: { (($0.mainFields.first(where: {$0.type == .id})?.value?.value())! as! String) == Id
-    })!)
-    save()
+    ContactManager.model.dataProvider.deleteContact(Id: Id)
   }
   
   //upd of model
   func save() {
-    Model.data = self.data
+    ContactManager.getModel().data = self.data
   }
 }
 

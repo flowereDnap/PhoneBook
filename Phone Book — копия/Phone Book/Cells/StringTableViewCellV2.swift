@@ -8,7 +8,7 @@
 import UIKit
 
 class StringTableViewCellV2: UITableViewCell, saveCell {
-
+  
   @IBOutlet var label: UILabel!
   @IBOutlet var textField: UITextField!
   
@@ -70,10 +70,10 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
     }
     
     if case .name(_) = item?.value {
-        item?.value = .name(textField.text!)
+      item?.value = .name(textField.text!)
     }
     if case .number(_) = item?.value {
-         item?.value = .number(textField.text!)
+      item?.value = .number(textField.text!)
     }
   }
   
@@ -95,23 +95,23 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
 }
 
 extension UITableViewCell {
-    var tableView: UITableView? {
-        return self.next(of: UITableView.self)
-    }
-
-    var indexPath: IndexPath? {
-        return self.tableView?.indexPath(for: self)
-    }
+  var tableView: UITableView? {
+    return self.next(of: UITableView.self)
+  }
+  
+  var indexPath: IndexPath? {
+    return self.tableView?.indexPath(for: self)
+  }
 }
 
 extension UIResponder {
-    /**
-     * Returns the next responder in the responder chain cast to the given type, or
-     * if nil, recurses the chain until the next responder is nil or castable.
-     */
-    func next<U: UIResponder>(of type: U.Type = U.self) -> U? {
-        return self.next.flatMap({ $0 as? U ?? $0.next() })
-    }
+  /**
+   * Returns the next responder in the responder chain cast to the given type, or
+   * if nil, recurses the chain until the next responder is nil or castable.
+   */
+  func next<U: UIResponder>(of type: U.Type = U.self) -> U? {
+    return self.next.flatMap({ $0 as? U ?? $0.next() })
+  }
 }
 
 protocol saveCell: UITableViewCell {

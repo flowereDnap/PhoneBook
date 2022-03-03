@@ -22,7 +22,15 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooter: SearchFooter!
   
   
-  lazy var contacts = controller.data
+  var contacts: [Contact] {
+    get{
+      let data = controller.data
+      return data
+    }
+    set {
+      controller.data = newValue
+    }
+  }
   var filteredContacts: [Contact]!
   var searchFoundInField: [Int]!
   var dataToShow: [Contact]! {
@@ -55,7 +63,10 @@ class ViewController: UIViewController {
     let currHeight = leftBarItem.customView?.heightAnchor.constraint(equalToConstant: 24)
     currHeight?.isActive = true
     
+    let leftleftBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(dataSaveSwitchButtonPressed))
+    
     self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
+    self.navigationItem.leftBarButtonItems = [leftleftBtt]
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
@@ -120,13 +131,13 @@ class ViewController: UIViewController {
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
-  //MARK: -Sort
+  //MARK: -sort
   @objc func sortButtonPressed(_ sender: UIBarButtonItem) {
     let optionMenu = UIAlertController(title: nil,
                                        message: "Choose Option",
                                        preferredStyle: .actionSheet)
     
-    let action1 = UIAlertAction(title: "Sort by alf",
+    let action1 = UIAlertAction(title: "sort by alf",
                                 style: .default) { [self] (UIAlertAction) in
       self.filteredContacts.sort { if case let .name(value) = $0.mainFields.first(where: {$0.type == .name})?.value {
         if case let .name(value2) = $1.mainFields.first(where: {$0.type == .name})?.value {
@@ -189,6 +200,41 @@ class ViewController: UIViewController {
   
   var isSearchBarEmpty: Bool {
     return searchController.searchBar.text?.isEmpty ?? true
+  }
+  
+  //MARK: -dataSaveSwitch
+  @objc func dataSaveSwitchButtonPressed(_ sender: UIBarButtonItem) {
+    let optionMenu = UIAlertController(title: nil,
+                                       message: "Choose Option",
+                                       preferredStyle: .actionSheet)
+    
+    let action1 = UIAlertAction(title: "Save to UserDefaults",
+                                style: .default) { [self] (UIAlertAction) in
+      controller.setupModel(dataSaveType: .usdefault)
+      reloadTableViewData(with: "No contacts yet")
+    }
+    let action2 = UIAlertAction(title: "Save to File",
+                                style: .default) { [self] (UIAlertAction) in
+      controller.setupModel(dataSaveType: .file)
+      reloadTableViewData(with: "No contacts yet")
+    }
+  
+    let action3 = UIAlertAction(title: "Save to CoreData",
+                                         style: .default) { [self] (UIAlertAction) in
+      print("switch in")
+
+      controller.setupModel(dataSaveType: .core)
+      reloadTableViewData(with: "No contacts yet")
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+    
+    optionMenu.addAction(action1)
+    optionMenu.addAction(action2)
+    optionMenu.addAction(action3)
+    optionMenu.addAction(cancelAction)
+    
+    self.present(optionMenu, animated: true, completion: nil)
   }
   
   //MARK: -search
@@ -273,7 +319,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
       }
     }
-    cell.contactId = contact.mainFields.first{$0.type == .id}?.value?.value() as! String
+    cell.contactId = contact.mainFields.first{$0.type == .id}?.value?.getEmbeddedValue() as! String
     cell.isSelected = false
     return cell
   }

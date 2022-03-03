@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19461" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="ContactCore" representedClassName="ContactCore" syncable="YES">
+        <attribute name="searchFoundIn" optional="YES" attributeType="Transformable" customClassName="NSAttributedString"/>
+        <relationship name="additionalFieldsCore" toMany="YES" deletionRule="Nullify" destinationEntity="ContactFieldCore"/>
+        <relationship name="mainFieldsCore" toMany="YES" deletionRule="Nullify" destinationEntity="ContactFieldCore"/>
+        <relationship name="model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ModelCore" inverseName="contacts" inverseEntity="ModelCore"/>
+    </entity>
+    <entity name="ContactFieldCore" representedClassName="ContactFieldCore" syncable="YES">
+        <attribute name="lable" attributeType="String"/>
+        <attribute name="position" attributeType="Integer 64" defaultValueString="-1" usesScalarValueType="YES"/>
+        <attribute name="typeCore" attributeType="String" customClassName="Labels"/>
+        <attribute name="valueCore" optional="YES" attributeType="Transformable" customClassName="Any"/>
+        <attribute name="valueType" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="ModelCore" representedClassName="ModelCore" syncable="YES">
+        <relationship name="contacts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ContactCore" inverseName="model" inverseEntity="ContactCore"/>
+    </entity>
+    <elements>
+        <element name="ContactCore" positionX="-54" positionY="-9" width="128" height="89"/>
+        <element name="ContactFieldCore" positionX="-36" positionY="9" width="128" height="104"/>
+        <element name="ModelCore" positionX="-63" positionY="-18" width="128" height="44"/>
+    </elements>
 </model>

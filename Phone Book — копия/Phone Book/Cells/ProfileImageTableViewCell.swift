@@ -14,25 +14,25 @@ class ProfileImageTableViewCell: UITableViewCell, saveCell {
   var imagePicker: ImagePicker!
   private var parentView: ContactViewControllerV2?
   internal var item: ContactField? {
-        didSet {
-          if case let .image(wrappedImage) = item?.value {
-          let image = wrappedImage.image
-            profilePicture.isUserInteractionEnabled = !(parentView?.viewMode == .view)
-          self.imagePicker = ImagePicker(presentationController: parentView!, delegate: self)
-          let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
-          
-          profilePicture.addGestureRecognizer(tapGestureRecognizer)
-          profilePicture.layer.cornerRadius = profilePicture.frame.size.height / 2
-          profilePicture.image = image
-        }
-        }
-     }
+    didSet {
+      if case let .image(wrappedImage) = item?.value {
+        let image = wrappedImage.image
+        profilePicture.isUserInteractionEnabled = !(parentView?.viewMode == .view)
+        self.imagePicker = ImagePicker(presentationController: parentView!, delegate: self)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
+        
+        profilePicture.addGestureRecognizer(tapGestureRecognizer)
+        profilePicture.layer.cornerRadius = profilePicture.frame.size.height / 2
+        profilePicture.image = image
+      }
+    }
+  }
   
   func setUpCell(parentView:ContactViewControllerV2, item: ContactField) {
     self.parentView = parentView
     self.item = item
   }
-
+  
   override func awakeFromNib() {
     super.awakeFromNib()
     
@@ -76,11 +76,11 @@ extension ProfileImageTableViewCell: UIImagePickerControllerDelegate {
     self.imagePicker.present(from: tappedImage, imageExist: imageExist)
   }
   static var nib:UINib {
-      return UINib(nibName: identifier, bundle: nil)
+    return UINib(nibName: identifier, bundle: nil)
   }
   
   static var identifier: String {
-      return String(describing: self)
+    return String(describing: self)
   }
 }
 
