@@ -48,6 +48,7 @@ public class ContactCore: NSManagedObject {
     let entity = NSEntityDescription.entity(forEntityName: "ContactCore", in: context)!
     super.init(entity: entity, insertInto: context)
     for field in contact.mainFields {
+      print("coreCont init: ", field.type)
       self.addToMainFields(ContactFieldCore(context: context, contactField: field))
     }
     for field in contact.otherFields {

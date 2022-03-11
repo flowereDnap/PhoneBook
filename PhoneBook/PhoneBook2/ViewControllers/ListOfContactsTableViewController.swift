@@ -306,7 +306,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     //contact
     let contact = dataToShow[indexPath.row]
     //contact name ("Unnamed" if none)
-    if let name = contact.mainFields.first(where: {$0.type == .name})?.value as? String {
+    let names = contact.mainFields.filter({$0.type == .name})
+    let name = names.min(by: {$0.position < $1.position})
+    if let name = name?.value as? String {
       if name != "" {
         text = name
       }

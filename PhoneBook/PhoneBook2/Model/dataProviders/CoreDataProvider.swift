@@ -25,15 +25,7 @@ class CoreDataProvider: DataProvider {
   }
   
   init(){
-    do{
-      loadDataCore = try context.fetch(ContactCore.fetchRequest())
-    } catch {
-      
-    }
-    for el in loadDataCore{
-      context.delete(el)
-    }
-    save()
+    fetch()
   }
   
   func fetch(){
@@ -42,6 +34,7 @@ class CoreDataProvider: DataProvider {
     } catch {
       
     }
+    loadData = []
     for coreContact in loadDataCore {
       loadData.append(Contact(coreContact: coreContact))
     }
@@ -71,6 +64,7 @@ class CoreDataProvider: DataProvider {
     
     //order matters
     deleteContact(id: contact.id)
+    
     ContactCore(context: context, contact: contact)
     save()
   }

@@ -64,8 +64,6 @@ public class ContactField: Codable{
   init(contactFieldCore: ContactFieldCore) {
     self.lable = contactFieldCore.lable
     self.position = Int(contactFieldCore.position)
-    
-    
     self.type = contactFieldCore.type
     self.value = contactFieldCore.value
     

@@ -13,6 +13,7 @@
 		CE010F5127D7885F00E5D335 /* UserDefaultsDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */; };
 		CE010F5327D7C1BE00E5D335 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */; };
 		CE010F5727D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */; };
+		CE71962327DB4EB600DF1623 /* FileDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71962227DB4EB600DF1623 /* FileDataProvider.swift */; };
 		CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */; };
 		CEBA0C4227D6201F00EE4FC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */; };
 		CEBA0C4727D6202000EE4FC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEBA0C4527D6202000EE4FC3 /* Main.storyboard */; };
@@ -49,6 +50,7 @@
 		CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsDataProvider.swift; sourceTree = "<group>"; };
 		CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataProvider.swift; sourceTree = "<group>"; };
 		CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactFieldCore+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CE71962227DB4EB600DF1623 /* FileDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDataProvider.swift; sourceTree = "<group>"; };
 		CEBA0C3C27D6201F00EE4FC3 /* PhoneBook2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBook2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */,
+				CE71962227DB4EB600DF1623 /* FileDataProvider.swift */,
 				CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */,
 			);
 			path = dataProviders;
@@ -296,6 +299,7 @@
 				CEBA0C4A27D6202000EE4FC3 /* PhoneBook2.xcdatamodeld in Sources */,
 				CE010F4D27D6D5C800E5D335 /* NumberFieldDelegate.swift in Sources */,
 				CEBA0C6527D6322C00EE4FC3 /* DataProviderProtocol.swift in Sources */,
+				CE71962327DB4EB600DF1623 /* FileDataProvider.swift in Sources */,
 				CEBA0CAF27D6C3D700EE4FC3 /* Toast.swift in Sources */,
 				CEBA0C9527D6567800EE4FC3 /* ContactCore+CoreDataProperties.swift in Sources */,
 				CEBA0CAD27D6C3B500EE4FC3 /* SearchBarFooter.swift in Sources */,

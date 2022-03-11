@@ -17,7 +17,7 @@ class DataManager {
   
   private static var dataProvider: DataProvider = UserDefaultsDataProvider()
   
-  static let contactListKey = "contactsList0"
+  static let contactListKey = "contactsList4"
   static var data: [Contact] {
     get {
       return dataProvider.data }
@@ -43,6 +43,7 @@ class DataManager {
   
   public static func updContact(contact: Contact) {
     dataProvider.updContact(contact: contact)
+    dataProvider.save()
   }
   
   public static func deleteContact(id: String) {
@@ -52,7 +53,6 @@ class DataManager {
   }
   
   public static func save() {
-    dataProvider.data = data
     dataProvider.save()
     contactsView.reloadTableViewData(with: "")
   }

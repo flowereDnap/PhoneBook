@@ -26,6 +26,7 @@ public class ContactFieldCore: NSManagedObject {
   var value: Any? {
     set {
       let value: Any = newValue ?? type.defaultValue()
+      print("set :", type)
       switch type {
       case .image:
         valueAsData = (value as! UIImage).pngData()!
@@ -58,8 +59,8 @@ public class ContactFieldCore: NSManagedObject {
     super.init(entity: entity, insertInto: context)
     self.lable = contactField.lable
     self.position = Int64(contactField.position)
-    self.value = contactField.value
     self.type = contactField.type
+    self.value = contactField.value
   }
   
   public init(context: NSManagedObjectContext,
@@ -76,8 +77,10 @@ public class ContactFieldCore: NSManagedObject {
       self.lable = typeOfValue // typeOfValue it self is a row value of type
     }
     self.value = value
+    self.position = Int64(position)
+    
   }
-  
+ 
   @objc
   override private init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
     super.init(entity: entity, insertInto: context)

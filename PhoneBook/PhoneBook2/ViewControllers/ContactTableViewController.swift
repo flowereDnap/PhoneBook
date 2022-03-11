@@ -32,10 +32,8 @@ class ContactViewController: UITableViewController {
     let vc: ContactViewController = mainStoryboard.instantiateViewController(withIdentifier: "ContactScene") as! ContactViewController
     //toDo
     vc.viewMode = viewMode
-    print(currentContact.mainFields.first{$0.type == .name}?.value )
     vc.currentContact = currentContact
     vc.currentEditingContact = currentContact.copy()
-    print(vc.currentEditingContact.mainFields.first{$0.type == .name}?.value )
     return vc
   }
   
@@ -151,6 +149,7 @@ class ContactViewController: UITableViewController {
       saveDataFromCells()
       //upd contact
       currentContact = currentEditingContact
+      DataManager.updContact(contact: currentEditingContact)
       //save changes
       DataManager.save()
       viewMode = .view
@@ -203,7 +202,7 @@ class ContactViewController: UITableViewController {
 
 
 
-
+//MARK: -TableView
 extension ContactViewController {
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 2
@@ -212,12 +211,12 @@ extension ContactViewController {
     switch section{
     case 0:
       var result = currentEditingContact?.mainFields.count ?? 0
-
       if !(self.viewMode == .view) {
         result = result + 1
       }
       return result
     case 1:
+      
       var result = currentEditingContact?.otherFields.count ?? 0
       if !(self.viewMode == .view) {
         result = result + 1
@@ -238,7 +237,6 @@ extension ContactViewController {
       break
     }
     
-    print("item type: ", item?.type, "item pos: ", item?.position , item?.value)
     switch item?.type{
     case .date:
       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2

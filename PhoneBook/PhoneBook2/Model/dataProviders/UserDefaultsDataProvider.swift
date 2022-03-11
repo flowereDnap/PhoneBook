@@ -9,7 +9,9 @@ import Foundation
 
 class UserDefaultsDataProvider: DataProvider {
   func updContact(contact: Contact) {
-    //no need cotact updeted since its ref type
+    let changingContact = data.first{$0.id == contact.id}
+    changingContact?.mainFields = contact.mainFields
+    changingContact?.otherFields = contact.otherFields
   }
   
   func addContact() -> Contact {
@@ -58,7 +60,7 @@ class UserDefaultsDataProvider: DataProvider {
   }
   
   init() {
-    self.data = dataLoad.map{$0.copy()}
+    self.data = dataLoad
   }
   //MARK: -Contact managment
   
