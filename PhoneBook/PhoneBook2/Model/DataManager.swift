@@ -17,7 +17,7 @@ class DataManager {
   
   private static var dataProvider: DataProvider = UserDefaultsDataProvider()
   
-  static let contactListKey = "contactsList4"
+  static let contactListKey = "contactsList5"
   static var data: [Contact] {
     get {
       return dataProvider.data }
@@ -27,12 +27,12 @@ class DataManager {
   }
   static var contactsView: ViewController!
   
-  static func setUpProvider(dataProv: DataProv = .userDefaults) {
+  static func setUpProvider(dataProv: DataProv = .file) {
     switch dataProv {
     case .userDefaults:
       dataProvider = UserDefaultsDataProvider()
     case .file:
-      dataProvider = UserDefaultsDataProvider()
+      dataProvider = FileDataProvider()
     case .core:
       dataProvider = CoreDataProvider()
     }

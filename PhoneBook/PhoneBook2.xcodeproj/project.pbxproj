@@ -13,6 +13,8 @@
 		CE010F5127D7885F00E5D335 /* UserDefaultsDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */; };
 		CE010F5327D7C1BE00E5D335 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */; };
 		CE010F5727D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */; };
+		CE18FD0327DF63D500C3F903 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18FD0127DF63D500C3F903 /* ContactTableViewCell.swift */; };
+		CE18FD0427DF63D500C3F903 /* ContactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18FD0227DF63D500C3F903 /* ContactTableViewCell.xib */; };
 		CE71962327DB4EB600DF1623 /* FileDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71962227DB4EB600DF1623 /* FileDataProvider.swift */; };
 		CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */; };
 		CEBA0C4227D6201F00EE4FC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */; };
@@ -50,6 +52,8 @@
 		CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsDataProvider.swift; sourceTree = "<group>"; };
 		CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataProvider.swift; sourceTree = "<group>"; };
 		CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactFieldCore+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CE18FD0127DF63D500C3F903 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
+		CE18FD0227DF63D500C3F903 /* ContactTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactTableViewCell.xib; sourceTree = "<group>"; };
 		CE71962227DB4EB600DF1623 /* FileDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDataProvider.swift; sourceTree = "<group>"; };
 		CEBA0C3C27D6201F00EE4FC3 /* PhoneBook2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBook2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -182,6 +186,8 @@
 				CEBA0C9F27D6807700EE4FC3 /* ProfileImageTableViewCell.xib */,
 				CEBA0CA227D6807800EE4FC3 /* StringTableViewCellV2.swift */,
 				CEBA0C9E27D6807700EE4FC3 /* StringTableViewCellV2.xib */,
+				CE18FD0127DF63D500C3F903 /* ContactTableViewCell.swift */,
+				CE18FD0227DF63D500C3F903 /* ContactTableViewCell.xib */,
 			);
 			path = CustomCells;
 			sourceTree = "<group>";
@@ -267,6 +273,7 @@
 			files = (
 				CEBA0CA427D6807800EE4FC3 /* StringTableViewCellV2.xib in Resources */,
 				CEBA0CA727D6807800EE4FC3 /* AddTableViewCell.xib in Resources */,
+				CE18FD0427DF63D500C3F903 /* ContactTableViewCell.xib in Resources */,
 				CEBA0CA527D6807800EE4FC3 /* ProfileImageTableViewCell.xib in Resources */,
 				CEBA0C4F27D6202300EE4FC3 /* LaunchScreen.storyboard in Resources */,
 				CEBA0C4C27D6202300EE4FC3 /* Assets.xcassets in Resources */,
@@ -309,6 +316,7 @@
 				CEBA0C4227D6201F00EE4FC3 /* SceneDelegate.swift in Sources */,
 				CEBA0C6027D62E7200EE4FC3 /* ListOfContactsTableViewController.swift in Sources */,
 				CE010F5327D7C1BE00E5D335 /* CoreDataProvider.swift in Sources */,
+				CE18FD0327DF63D500C3F903 /* ContactTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,7 +5,7 @@
 //  Created by User on 07.03.2022.
 //
 
-import Foundation
+
 import UIKit
 
 public enum Types: String , Codable{
@@ -30,7 +30,7 @@ public enum Types: String , Codable{
   func defaultValue()->Any{
     switch self {
     case .image:
-      return UIImage(systemName: "face.smiling")!
+      return UIImage(named: "contactDefaultImage")!
     case .name:
       return ""
     case .number:

@@ -10,7 +10,7 @@ import UIKit
 public class Contact: Codable, Copyable{
   
   private enum CodingKeys: String, CodingKey {
-    case mainFields, otherFields, id, dateOfCreation
+    case id, dateOfCreation, mainFields, otherFields
   }
   
   let id: String
@@ -91,8 +91,12 @@ public class Contact: Codable, Copyable{
   required init(instance: Contact) {
    self.id = instance.id
    self.dateOfCreation = instance.dateOfCreation
-   self.mainFields = instance.mainFields
-   self.otherFields = instance.otherFields
+    for field in instance.mainFields {
+      self.mainFields.append(field.copy())
+    }
+    for field in instance.otherFields {
+      self.otherFields.append(field.copy())
+    }
  }
 }
 

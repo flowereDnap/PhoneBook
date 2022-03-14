@@ -6,11 +6,11 @@ protocol Observer: AnyObject {
   func update(subject: DataManager)
 }
 
-enum FilterMode{
+enum Filters: String , Decodable, CaseIterable{
+  case none
   case alf
   case date
 }
-
 
 
 
@@ -21,7 +21,7 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
   
-  var filterMode:FilterMode = .alf
+  var filterMode:Filters = .none
   var contacts: [Contact] {
     get{
       let data = DataManager.data
@@ -77,6 +77,11 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    tableView?.register(ContactTableViewCell.nib, forCellReuseIdentifier: ContactTableViewCell.identifier)
+    tableView?.rowHeight = UITableView.automaticDimension
+    tableView?.estimatedRowHeight = 80
+    
     title = "Phone Book"
     filteredContacts = contacts
     searchFoundInField = []
@@ -90,6 +95,9 @@ class ViewController: UIViewController {
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
+    //searchController.searchBar.scopeButtonTitles = Filters.allCases.map{$0.rawValue}
+    //searchController.searchBar.delegate = self
+    
     navigationItem.hidesSearchBarWhenScrolling = false
     navigationItem.searchController = searchController
     definesPresentationContext = true
@@ -276,7 +284,7 @@ class ViewController: UIViewController {
       }
       return false
     }
-      self.reloadTableViewData(with: "-")
+    self.reloadTableViewData(with: "-")
   }
 }
 
@@ -301,36 +309,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     //new cell
-    let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! MyCell
-    var text: String = "Unnamed"
-    //contact
+    let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.identifier, for: indexPath) as! ContactTableViewCell
     let contact = dataToShow[indexPath.row]
-    //contact name ("Unnamed" if none)
-    let names = contact.mainFields.filter({$0.type == .name})
-    let name = names.min(by: {$0.position < $1.position})
-    if let name = name?.value as? String {
-      if name != "" {
-        text = name
-      }
-    }
-    //set name text
-    cell.textLabel?.text = text
-    if isFiltering{
-      let string = NSMutableAttributedString(string: "found in: ")
-      string.append(contact.searchFoundIn!)
-      cell.detailTextLabel?.attributedText = string
-    } else {
-      //if no name show additional data
-      if let number = contact.mainFields.first(where: {$0.type == .number})?.value as? String {
-        if text == "Unnamed" && number != "" {
-          cell.detailTextLabel?.text = "Number: " + number
-        } else {
-          cell.detailTextLabel?.text = nil
-        }
-      }
-    }
-    cell.contactId = contact.id
-    cell.isSelected = false
+    cell.setUpCell(contact: contact, isFilteringBySearchBar: self.isFilteringBySearchBar)
     return cell
   }
   
@@ -406,5 +387,48 @@ extension ViewController: UISearchResultsUpdating {
   func updateSearchResults(for searchController: UISearchController) {
     let searchBar = searchController.searchBar
     filterContentForSearchText(searchBar.text!)
+  }
+}
+
+extension ViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+    
+    let filter = Filters(rawValue:  searchBar.scopeButtonTitles![selectedScope])!
+    print(filter)
+    switch filter {
+    case .none:
+      filtersOn = false
+    case .alf:
+      self.filteredContacts.sort {
+        let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
+        let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
+        return val1 < val2
+      }
+      print(self.filteredContacts)
+      filtersOn = true
+    case .date:
+      self.filteredContacts.sort {
+        let val1 = $0.dateOfCreation
+        let val2 = $1.dateOfCreation
+        return val1 < val2
+      }
+      filtersOn = true
+    default:
+      break
+    }
+    /*self.filteredContacts.sort {
+      let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
+      let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
+      return val1 > val2
+    }
+    
+    self.filteredContacts.sort {
+      let val1 = $0.dateOfCreation
+      let val2 = $1.dateOfCreation
+      return val1 > val2
+    }
+    */
+    reloadTableViewData(with: "No contacts yet")
+    
   }
 }

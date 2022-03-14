@@ -8,7 +8,8 @@
 import UIKit
 
 
-public class ContactField: Codable{
+public class ContactField: Codable, Copyable{
+ 
   
   private enum CodingKeys: String, CodingKey {
           case position
@@ -67,6 +68,13 @@ public class ContactField: Codable{
     self.type = contactFieldCore.type
     self.value = contactFieldCore.value
     
+  }
+  
+  required init(instance: ContactField) {
+    self.type = instance.type
+    self.valueAsData = instance.valueAsData
+    self.position = instance.position
+    self.lable = instance.lable
   }
   
 }

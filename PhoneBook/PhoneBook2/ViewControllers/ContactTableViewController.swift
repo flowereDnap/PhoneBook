@@ -95,6 +95,7 @@ class ContactViewController: UITableViewController {
   @objc func editCancelButtonPressed(_ sender: UIButton){
     self.viewMode = .view
     currentEditingContact = currentContact?.copy()
+    self.dataChanged = false
     viewWillAppear(false)
   }
   
