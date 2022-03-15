@@ -7,8 +7,8 @@ protocol Observer: AnyObject {
 }
 
 enum SortType: String , Decodable, CaseIterable{
-  case alf
-  case reAlf = "re-alf"
+  case alph
+  case reAlph = "re-alph"
   case date
   case reDate = "re-date"
 }
@@ -22,7 +22,7 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
   
-  var sortMode:SortType = .alf
+  var sortMode:SortType = .alph
   var contacts: [Contact] {
     get{
       let data = DataManager.data
@@ -357,13 +357,13 @@ extension ViewController {
     self.sortMode = filter
     var toastText: String
     switch filter {
-    case .alf:
-      toastText = "filtered by alfabet"
+    case .alph:
+      toastText = "filtered by alphabet"
     case .date:
       toastText = "filtered by date"
 
-    case .reAlf:
-      toastText = "reverse filtered by alfabet"
+    case .reAlph:
+      toastText = "reverse filtered by alphabet"
     case .reDate:
       toastText = "reverse filtered by date"
     }
@@ -372,7 +372,7 @@ extension ViewController {
   }
   func sortContacts(sorter:SortType){
     switch sorter {
-    case .alf:
+    case .alph:
       self.contacts.sort {
         let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
         let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
@@ -384,7 +384,7 @@ extension ViewController {
         let val2 = $1.dateOfCreation
         return val1 < val2
       }
-    case .reAlf:
+    case .reAlph:
       self.contacts.sort {
         let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
         let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
