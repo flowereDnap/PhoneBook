@@ -6,10 +6,11 @@ protocol Observer: AnyObject {
   func update(subject: DataManager)
 }
 
-enum Filters: String , Decodable, CaseIterable{
-  case none
+enum SortType: String , Decodable, CaseIterable{
   case alf
+  case reAlf = "re-alf"
   case date
+  case reDate = "re-date"
 }
 
 
@@ -21,7 +22,7 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
   
-  var filterMode:Filters = .none
+  var sortMode:SortType = .alf
   var contacts: [Contact] {
     get{
       let data = DataManager.data
@@ -29,6 +30,7 @@ class ViewController: UIViewController {
     }
     set {
       DataManager.data = newValue
+      filteredContacts = newValue
     }
   }
   var filteredContacts: [Contact]!
@@ -40,12 +42,11 @@ class ViewController: UIViewController {
       return contacts
     }
   }
-  var filtersOn: Bool = false
   var isFilteringBySearchBar: Bool {
     return searchController.isActive && !isSearchBarEmpty
   }
   var isFiltering: Bool {
-    return isFilteringBySearchBar || filtersOn
+    return isFilteringBySearchBar
   }
   
   let searchController = UISearchController(searchResultsController: nil)
@@ -55,7 +56,8 @@ class ViewController: UIViewController {
     let menuBtn = UIButton(type: .custom)
     menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
     menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
-    menuBtn.addTarget(self, action: #selector(sortButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+    menuBtn.showsMenuAsPrimaryAction = true
+    menuBtn.menu = makeMenu()
     
     let leftBarItem = UIBarButtonItem(customView: menuBtn)
     let currWidth = leftBarItem.customView?.widthAnchor.constraint(equalToConstant: 24)
@@ -71,7 +73,8 @@ class ViewController: UIViewController {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
     self.navigationItem.searchController = searchController
-    filtersOn = false
+    
+    sortContacts(sorter: sortMode)
     reloadTableViewData(with: "No contacts yet")
   }
   
@@ -139,68 +142,7 @@ class ViewController: UIViewController {
     let vc = ContactViewController.getView(viewMode: .create, currentContact: newContact)
     self.navigationController?.pushViewController(vc, animated: true)
   }
-  
-  //MARK: -sort
-  @objc func sortButtonPressed(_ sender: UIBarButtonItem) {
-    let optionMenu = UIAlertController(title: nil,
-                                       message: "Choose Option",
-                                       preferredStyle: .actionSheet)
-    
-    let action1 = UIAlertAction(title: "sort by alf",
-                                style: .default) { [self] (UIAlertAction) in
-      self.filteredContacts.sort {
-        let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
-        let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
-        return val1 < val2
-      }
-    }
-    filtersOn = true
-    reloadTableViewData(with: "No contacts yet")
-    let action2 = UIAlertAction(title: "Sort by date",
-                                style: .default) { [self] (UIAlertAction) in
-      
-      self.filteredContacts.sort {
-        let val1 = $0.dateOfCreation
-        let val2 = $1.dateOfCreation
-        return val1 < val2
-      }
-      filtersOn = true
-      reloadTableViewData(with: "No contacts yet")
-    }
-    let action1_reversed = UIAlertAction(title: "Sort by alf reversed",
-                                         style: .default) {[self] (UIAlertAction) in
-      
-      self.filteredContacts.sort {
-        let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
-        let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
-        return val1 > val2
-      }
-      filtersOn = true
-      reloadTableViewData(with: "No contacts yet")
-    }
-    let action2_reversed = UIAlertAction(title: "Sort by date reversed",
-                                         style: .default) {[self] (UIAlertAction) in
-      
-      self.filteredContacts.sort {
-        let val1 = $0.dateOfCreation
-        let val2 = $1.dateOfCreation
-        return val1 > val2
-      }
-      filtersOn = true
-      reloadTableViewData(with: "No contacts yet")
-    }
-    
-    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-    
-    optionMenu.addAction(action1)
-    optionMenu.addAction(action1_reversed)
-    optionMenu.addAction(action2)
-    optionMenu.addAction(action2_reversed)
-    optionMenu.addAction(cancelAction)
-    
-    self.present(optionMenu, animated: true, completion: nil)
-  }
-  
+
   var isSearchBarEmpty: Bool {
     return searchController.searchBar.text?.isEmpty ?? true
   }
@@ -214,21 +156,21 @@ class ViewController: UIViewController {
     let action1 = UIAlertAction(title: "Save to UserDefaults",
                                 style: .default) { [self] (UIAlertAction) in
       DataManager.setUpProvider(dataProv: .userDefaults)
-      reloadTableViewData(with: "No contacts yet")
-      self.showToast(message: "loaded with UserDefaults", font: .systemFont(ofSize: 12.0))
+      viewWillAppear(false)
+      self.showToast(message: "loaded with UserDefaults")
     }
     let action2 = UIAlertAction(title: "Save to File",
                                 style: .default) { [self] (UIAlertAction) in
       DataManager.setUpProvider(dataProv: .file)
-      reloadTableViewData(with: "No contacts yet")
-      self.showToast(message: "loaded with file", font: .systemFont(ofSize: 12.0))
+      viewWillAppear(false)
+      self.showToast(message: "loaded with file")
     }
     
     let action3 = UIAlertAction(title: "Save to CoreData",
                                 style: .default) { [self] (UIAlertAction) in
       DataManager.setUpProvider(dataProv: .core)
-      reloadTableViewData(with: "No contacts yet")
-      self.showToast(message: "loaded with core", font: .systemFont(ofSize: 12.0))
+      viewWillAppear(false)
+      self.showToast(message: "loaded with core")
     }
     
     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -390,45 +332,72 @@ extension ViewController: UISearchResultsUpdating {
   }
 }
 
-extension ViewController: UISearchBarDelegate {
-  func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-    
-    let filter = Filters(rawValue:  searchBar.scopeButtonTitles![selectedScope])!
-    print(filter)
+extension ViewController {
+  func makeMenu()
+    -> UIMenu {
+      let filterButtonTitles = SortType.allCases.map{$0.rawValue}
+      let filterActions = filterButtonTitles
+            .enumerated()
+            .map { index, title in
+              return UIAction(title: title,
+                              identifier: UIAction.Identifier(title),
+                              handler: self.filterHandler)
+            }
+          
+          return UIMenu(title: "Filter",
+                        image: UIImage(systemName: "star.circle"),
+                        options: .displayInline,
+                        children: filterActions)
+  }
+  
+  func filterHandler(from action: UIAction) {
+    guard let filter = SortType(rawValue: action.identifier.rawValue) else {
+      return
+    }
+    self.sortMode = filter
+    var toastText: String
     switch filter {
-    case .none:
-      filtersOn = false
     case .alf:
-      self.filteredContacts.sort {
+      toastText = "filtered by alfabet"
+    case .date:
+      toastText = "filtered by date"
+
+    case .reAlf:
+      toastText = "reverse filtered by alfabet"
+    case .reDate:
+      toastText = "reverse filtered by date"
+    }
+    sortContacts(sorter: filter)
+    showToast(message: toastText)
+  }
+  func sortContacts(sorter:SortType){
+    switch sorter {
+    case .alf:
+      self.contacts.sort {
         let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
         let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
         return val1 < val2
       }
-      print(self.filteredContacts)
-      filtersOn = true
     case .date:
-      self.filteredContacts.sort {
+      self.contacts.sort {
         let val1 = $0.dateOfCreation
         let val2 = $1.dateOfCreation
         return val1 < val2
       }
-      filtersOn = true
-    default:
-      break
+    case .reAlf:
+      self.contacts.sort {
+        let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
+        let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
+        return val1 > val2
+      }
+    case .reDate:
+      self.contacts.sort {
+        let val1 = $0.dateOfCreation
+        let val2 = $1.dateOfCreation
+        return val1 > val2
+      }
     }
-    /*self.filteredContacts.sort {
-      let val1 = $0.mainFields.first{$0.type == .name}?.value as? String ?? ""
-      let val2 = $1.mainFields.first{$0.type == .name}?.value as? String ?? ""
-      return val1 > val2
-    }
-    
-    self.filteredContacts.sort {
-      let val1 = $0.dateOfCreation
-      let val2 = $1.dateOfCreation
-      return val1 > val2
-    }
-    */
-    reloadTableViewData(with: "No contacts yet")
-    
+    reloadTableViewData(with: "")
   }
 }
+
