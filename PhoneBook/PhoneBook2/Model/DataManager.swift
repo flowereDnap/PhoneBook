@@ -7,10 +7,11 @@
 
 import UIKit
 
-enum DataProv{
+enum DataProv: String, CaseIterable{
   case userDefaults
   case file
   case core
+  case server
 }
 
 class DataManager {
@@ -18,6 +19,8 @@ class DataManager {
   private static var dataProvider: DataProvider = UserDefaultsDataProvider()
   
   static let contactListKey = "contactsList5"
+  
+  static var user:String!
   static var data: [Contact] {
     get {
       return dataProvider.data }
@@ -35,6 +38,8 @@ class DataManager {
       dataProvider = FileDataProvider()
     case .core:
       dataProvider = CoreDataProvider()
+    case .server:
+      dataProvider = ApiClient()
     }
   }
   public static func addContact()->Contact{

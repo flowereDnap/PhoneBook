@@ -13,8 +13,16 @@
 		CE010F5127D7885F00E5D335 /* UserDefaultsDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5027D7885F00E5D335 /* UserDefaultsDataProvider.swift */; };
 		CE010F5327D7C1BE00E5D335 /* CoreDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5227D7C1BE00E5D335 /* CoreDataProvider.swift */; };
 		CE010F5727D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */; };
+		CE1019DA27E4E65600EA8E90 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE1019D927E4E65600EA8E90 /* FirebaseAnalytics */; };
+		CE1019DC27E4E65600EA8E90 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE1019DB27E4E65600EA8E90 /* FirebaseAuth */; };
+		CE1019DE27E4E65600EA8E90 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CE1019DD27E4E65600EA8E90 /* FirebaseFirestore */; };
+		CE1019E027E4E65600EA8E90 /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = CE1019DF27E4E65600EA8E90 /* FirebaseFirestoreSwift-Beta */; };
 		CE18FD0327DF63D500C3F903 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18FD0127DF63D500C3F903 /* ContactTableViewCell.swift */; };
 		CE18FD0427DF63D500C3F903 /* ContactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18FD0227DF63D500C3F903 /* ContactTableViewCell.xib */; };
+		CE4D541D27E3B3070019CEFE /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D541C27E3B3070019CEFE /* ApiClient.swift */; };
+		CE4D541F27E494780019CEFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4D541E27E494780019CEFE /* GoogleService-Info.plist */; };
+		CE4D542427E4A68B0019CEFE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D542327E4A68B0019CEFE /* LoginViewController.swift */; };
+		CE6DBBD727E7674B00EBE22B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DBBD627E7674B00EBE22B /* User.swift */; };
 		CE71962327DB4EB600DF1623 /* FileDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71962227DB4EB600DF1623 /* FileDataProvider.swift */; };
 		CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */; };
 		CEBA0C4227D6201F00EE4FC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */; };
@@ -54,6 +62,10 @@
 		CE010F5527D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactFieldCore+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CE18FD0127DF63D500C3F903 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
 		CE18FD0227DF63D500C3F903 /* ContactTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactTableViewCell.xib; sourceTree = "<group>"; };
+		CE4D541C27E3B3070019CEFE /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		CE4D541E27E494780019CEFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE4D542327E4A68B0019CEFE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		CE6DBBD627E7674B00EBE22B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CE71962227DB4EB600DF1623 /* FileDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDataProvider.swift; sourceTree = "<group>"; };
 		CEBA0C3C27D6201F00EE4FC3 /* PhoneBook2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBook2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +103,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE1019DA27E4E65600EA8E90 /* FirebaseAnalytics in Frameworks */,
+				CE1019E027E4E65600EA8E90 /* FirebaseFirestoreSwift-Beta in Frameworks */,
+				CE1019DC27E4E65600EA8E90 /* FirebaseAuth in Frameworks */,
+				CE1019DE27E4E65600EA8E90 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +121,15 @@
 				CE010F4E27D6D60B00E5D335 /* MailFieldDelegate.swift */,
 			);
 			path = TextFieldDelegates;
+			sourceTree = "<group>";
+		};
+		CE4D541B27E3B2DE0019CEFE /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				CE4D541C27E3B3070019CEFE /* ApiClient.swift */,
+				CE6DBBD627E7674B00EBE22B /* User.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		CEBA0C3327D6201F00EE4FC3 = {
@@ -127,6 +152,7 @@
 		CEBA0C3E27D6201F00EE4FC3 /* PhoneBook2 */ = {
 			isa = PBXGroup;
 			children = (
+				CE4D541B27E3B2DE0019CEFE /* Network */,
 				CEBA0C4827D6202000EE4FC3 /* PhoneBook2.xcdatamodeld */,
 				CEBA0C5627D6213900EE4FC3 /* Model */,
 				CEBA0C6127D631BE00EE4FC3 /* CoreClasses */,
@@ -139,6 +165,7 @@
 				CEBA0C4B27D6202300EE4FC3 /* Assets.xcassets */,
 				CEBA0C4D27D6202300EE4FC3 /* LaunchScreen.storyboard */,
 				CEBA0C5027D6202300EE4FC3 /* Info.plist */,
+				CE4D541E27E494780019CEFE /* GoogleService-Info.plist */,
 			);
 			path = PhoneBook2;
 			sourceTree = "<group>";
@@ -197,6 +224,7 @@
 			children = (
 				CEBA0C5F27D62E7200EE4FC3 /* ListOfContactsTableViewController.swift */,
 				CEBA0C9227D649EF00EE4FC3 /* ContactTableViewController.swift */,
+				CE4D542327E4A68B0019CEFE /* LoginViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -229,6 +257,12 @@
 			dependencies = (
 			);
 			name = PhoneBook2;
+			packageProductDependencies = (
+				CE1019D927E4E65600EA8E90 /* FirebaseAnalytics */,
+				CE1019DB27E4E65600EA8E90 /* FirebaseAuth */,
+				CE1019DD27E4E65600EA8E90 /* FirebaseFirestore */,
+				CE1019DF27E4E65600EA8E90 /* FirebaseFirestoreSwift-Beta */,
+			);
 			productName = PhoneBook2;
 			productReference = CEBA0C3C27D6201F00EE4FC3 /* PhoneBook2.app */;
 			productType = "com.apple.product-type.application";
@@ -257,6 +291,9 @@
 				Base,
 			);
 			mainGroup = CEBA0C3327D6201F00EE4FC3;
+			packageReferences = (
+				CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = CEBA0C3D27D6201F00EE4FC3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -272,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEBA0CA427D6807800EE4FC3 /* StringTableViewCellV2.xib in Resources */,
+				CE4D541F27E494780019CEFE /* GoogleService-Info.plist in Resources */,
 				CEBA0CA727D6807800EE4FC3 /* AddTableViewCell.xib in Resources */,
 				CE18FD0427DF63D500C3F903 /* ContactTableViewCell.xib in Resources */,
 				CEBA0CA527D6807800EE4FC3 /* ProfileImageTableViewCell.xib in Resources */,
@@ -292,6 +330,7 @@
 				CEBA0CA327D6807800EE4FC3 /* ProfileImageTableViewCell.swift in Sources */,
 				CE010F4B27D6D59400E5D335 /* NameFieldDelegate.swift in Sources */,
 				CEBA0C7B27D6351B00EE4FC3 /* Contact.swift in Sources */,
+				CE6DBBD727E7674B00EBE22B /* User.swift in Sources */,
 				CEBA0C8F27D6441C00EE4FC3 /* TypesOfContactField.swift in Sources */,
 				CE010F4F27D6D60B00E5D335 /* MailFieldDelegate.swift in Sources */,
 				CEBA0C9327D649EF00EE4FC3 /* ContactTableViewController.swift in Sources */,
@@ -301,6 +340,7 @@
 				CEBA0CA627D6807800EE4FC3 /* AddTableViewCell.swift in Sources */,
 				CEBA0CA827D6807800EE4FC3 /* StringTableViewCellV2.swift in Sources */,
 				CE010F5727D7C24A00E5D335 /* ContactFieldCore+CoreDataProperties.swift in Sources */,
+				CE4D542427E4A68B0019CEFE /* LoginViewController.swift in Sources */,
 				CEBA0C8827D6361600EE4FC3 /* ContactCore+CoreDataClass.swift in Sources */,
 				CEBA0C9127D6483B00EE4FC3 /* ContactFieldCore+CoreDataProperties.swift in Sources */,
 				CEBA0C4A27D6202000EE4FC3 /* PhoneBook2.xcdatamodeld in Sources */,
@@ -317,6 +357,7 @@
 				CEBA0C6027D62E7200EE4FC3 /* ListOfContactsTableViewController.swift in Sources */,
 				CE010F5327D7C1BE00E5D335 /* CoreDataProvider.swift in Sources */,
 				CE18FD0327DF63D500C3F903 /* ContactTableViewCell.swift in Sources */,
+				CE4D541D27E3B3070019CEFE /* ApiClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +575,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CE1019D927E4E65600EA8E90 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		CE1019DB27E4E65600EA8E90 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CE1019DD27E4E65600EA8E90 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		CE1019DF27E4E65600EA8E90 /* FirebaseFirestoreSwift-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE1019D827E4E65600EA8E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreSwift-Beta";
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		CEBA0C4827D6202000EE4FC3 /* PhoneBook2.xcdatamodeld */ = {

@@ -26,7 +26,6 @@ public class ContactFieldCore: NSManagedObject {
   var value: Any? {
     set {
       let value: Any = newValue ?? type.defaultValue()
-      print("set :", type)
       switch type {
       case .image:
         valueAsData = (value as! UIImage).pngData()!

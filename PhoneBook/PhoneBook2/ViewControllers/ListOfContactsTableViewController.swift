@@ -1,5 +1,8 @@
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import Firebase
 
 protocol Observer: AnyObject {
   
@@ -57,7 +60,7 @@ class ViewController: UIViewController {
     menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
     menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
     menuBtn.showsMenuAsPrimaryAction = true
-    menuBtn.menu = makeMenu()
+    menuBtn.menu = makeFiltersMenu()
     
     let leftBarItem = UIBarButtonItem(customView: menuBtn)
     let currWidth = leftBarItem.customView?.widthAnchor.constraint(equalToConstant: 24)
@@ -65,7 +68,7 @@ class ViewController: UIViewController {
     let currHeight = leftBarItem.customView?.heightAnchor.constraint(equalToConstant: 24)
     currHeight?.isActive = true
     
-    let leftleftBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(dataSaveSwitchButtonPressed))
+    let leftleftBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: self, action: #selector(settingsButtonPressed(_:)))
     
     self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
     self.navigationItem.leftBarButtonItems = [leftleftBtt]
@@ -147,37 +150,29 @@ class ViewController: UIViewController {
     return searchController.searchBar.text?.isEmpty ?? true
   }
   
+  @objc func settingsButtonPressed(_ sender: UIBarButtonItem) {
+    
+  }
+  
+  
+  
   //MARK: -dataSaveSwitch
-  @objc func dataSaveSwitchButtonPressed(_ sender: UIBarButtonItem) {
+  @objc func dataSaveSwitchButtonPressed(_ sender: UIButton) {
     let optionMenu = UIAlertController(title: nil,
                                        message: "Choose Option",
                                        preferredStyle: .actionSheet)
     
-    let action1 = UIAlertAction(title: "Save to UserDefaults",
-                                style: .default) { [self] (UIAlertAction) in
-      DataManager.setUpProvider(dataProv: .userDefaults)
-      viewWillAppear(false)
-      self.showToast(message: "loaded with UserDefaults")
-    }
-    let action2 = UIAlertAction(title: "Save to File",
-                                style: .default) { [self] (UIAlertAction) in
-      DataManager.setUpProvider(dataProv: .file)
-      viewWillAppear(false)
-      self.showToast(message: "loaded with file")
-    }
-    
-    let action3 = UIAlertAction(title: "Save to CoreData",
-                                style: .default) { [self] (UIAlertAction) in
-      DataManager.setUpProvider(dataProv: .core)
-      viewWillAppear(false)
-      self.showToast(message: "loaded with core")
+    for type in DataProv.allCases {
+      let action = UIAlertAction(title: "Save to \(type.rawValue)",
+                                  style: .default) { [self] (UIAlertAction) in
+        DataManager.setUpProvider(dataProv: type)
+        viewWillAppear(false)
+        self.showToast(message: "loaded with \(type.rawValue)")
+      }
+      optionMenu.addAction(action)
     }
     
     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-    
-    optionMenu.addAction(action1)
-    optionMenu.addAction(action2)
-    optionMenu.addAction(action3)
     optionMenu.addAction(cancelAction)
     
     self.present(optionMenu, animated: true, completion: nil)
@@ -333,7 +328,110 @@ extension ViewController: UISearchResultsUpdating {
 }
 
 extension ViewController {
-  func makeMenu()
+  
+func makeSettingsMenu()-> UIMenu{
+    let settingsButtonTitles = ["data provider", "user", "logaout"]
+    let action1 =  UIAction(title: settingsButtonTitles[0]) { _ in
+      let optionMenu = UIAlertController(title: nil,
+                                         message: "Choose Option",
+                                         preferredStyle: .actionSheet)
+      
+      for type in DataProv.allCases {
+        let action = UIAlertAction(title: "Save to \(type.rawValue)",
+                                    style: .default) { [self] (UIAlertAction) in
+          DataManager.setUpProvider(dataProv: type)
+          viewWillAppear(false)
+          self.showToast(message: "loaded with \(type.rawValue)")
+        }
+        optionMenu.addAction(action)
+      }
+      
+      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+      optionMenu.addAction(cancelAction)
+      
+      self.present(optionMenu, animated: true, completion: nil)
+    }
+    
+    let action2 = UIAction(title: settingsButtonTitles[1]) { _ in
+      let alert = UIAlertController(title: "User",
+                                    message: "blah blah",
+                                    preferredStyle: .alert)
+      alert.addTextField { field in
+        field.text = ApiClient.user?.name
+      }
+      alert.addTextField { field in
+        field.text = ApiClient.user?.email
+      }
+      alert.addTextField { field in
+        field.placeholder = "new password"
+        field.isSecureTextEntry = true
+      }
+      alert.addTextField { field in
+        field.placeholder = "password"
+        field.isSecureTextEntry = true
+      }
+      alert.addAction(UIAlertAction(title: "Cancel",
+                                    style: .cancel,
+                                    handler: nil))
+      alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
+        guard let fields = alert.textFields else {
+          return
+        }
+        let name = fields[0].text!
+        let email = fields[1].text!
+        let password = fields[2].text!
+        var dataChanged = false
+        
+        if name != ApiClient.user?.name {
+          ApiClient.user?.name = name
+          dataChanged = true
+        }
+        
+        if email != ApiClient.user?.email {
+          if LoginViewController.isValidEmail(testStr: email) {
+            ApiClient.user?.email = email
+            dataChanged = true
+          } else {
+            self.showToast(message: "not valid email")
+          }
+        }
+        
+       
+        
+        if dataChanged {
+          
+          let db = Firestore.firestore()
+          do {
+            try db.collection("users").document(ApiClient.user!.uid).setData(from: ApiClient.user!)
+          } catch {
+            debugPrint("user save fail")
+          }
+        }
+      
+        if LoginViewController.isPasswordValid(password) {
+          Auth.auth().currentUser?.updatePassword(to: password) { error in
+            if let error = error {
+              debugPrint(error.localizedDescription)
+            }
+          }
+        } else {
+          self.showToast(message: "not valid password")
+        }
+        
+      }))
+      self.present(alert, animated: true, completion: nil)
+      
+    }
+        
+  
+        return UIMenu(title: "Filter",
+                      image: UIImage(systemName: "star.circle"),
+                      options: .displayInline,
+                      children: [action1, action2])
+  }
+  
+  
+  func makeFiltersMenu()
     -> UIMenu {
       let filterButtonTitles = SortType.allCases.map{$0.rawValue}
       let filterActions = filterButtonTitles
