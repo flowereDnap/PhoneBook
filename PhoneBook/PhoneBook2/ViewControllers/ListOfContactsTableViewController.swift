@@ -4,6 +4,7 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 import Firebase
 
+
 protocol Observer: AnyObject {
   
   func update(subject: DataManager)
@@ -25,7 +26,10 @@ class ViewController: UIViewController {
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
   @IBOutlet var searchFooter: SearchFooter!
   
+  
+  
   var sortMode:SortType = .alph
+  
   var contacts: [Contact] {
     get{
       let data = DataManager.data
@@ -36,6 +40,7 @@ class ViewController: UIViewController {
       filteredContacts = newValue
     }
   }
+  
   var filteredContacts: [Contact]!
   var searchFoundInField: [Int]!
   var dataToShow: [Contact]! {
@@ -68,10 +73,20 @@ class ViewController: UIViewController {
     let currHeight = leftBarItem.customView?.heightAnchor.constraint(equalToConstant: 24)
     currHeight?.isActive = true
     
-    let leftleftBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: self, action: #selector(settingsButtonPressed(_:)))
+    let menuBtn2 = UIButton(type: .custom)
+    menuBtn2.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
+    menuBtn2.setImage(UIImage(named:"sort_icon"), for: .normal)
+    menuBtn2.showsMenuAsPrimaryAction = true
+    menuBtn2.menu = makeSettingsMenu()
+    
+    let leftBarItem2 = UIBarButtonItem(customView: menuBtn2)
+    let currWidth2 = leftBarItem2.customView?.widthAnchor.constraint(equalToConstant: 24)
+    currWidth2?.isActive = true
+    let currHeight2 = leftBarItem2.customView?.heightAnchor.constraint(equalToConstant: 24)
+    currHeight2?.isActive = true
     
     self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
-    self.navigationItem.leftBarButtonItems = [leftleftBtt]
+    self.navigationItem.leftBarButtonItems = [leftBarItem2]
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.searchBar.placeholder = "Search Contacts"
@@ -83,6 +98,9 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    
+    ApiClient.parentView = self
     
     tableView?.register(ContactTableViewCell.nib, forCellReuseIdentifier: ContactTableViewCell.identifier)
     tableView?.rowHeight = UITableView.automaticDimension
@@ -118,7 +136,6 @@ class ViewController: UIViewController {
   }
   
   func handleKeyboard(notification: Notification) {
-    // 1
     guard notification.name == UIResponder.keyboardWillChangeFrameNotification else {
       searchFooterBottomConstraint.constant = 0
       view.layoutIfNeeded()
@@ -132,7 +149,6 @@ class ViewController: UIViewController {
       return
     }
     
-    // 2
     let keyboardHeight = keyboardFrame.cgRectValue.size.height
     UIView.animate(withDuration: 0.1, animations: { () -> Void in
       self.searchFooterBottomConstraint.constant = keyboardHeight
@@ -145,7 +161,7 @@ class ViewController: UIViewController {
     let vc = ContactViewController.getView(viewMode: .create, currentContact: newContact)
     self.navigationController?.pushViewController(vc, animated: true)
   }
-
+  
   var isSearchBarEmpty: Bool {
     return searchController.searchBar.text?.isEmpty ?? true
   }
@@ -164,7 +180,7 @@ class ViewController: UIViewController {
     
     for type in DataProv.allCases {
       let action = UIAlertAction(title: "Save to \(type.rawValue)",
-                                  style: .default) { [self] (UIAlertAction) in
+                                 style: .default) { [self] (UIAlertAction) in
         DataManager.setUpProvider(dataProv: type)
         viewWillAppear(false)
         self.showToast(message: "loaded with \(type.rawValue)")
@@ -329,7 +345,7 @@ extension ViewController: UISearchResultsUpdating {
 
 extension ViewController {
   
-func makeSettingsMenu()-> UIMenu{
+  func makeSettingsMenu()-> UIMenu{
     let settingsButtonTitles = ["data provider", "user", "logaout"]
     let action1 =  UIAction(title: settingsButtonTitles[0]) { _ in
       let optionMenu = UIAlertController(title: nil,
@@ -338,7 +354,7 @@ func makeSettingsMenu()-> UIMenu{
       
       for type in DataProv.allCases {
         let action = UIAlertAction(title: "Save to \(type.rawValue)",
-                                    style: .default) { [self] (UIAlertAction) in
+                                   style: .default) { [self] (UIAlertAction) in
           DataManager.setUpProvider(dataProv: type)
           viewWillAppear(false)
           self.showToast(message: "loaded with \(type.rawValue)")
@@ -353,99 +369,43 @@ func makeSettingsMenu()-> UIMenu{
     }
     
     let action2 = UIAction(title: settingsButtonTitles[1]) { _ in
-      let alert = UIAlertController(title: "User",
-                                    message: "blah blah",
-                                    preferredStyle: .alert)
-      alert.addTextField { field in
-        field.text = ApiClient.user?.name
-      }
-      alert.addTextField { field in
-        field.text = ApiClient.user?.email
-      }
-      alert.addTextField { field in
-        field.placeholder = "new password"
-        field.isSecureTextEntry = true
-      }
-      alert.addTextField { field in
-        field.placeholder = "password"
-        field.isSecureTextEntry = true
-      }
-      alert.addAction(UIAlertAction(title: "Cancel",
-                                    style: .cancel,
-                                    handler: nil))
-      alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
-        guard let fields = alert.textFields else {
-          return
-        }
-        let name = fields[0].text!
-        let email = fields[1].text!
-        let password = fields[2].text!
-        var dataChanged = false
-        
-        if name != ApiClient.user?.name {
-          ApiClient.user?.name = name
-          dataChanged = true
-        }
-        
-        if email != ApiClient.user?.email {
-          if LoginViewController.isValidEmail(testStr: email) {
-            ApiClient.user?.email = email
-            dataChanged = true
-          } else {
-            self.showToast(message: "not valid email")
-          }
-        }
-        
-       
-        
-        if dataChanged {
-          
-          let db = Firestore.firestore()
-          do {
-            try db.collection("users").document(ApiClient.user!.uid).setData(from: ApiClient.user!)
-          } catch {
-            debugPrint("user save fail")
-          }
-        }
-      
-        if LoginViewController.isPasswordValid(password) {
-          Auth.auth().currentUser?.updatePassword(to: password) { error in
-            if let error = error {
-              debugPrint(error.localizedDescription)
-            }
-          }
-        } else {
-          self.showToast(message: "not valid password")
-        }
-        
-      }))
-      self.present(alert, animated: true, completion: nil)
-      
+      let vc = UserSettingsViewController().getView()
+      self.present(vc , animated: true, completion: nil)
     }
-        
-  
-        return UIMenu(title: "Filter",
-                      image: UIImage(systemName: "star.circle"),
-                      options: .displayInline,
-                      children: [action1, action2])
+    
+    let action3 = UIAction(title: "logout") { _ in
+      let firebaseAuth = Auth.auth()
+      do {
+        try firebaseAuth.signOut()
+      } catch let signOutError as NSError {
+        print("Error signing out: %@", signOutError)
+      }
+      self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    return UIMenu(title: "Filter",
+                  image: UIImage(systemName: "star.circle"),
+                  options: .displayInline,
+                  children: [action1, action2, action3])
   }
   
   
   func makeFiltersMenu()
-    -> UIMenu {
-      let filterButtonTitles = SortType.allCases.map{$0.rawValue}
-      let filterActions = filterButtonTitles
-            .enumerated()
-            .map { index, title in
-              return UIAction(title: title,
-                              identifier: UIAction.Identifier(title),
-                              handler: self.filterHandler)
-            }
-          
-          return UIMenu(title: "Filter",
-                        image: UIImage(systemName: "star.circle"),
-                        options: .displayInline,
-                        children: filterActions)
+  -> UIMenu {
+    let filterButtonTitles = SortType.allCases.map{$0.rawValue}
+    let filterActions = filterButtonTitles
+      .enumerated()
+      .map { index, title in
+        return UIAction(title: title,
+                        identifier: UIAction.Identifier(title),
+                        handler: self.filterHandler)
+      }
+    
+    return UIMenu(title: "Filter",
+                  image: UIImage(systemName: "star.circle"),
+                  options: .displayInline,
+                  children: filterActions)
   }
   
   func filterHandler(from action: UIAction) {
@@ -459,7 +419,7 @@ func makeSettingsMenu()-> UIMenu{
       toastText = "filtered by alphabet"
     case .date:
       toastText = "filtered by date"
-
+      
     case .reAlph:
       toastText = "reverse filtered by alphabet"
     case .reDate:

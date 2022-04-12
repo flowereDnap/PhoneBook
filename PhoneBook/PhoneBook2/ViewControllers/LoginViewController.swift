@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import Firebase
 import FirebaseFirestoreSwift
+import SwiftUI
 
 class LoginViewController: UIViewController {
   
@@ -17,19 +18,31 @@ class LoginViewController: UIViewController {
   @IBOutlet var passwordTextField: UITextField!
   @IBOutlet var errorLable: UILabel!
   
+  let loadingVC = LoadingViewController()
+
+  
+  var gotAnswer: Bool! {
+    didSet {
+      if gotAnswer == true {
+        self.dismiss(animated: true, completion: nil)
+      } else {
+        self.present(loadingVC, animated: true, completion: nil)
+      }
+    }
+  }
+  
   var handle: AuthStateDidChangeListenerHandle?
+  
+  override func viewWillAppear(_ animated: Bool) {
+    passwordTextField.text = nil
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+  
     
-    handle = Auth.auth().addStateDidChangeListener { _, authData in
-      if let authData = authData {
-        let user = User(authData: authData)
-        ApiClient.user = user
-        self.showToast(message: "Hi, \(user.name)")
-        print("Hi, \(user.name)")
-      }
-    }
+    loadingVC.modalPresentationStyle = .overCurrentContext
+    loadingVC.modalTransitionStyle = .crossDissolve
     
     //hide an error lable
     errorLable.alpha = 0
@@ -40,7 +53,6 @@ class LoginViewController: UIViewController {
    
     let error = checkTheFields()
     if let error = error {
-      //print an error
       showError(error)
       return
     } else {
@@ -50,12 +62,34 @@ class LoginViewController: UIViewController {
     let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
     let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
 
-    Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+ 
+    gotAnswer = false
+    Auth.auth().signIn(withEmail: email, password: password) { user, error in
       if let error = error {
         self.showError(error.localizedDescription)
+        self.gotAnswer = true
         return
       }
-      print("result type: ", type(of:result),"result: ", result )
+      
+     
+
+      
+      
+      DataManager.user = User(authData: Auth.auth().currentUser!)
+      let db = Firestore.firestore()
+      
+        let docRef = db.collection("users").document(DataManager.user.uid)
+        docRef.getDocument(source: .cache) { (document, error) in
+            if let document = document {
+              DataManager.user.name = document.get("name") as! String
+              print("name:  ", DataManager.user.name)
+            } else {
+                print("Document does not exist in cache")
+            }
+        }
+      
+      DataManager.user.password = password
+      self.gotAnswer = true
       self.transitionToListOfContacts()
     }
   }
@@ -103,19 +137,24 @@ class LoginViewController: UIViewController {
         self.showError("passwords dont match")
         return
       }
+      
+      self.gotAnswer = false
       Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
         if error != nil {
           self.showError("error creating user: \(error!.localizedDescription)")
+          self.gotAnswer = true
           return
         }
         
         let db = Firestore.firestore()
         let user = User(uid: result!.user.uid, email: result!.user.email ?? "", name: name)
+        DataManager.user = user
         do {
           try db.collection("users").document(user.uid).setData(from: user)
         } catch {
           debugPrint("user save fail")
         }
+        self.gotAnswer = true
         self.transitionToListOfContacts()
       }
     }))
@@ -129,7 +168,7 @@ class LoginViewController: UIViewController {
     let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
     let vc: UINavigationController = mainStoryboard.instantiateViewController(withIdentifier: "ContactsList") as! UINavigationController
     vc.modalPresentationStyle = .fullScreen
-    self.present( vc , animated: false, completion: nil)
+    self.present(vc , animated: true, completion: nil)
   }
   
   func showError(_ err: String) {

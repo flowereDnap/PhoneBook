@@ -17,30 +17,56 @@ enum ApiError: Error {
 class ApiClient: DataProvider{
   
   
+  
   static var user: User?
+  static var parentView: ViewController!
+  
+  let loadingVC = LoadingViewController()
+
+  
+  var gotAnswer: Bool! {
+    didSet {
+      if self.gotAnswer == true {
+        ApiClient.parentView.dismiss(animated: true, completion: nil)
+        ApiClient.parentView.reloadTableViewData(with: "")
+      } else {
+        ApiClient.parentView.present(loadingVC, animated: true, completion: nil)
+      }
+    }
+  }
   
   let db = Firestore.firestore()
   
   var data: [Contact] = []
   
   init() {
+    
+    loadingVC.modalPresentationStyle = .overCurrentContext
+    loadingVC.modalTransitionStyle = .crossDissolve
+   
+    callfunc()
     var result: [Contact] = []
     let db = Firestore.firestore()
     guard let uid = ApiClient.user?.uid else {
       debugPrint("user uid is empty")
       data = result
+      self.gotAnswer = true
       return
     }
     
     
     db.collection(uid).getDocuments { (querySnapshot, error) in
+      if let err = error {
+        self.gotAnswer = true
+        ApiClient.parentView.showToast(message: err.localizedDescription)
+      }
+      
+      
       guard let snapshotDocuments = querySnapshot?.documents else {
-        print("case 0")
+        self.gotAnswer = true
         return
       }
-      print("case 1")
       for document in snapshotDocuments {
-        print("case 2")
         do {
           let contact = try document.data(as: Contact.self)
           print("cont: ", contact.id)
@@ -49,11 +75,13 @@ class ApiClient: DataProvider{
           debugPrint("error: \(error.localizedDescription)")
         }
       }
-      print("case 3")
       self.data = result
+      self.gotAnswer = true
     }
   }
-  
+  func callfunc(){
+    self.gotAnswer = false
+  }
   func save() {
     for contact in data {
       updContact(contact: contact)

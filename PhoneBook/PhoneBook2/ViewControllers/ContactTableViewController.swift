@@ -39,6 +39,7 @@ class ContactViewController: UITableViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     dataChanged = false
+    
     var rightButton: UIBarButtonItem
     var leftButton: UIBarButtonItem
     switch viewMode {
@@ -83,6 +84,7 @@ class ContactViewController: UITableViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     tableView?.register(StringTableViewCellV2.nib, forCellReuseIdentifier: StringTableViewCellV2.identifier)
     tableView?.register(ProfileImageTableViewCell.nib, forCellReuseIdentifier: ProfileImageTableViewCell.identifier)
     tableView?.register(AddTableViewCell.nib, forCellReuseIdentifier: AddTableViewCell.identifier)

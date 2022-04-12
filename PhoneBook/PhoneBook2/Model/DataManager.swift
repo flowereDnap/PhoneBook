@@ -20,7 +20,8 @@ class DataManager {
   
   static let contactListKey = "contactsList5"
   
-  static var user:String!
+  static var user: User!
+  
   static var data: [Contact] {
     get {
       return dataProvider.data }

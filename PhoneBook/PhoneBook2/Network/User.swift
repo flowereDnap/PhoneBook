@@ -36,6 +36,8 @@ struct User: Codable {
   let uid: String
   var email: String
   var name: String
+  
+  var password: String?
 
   init(authData: Firebase.User) {
     uid = authData.uid
@@ -43,11 +45,10 @@ struct User: Codable {
     
     let db = Firebase.Firestore.firestore()
     let user = db.collection("users").document(uid)
-    name = ""
-    var nameFromFile = ""
+    var nameFromFile = "def"
     user.getDocument(source: .cache) { (document, error) in
                 if let document = document {
-                  nameFromFile = document.get("userName") as? String ?? ""
+                  nameFromFile = document.get("userName") as? String ?? "def"
                 } else {
                     print("Document does not exist in cache")
                 }
@@ -60,5 +61,9 @@ struct User: Codable {
     self.uid = uid
     self.email = email
     self.name = name
+  }
+  
+  func checkPassword(pass: String)-> Bool{
+    return self.password == pass
   }
 }
