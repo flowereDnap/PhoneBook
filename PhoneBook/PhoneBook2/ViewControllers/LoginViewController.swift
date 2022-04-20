@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
   
-    
+    passwordTextField.enablePasswordToggle()
     loadingVC.modalPresentationStyle = .overCurrentContext
     loadingVC.modalTransitionStyle = .crossDissolve
     

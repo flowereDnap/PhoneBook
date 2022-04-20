@@ -20,7 +20,7 @@ class CoreDataProvider: DataProvider {
       return loadData
     }
     set {
-      
+      loadData = newValue
     }
   }
   

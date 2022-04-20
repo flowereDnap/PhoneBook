@@ -5,6 +5,8 @@ import FirebaseFirestoreSwift
 import Firebase
 
 
+
+
 protocol Observer: AnyObject {
   
   func update(subject: DataManager)
@@ -179,8 +181,10 @@ class ViewController: UIViewController {
                                        preferredStyle: .actionSheet)
     
     for type in DataProv.allCases {
+      let style: UIAlertAction.Style = (type == DataManager.dataProvType ? UIAlertAction.Style.cancel : .default)
+      print("STYLE: ", style)
       let action = UIAlertAction(title: "Save to \(type.rawValue)",
-                                 style: .default) { [self] (UIAlertAction) in
+                                 style: (type == DataManager.dataProvType ? UIAlertAction.Style.cancel : .default)) { [self] (UIAlertAction) in
         DataManager.setUpProvider(dataProv: type)
         viewWillAppear(false)
         self.showToast(message: "loaded with \(type.rawValue)")
@@ -353,12 +357,21 @@ extension ViewController {
                                          preferredStyle: .actionSheet)
       
       for type in DataProv.allCases {
-        let action = UIAlertAction(title: "Save to \(type.rawValue)",
+        
+        var title = "Save to \(type.rawValue)"
+        var isEnabled = true
+        if type == DataManager.dataProvType{
+          title = "Saved to \(type.rawValue)"
+           isEnabled = false
+        }
+       
+        let action = UIAlertAction(title: title,
                                    style: .default) { [self] (UIAlertAction) in
           DataManager.setUpProvider(dataProv: type)
           viewWillAppear(false)
           self.showToast(message: "loaded with \(type.rawValue)")
         }
+        action.isEnabled = isEnabled
         optionMenu.addAction(action)
       }
       
@@ -396,10 +409,22 @@ extension ViewController {
     let filterButtonTitles = SortType.allCases.map{$0.rawValue}
     let filterActions = filterButtonTitles
       .enumerated()
-      .map { index, title in
-        return UIAction(title: title,
+      .map { (index, title) -> UIAction in
+        
+        
+        
+        let action = UIAction(title: title,
                         identifier: UIAction.Identifier(title),
                         handler: self.filterHandler)
+        if title == self.sortMode.rawValue {
+          action.title = "sorted by " + title
+          action.state = .on
+        } else {
+          action.title = title
+          action.state = .off
+        }
+        
+        return action
       }
     
     return UIMenu(title: "Filter",
@@ -412,20 +437,24 @@ extension ViewController {
     guard let filter = SortType(rawValue: action.identifier.rawValue) else {
       return
     }
+    
     self.sortMode = filter
     var toastText: String
     switch filter {
     case .alph:
-      toastText = "filtered by alphabet"
+      toastText = "sorted by alphabet"
     case .date:
-      toastText = "filtered by date"
+      toastText = "sorted by date"
       
     case .reAlph:
-      toastText = "reverse filtered by alphabet"
+      toastText = "reverse sorted by alphabet"
     case .reDate:
-      toastText = "reverse filtered by date"
+      toastText = "reverse sorted by date"
     }
     sortContacts(sorter: filter)
+    let menu = makeFiltersMenu()
+    self.navigationItem.rightBarButtonItems![0].menu = menu
+    print("MENU: ", self.navigationItem.rightBarButtonItems![0], "ASDASSDASDAS", menu)
     showToast(message: toastText)
   }
   func sortContacts(sorter:SortType){

@@ -29,6 +29,7 @@
 		CEA7B1BE27E8964A0021AD47 /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7B1BC27E8964A0021AD47 /* UserSettingsViewController.swift */; };
 		CEA7B1C227E89C290021AD47 /* UserChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7B1C027E89C290021AD47 /* UserChangeViewController.swift */; };
 		CEA7B1C327E89C290021AD47 /* UserChangeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA7B1C127E89C290021AD47 /* UserChangeViewController.xib */; };
+		CEB9F4162810365A008C9E9D /* passwordShowToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9F4152810365A008C9E9D /* passwordShowToggle.swift */; };
 		CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */; };
 		CEBA0C4227D6201F00EE4FC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */; };
 		CEBA0C4727D6202000EE4FC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEBA0C4527D6202000EE4FC3 /* Main.storyboard */; };
@@ -78,6 +79,7 @@
 		CEA7B1BC27E8964A0021AD47 /* UserSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
 		CEA7B1C027E89C290021AD47 /* UserChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChangeViewController.swift; sourceTree = "<group>"; };
 		CEA7B1C127E89C290021AD47 /* UserChangeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserChangeViewController.xib; sourceTree = "<group>"; };
+		CEB9F4152810365A008C9E9D /* passwordShowToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = passwordShowToggle.swift; sourceTree = "<group>"; };
 		CEBA0C3C27D6201F00EE4FC3 /* PhoneBook2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBook2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEBA0C3F27D6201F00EE4FC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEBA0C4127D6201F00EE4FC3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				CEBA0CB027D6C3F200EE4FC3 /* ImagePicker.swift */,
 				CEBA0CA927D69FB100EE4FC3 /* Copyable.swift */,
 				CE244FD02801D94B00619441 /* Styles.swift */,
+				CEB9F4152810365A008C9E9D /* passwordShowToggle.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				CE6DBBD727E7674B00EBE22B /* User.swift in Sources */,
 				CEBA0C8F27D6441C00EE4FC3 /* TypesOfContactField.swift in Sources */,
 				CE010F4F27D6D60B00E5D335 /* MailFieldDelegate.swift in Sources */,
+				CEB9F4162810365A008C9E9D /* passwordShowToggle.swift in Sources */,
 				CEA7B1C227E89C290021AD47 /* UserChangeViewController.swift in Sources */,
 				CEBA0C9327D649EF00EE4FC3 /* ContactTableViewController.swift in Sources */,
 				CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */,

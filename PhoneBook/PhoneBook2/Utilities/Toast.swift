@@ -15,6 +15,7 @@ func showToast(message : String, font: UIFont = .systemFont(ofSize: 12.0)) {
     toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
     toastLabel.textColor = UIColor.white
     toastLabel.font = font
+    toastLabel.adjustsFontSizeToFitWidth = true
     toastLabel.textAlignment = .center;
     toastLabel.text = message
     toastLabel.alpha = 1.0

@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum DataProv: String, CaseIterable{
+enum DataProv: String, CaseIterable, Codable{
   case userDefaults
   case file
   case core
@@ -16,14 +16,53 @@ enum DataProv: String, CaseIterable{
 
 class DataManager {
   
-  private static var dataProvider: DataProvider = UserDefaultsDataProvider()
+  private static var dataProvider: DataProvider!
   
+  
+  
+  static var dataProvType: DataProv = { () -> DataProv in
+      var data2: DataProv?
+      if let mydata = UserDefaults.standard.value(forKey:DataManager.dataProvTypeKey) as? Data {
+        data2 = try? JSONDecoder().decode(DataProv.self, from: mydata)
+      }
+    
+    switch data2 {
+    case .file:
+      dataProvider = FileDataProvider()
+    case .core:
+      dataProvider = CoreDataProvider()
+    case .server:
+      dataProvider = ApiClient()
+    default:
+      dataProvider = UserDefaultsDataProvider()
+    }
+      return data2 ?? DataProv.userDefaults
+  }() {
+    didSet{
+      print("DIDSET", dataProvType)
+      UserDefaults.standard.set(try? JSONEncoder().encode(dataProvType), forKey:DataManager.dataProvTypeKey)
+      
+    
+      switch dataProvType {
+      case .userDefaults:
+        dataProvider = UserDefaultsDataProvider()
+      case .file:
+        dataProvider = FileDataProvider()
+      case .core:
+        dataProvider = CoreDataProvider()
+      case .server:
+        dataProvider = ApiClient()
+      }
+    }
+  }
+  static let dataProvTypeKey = "dataProvTypeKey"
   static let contactListKey = "contactsList5"
   
   static var user: User!
   
   static var data: [Contact] {
     get {
+      print("dataptovtype:  ",dataProvType, dataProvider)
       return dataProvider.data }
     set {
       dataProvider.data = newValue
@@ -31,17 +70,11 @@ class DataManager {
   }
   static var contactsView: ViewController!
   
-  static func setUpProvider(dataProv: DataProv = .file) {
-    switch dataProv {
-    case .userDefaults:
-      dataProvider = UserDefaultsDataProvider()
-    case .file:
-      dataProvider = FileDataProvider()
-    case .core:
-      dataProvider = CoreDataProvider()
-    case .server:
-      dataProvider = ApiClient()
+  static func setUpProvider(dataProv: DataProv?) {
+    if let dataProv = dataProv {
+      dataProvType = dataProv
     }
+  
   }
   public static func addContact()->Contact{
     dataProvider.addContact()
@@ -59,6 +92,7 @@ class DataManager {
   }
   
   public static func save() {
+ 
     dataProvider.save()
     contactsView.reloadTableViewData(with: "")
   }
