@@ -24,6 +24,7 @@
 		CE4D541D27E3B3070019CEFE /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D541C27E3B3070019CEFE /* ApiClient.swift */; };
 		CE4D541F27E494780019CEFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4D541E27E494780019CEFE /* GoogleService-Info.plist */; };
 		CE4D542427E4A68B0019CEFE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D542327E4A68B0019CEFE /* LoginViewController.swift */; };
+		CE64D3052816E589000FFC82 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE64D3042816E589000FFC82 /* SignUpVC.swift */; };
 		CE6DBBD727E7674B00EBE22B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DBBD627E7674B00EBE22B /* User.swift */; };
 		CE71962327DB4EB600DF1623 /* FileDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71962227DB4EB600DF1623 /* FileDataProvider.swift */; };
 		CEA7B1BE27E8964A0021AD47 /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7B1BC27E8964A0021AD47 /* UserSettingsViewController.swift */; };
@@ -74,6 +75,7 @@
 		CE4D541C27E3B3070019CEFE /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		CE4D541E27E494780019CEFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE4D542327E4A68B0019CEFE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		CE64D3042816E589000FFC82 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		CE6DBBD627E7674B00EBE22B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CE71962227DB4EB600DF1623 /* FileDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDataProvider.swift; sourceTree = "<group>"; };
 		CEA7B1BC27E8964A0021AD47 /* UserSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				CEBA0C5F27D62E7200EE4FC3 /* ListOfContactsTableViewController.swift */,
 				CEBA0C9227D649EF00EE4FC3 /* ContactTableViewController.swift */,
 				CE4D542327E4A68B0019CEFE /* LoginViewController.swift */,
+				CE64D3042816E589000FFC82 /* SignUpVC.swift */,
 				CEA7B1C427E89C3D0021AD47 /* Settings */,
 				CECF673627F1E99B00722390 /* LoaderScreen.swift */,
 			);
@@ -366,6 +369,7 @@
 				CEBA0C8F27D6441C00EE4FC3 /* TypesOfContactField.swift in Sources */,
 				CE010F4F27D6D60B00E5D335 /* MailFieldDelegate.swift in Sources */,
 				CEB9F4162810365A008C9E9D /* passwordShowToggle.swift in Sources */,
+				CE64D3052816E589000FFC82 /* SignUpVC.swift in Sources */,
 				CEA7B1C227E89C290021AD47 /* UserChangeViewController.swift in Sources */,
 				CEBA0C9327D649EF00EE4FC3 /* ContactTableViewController.swift in Sources */,
 				CEBA0C4027D6201F00EE4FC3 /* AppDelegate.swift in Sources */,

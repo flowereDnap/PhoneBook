@@ -17,9 +17,10 @@ class LoginViewController: UIViewController {
   @IBOutlet var emailTextField: UITextField!
   @IBOutlet var passwordTextField: UITextField!
   @IBOutlet var errorLable: UILabel!
+  @IBOutlet var signUpTextField: UITextField!
   
   let loadingVC = LoadingViewController()
-
+  var parentView: ViewController!
   
   var gotAnswer: Bool! {
     didSet {
@@ -41,6 +42,7 @@ class LoginViewController: UIViewController {
     super.viewDidLoad()
   
     passwordTextField.enablePasswordToggle()
+    
     loadingVC.modalPresentationStyle = .overCurrentContext
     loadingVC.modalTransitionStyle = .crossDissolve
     
@@ -70,11 +72,6 @@ class LoginViewController: UIViewController {
         self.gotAnswer = true
         return
       }
-      
-     
-
-      
-      
       DataManager.user = User(authData: Auth.auth().currentUser!)
       let db = Firestore.firestore()
       
@@ -90,75 +87,21 @@ class LoginViewController: UIViewController {
       
       DataManager.user.password = password
       self.gotAnswer = true
-      self.transitionToListOfContacts()
+      
+      DataManager.dataProvType = .server
+      self.showToast(message: "loaded with server")
+      self.parentView.setUpView()
+      self.dismiss(animated: true, completion: nil)
     }
   }
   @IBAction func signUpButtonPressed(_ sender: UIButton) {
     // check the fields
     
-    let error = checkTheFields()
-    if let error = error {
-      //print an error
-      showError(error)
-      return
-    } else {
-      hideError()
-    }
-    
-    let email = emailTextField.text!
-    let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-    
-    //creating new account with email and validating password
-    let alert = UIAlertController(title: "registration",
-                                  message: "enter name you want to register with",
-                                  preferredStyle: .alert)
-    alert.addTextField { field in
-      field.placeholder = "user name"
-    }
-    alert.addTextField { field in
-      field.placeholder = "confirm password"
-      field.isSecureTextEntry = true
-    }
-    alert.addAction(UIAlertAction(title: "Cancel",
-                                  style: .cancel,
-                                  handler: nil))
-    alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
-      guard let fields = alert.textFields else {
-        return
-      }
-      let name = fields[0].text!
-      let confPassword = fields[1].text!
-      
-      if name.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-        self.showError("invalid name")
-        return
-      }
-      if password != confPassword {
-        self.showError("passwords dont match")
-        return
-      }
-      
-      self.gotAnswer = false
-      Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-        if error != nil {
-          self.showError("error creating user: \(error!.localizedDescription)")
-          self.gotAnswer = true
-          return
-        }
-        
-        let db = Firestore.firestore()
-        let user = User(uid: result!.user.uid, email: result!.user.email ?? "", name: name)
-        DataManager.user = user
-        do {
-          try db.collection("users").document(user.uid).setData(from: user)
-        } catch {
-          debugPrint("user save fail")
-        }
-        self.gotAnswer = true
-        self.transitionToListOfContacts()
-      }
-    }))
-    self.present(alert, animated: true, completion: nil)
+    let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+    let vc: SignUpVC = mainStoryboard.instantiateViewController(withIdentifier: "SignUp") as! SignUpVC
+    vc.modalPresentationStyle = .fullScreen
+    self.present(vc , animated: true, completion: nil)
+  
     
     
     

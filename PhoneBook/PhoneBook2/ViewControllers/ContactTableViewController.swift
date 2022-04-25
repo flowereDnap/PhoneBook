@@ -37,9 +37,8 @@ class ContactViewController: UITableViewController {
     return vc
   }
   
-  override func viewWillAppear(_ animated: Bool) {
+  func setUpView(){
     dataChanged = false
-    
     var rightButton: UIBarButtonItem
     var leftButton: UIBarButtonItem
     switch viewMode {
@@ -82,8 +81,10 @@ class ContactViewController: UITableViewController {
     tableView.reloadData()
   }
   
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    setUpView()
     
     tableView?.register(StringTableViewCellV2.nib, forCellReuseIdentifier: StringTableViewCellV2.identifier)
     tableView?.register(ProfileImageTableViewCell.nib, forCellReuseIdentifier: ProfileImageTableViewCell.identifier)
@@ -98,7 +99,7 @@ class ContactViewController: UITableViewController {
     self.viewMode = .view
     currentEditingContact = currentContact?.copy()
     self.dataChanged = false
-    viewWillAppear(false)
+    setUpView()
   }
   
   @objc func backButtonPressed(_ sender: UIButton){
@@ -156,7 +157,7 @@ class ContactViewController: UITableViewController {
       //save changes
       DataManager.save()
       viewMode = .view
-      viewWillAppear(false)
+      setUpView()
     } else {
       let alert = UIAlertController(title: "Empty contact",
                                     message: "You can't save empty contact",
@@ -172,7 +173,7 @@ class ContactViewController: UITableViewController {
   
   @IBAction func editButtonPressed(_ sender: UIButton) {
     viewMode = .edit
-    viewWillAppear(false)
+    setUpView()
   }
   
   @objc func saveButtonPressed(_ sender: UIButton) {
@@ -185,7 +186,7 @@ class ContactViewController: UITableViewController {
     DataManager.save()
     
     viewMode = .view
-    viewWillAppear(false)
+    setUpView()
   }
   
   func saveDataFromCells(){

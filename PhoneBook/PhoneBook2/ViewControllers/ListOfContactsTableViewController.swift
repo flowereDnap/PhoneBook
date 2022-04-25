@@ -61,7 +61,7 @@ class ViewController: UIViewController {
   
   let searchController = UISearchController(searchResultsController: nil)
   
-  override func viewWillAppear(_ animated: Bool) {
+   func setUpView() {
     let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
     let menuBtn = UIButton(type: .custom)
     menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
@@ -77,7 +77,7 @@ class ViewController: UIViewController {
     
     let menuBtn2 = UIButton(type: .custom)
     menuBtn2.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
-    menuBtn2.setImage(UIImage(named:"sort_icon"), for: .normal)
+    menuBtn2.setImage(UIImage(named:"settingsIcon"), for: .normal)
     menuBtn2.showsMenuAsPrimaryAction = true
     menuBtn2.menu = makeSettingsMenu()
     
@@ -100,7 +100,7 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    setUpView()
     
     ApiClient.parentView = self
     
@@ -170,32 +170,6 @@ class ViewController: UIViewController {
   
   @objc func settingsButtonPressed(_ sender: UIBarButtonItem) {
     
-  }
-  
-  
-  
-  //MARK: -dataSaveSwitch
-  @objc func dataSaveSwitchButtonPressed(_ sender: UIButton) {
-    let optionMenu = UIAlertController(title: nil,
-                                       message: "Choose Option",
-                                       preferredStyle: .actionSheet)
-    
-    for type in DataProv.allCases {
-      let style: UIAlertAction.Style = (type == DataManager.dataProvType ? UIAlertAction.Style.cancel : .default)
-      print("STYLE: ", style)
-      let action = UIAlertAction(title: "Save to \(type.rawValue)",
-                                 style: (type == DataManager.dataProvType ? UIAlertAction.Style.cancel : .default)) { [self] (UIAlertAction) in
-        DataManager.setUpProvider(dataProv: type)
-        viewWillAppear(false)
-        self.showToast(message: "loaded with \(type.rawValue)")
-      }
-      optionMenu.addAction(action)
-    }
-    
-    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-    optionMenu.addAction(cancelAction)
-    
-    self.present(optionMenu, animated: true, completion: nil)
   }
   
   //MARK: -search
@@ -351,6 +325,7 @@ extension ViewController {
   
   func makeSettingsMenu()-> UIMenu{
     let settingsButtonTitles = ["data provider", "user", "logaout"]
+    var actions: [UIAction] = []
     let action1 =  UIAction(title: settingsButtonTitles[0]) { _ in
       let optionMenu = UIAlertController(title: nil,
                                          message: "Choose Option",
@@ -362,14 +337,24 @@ extension ViewController {
         var isEnabled = true
         if type == DataManager.dataProvType{
           title = "Saved to \(type.rawValue)"
-           isEnabled = false
+          isEnabled = false
         }
-       
+        
         let action = UIAlertAction(title: title,
                                    style: .default) { [self] (UIAlertAction) in
-          DataManager.setUpProvider(dataProv: type)
-          viewWillAppear(false)
-          self.showToast(message: "loaded with \(type.rawValue)")
+          
+          
+          if type == .server {
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            let vc: LoginViewController = mainStoryboard.instantiateViewController(withIdentifier: "LoginScene") as! LoginViewController
+            vc.parentView = self
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc , animated: true, completion: nil)
+          } else {
+            DataManager.dataProvType = type
+            setUpView()
+            self.showToast(message: "loaded with \(type.rawValue)")
+          }
         }
         action.isEnabled = isEnabled
         optionMenu.addAction(action)
@@ -380,32 +365,35 @@ extension ViewController {
       
       self.present(optionMenu, animated: true, completion: nil)
     }
+    actions.append(action1)
     
-    let action2 = UIAction(title: settingsButtonTitles[1]) { _ in
-      let vc = UserSettingsViewController().getView()
-      self.present(vc , animated: true, completion: nil)
-    }
-    
-    let action3 = UIAction(title: "logout") { _ in
-      let firebaseAuth = Auth.auth()
-      do {
-        try firebaseAuth.signOut()
-      } catch let signOutError as NSError {
-        print("Error signing out: %@", signOutError)
+    if DataManager.dataProvType == .server{
+      let action2 = UIAction(title: settingsButtonTitles[1]) { _ in
+        let vc = UserSettingsViewController().getView()
+        self.present(vc , animated: true, completion: nil)
       }
-      self.dismiss(animated: true, completion: nil)
+      actions.append(action2)
+      let action3 = UIAction(title: "logout") { _ in
+        let firebaseAuth = Auth.auth()
+        do {
+          try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
+        }
+        self.dismiss(animated: true, completion: nil)
+      }
+      actions.append(action3)
     }
     
-    
-    return UIMenu(title: "Filter",
-                  image: UIImage(systemName: "star.circle"),
+    return UIMenu(title: "Settings",
                   options: .displayInline,
-                  children: [action1, action2, action3])
+                  children: actions)
   }
   
   
   func makeFiltersMenu()
   -> UIMenu {
+    
     let filterButtonTitles = SortType.allCases.map{$0.rawValue}
     let filterActions = filterButtonTitles
       .enumerated()
@@ -414,8 +402,8 @@ extension ViewController {
         
         
         let action = UIAction(title: title,
-                        identifier: UIAction.Identifier(title),
-                        handler: self.filterHandler)
+                              identifier: UIAction.Identifier(title),
+                              handler: self.filterHandler)
         if title == self.sortMode.rawValue {
           action.title = "sorted by " + title
           action.state = .on
@@ -427,8 +415,7 @@ extension ViewController {
         return action
       }
     
-    return UIMenu(title: "Filter",
-                  image: UIImage(systemName: "star.circle"),
+    return UIMenu(title: "Sorts",
                   options: .displayInline,
                   children: filterActions)
   }
@@ -452,10 +439,22 @@ extension ViewController {
       toastText = "reverse sorted by date"
     }
     sortContacts(sorter: filter)
-    let menu = makeFiltersMenu()
-    self.navigationItem.rightBarButtonItems![0].menu = menu
-    print("MENU: ", self.navigationItem.rightBarButtonItems![0], "ASDASSDASDAS", menu)
+    let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+    let menuBtn = UIButton(type: .custom)
+    menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
+    menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
+    menuBtn.showsMenuAsPrimaryAction = true
+    menuBtn.menu = makeFiltersMenu()
+    
+    let leftBarItem = UIBarButtonItem(customView: menuBtn)
+    let currWidth = leftBarItem.customView?.widthAnchor.constraint(equalToConstant: 24)
+    currWidth?.isActive = true
+    let currHeight = leftBarItem.customView?.heightAnchor.constraint(equalToConstant: 24)
+    currHeight?.isActive = true
+    
+    self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
     showToast(message: toastText)
+    
   }
   func sortContacts(sorter:SortType){
     switch sorter {

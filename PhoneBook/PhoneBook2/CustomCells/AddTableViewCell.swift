@@ -60,6 +60,8 @@ class AddTableViewCell: UITableViewCell {
                                   style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .number, isMain: true)
       }
+      let action3 = UIAlertAction(title: "Cancel", style: .cancel)
+      optionMenu.addAction(action3)
       optionMenu.addAction(action1)
       optionMenu.addAction(action2)
       parentView.present(optionMenu, animated: true, completion: nil)
@@ -70,8 +72,9 @@ class AddTableViewCell: UITableViewCell {
       let action2 = UIAlertAction(title: "new date of birth",
                                   style: .default) { [self] (UIAlertAction2) in
         callCreateAllert(type: .date, isMain: false)
-
       }
+      let action3 = UIAlertAction(title: "Cancel", style: .cancel)
+      optionMenu.addAction(action3)
       optionMenu.addAction(action2)
       parentView.present(optionMenu, animated: true, completion: nil)
     default:

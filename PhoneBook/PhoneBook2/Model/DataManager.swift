@@ -71,7 +71,13 @@ class DataManager {
   static var contactsView: ViewController!
   
   static func setUpProvider(dataProv: DataProv?) {
-    if let dataProv = dataProv {
+    guard let dataProv = dataProv else {
+      return
+    }
+    
+    if dataProv == .server {
+      
+    } else {
       dataProvType = dataProv
     }
   
