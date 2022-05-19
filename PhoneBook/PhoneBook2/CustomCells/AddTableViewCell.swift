@@ -9,6 +9,7 @@ import UIKit
 
 class AddTableViewCell: UITableViewCell {
   
+  
   static var nib:UINib {
     return UINib(nibName: identifier, bundle: nil)
   }
@@ -24,7 +25,7 @@ class AddTableViewCell: UITableViewCell {
   
   @IBOutlet var button:UIButton!
   private var type: cellType!
-  var parentView: ContactViewController!
+  weak var parentView: ContactViewController!
   var currentEditingContact: Contact!
   var delegate:UITextFieldDelegate?
   
@@ -41,9 +42,10 @@ class AddTableViewCell: UITableViewCell {
   }
   
   func setUpCell(type:cellType, parentView: ContactViewController){
+    self.button.setUpStyle()
     self.type = type
     self.parentView = parentView
-    self .currentEditingContact = parentView.currentEditingContact
+    self.currentEditingContact = parentView.currentEditingContact
   }
   
   @IBAction func addButtonPressed(_ sender: UIButton){
@@ -53,12 +55,12 @@ class AddTableViewCell: UITableViewCell {
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
       let action1 = UIAlertAction(title: "new name",
-                                  style: .default) { [self] (UIAlertAction2) in
-        callCreateAllert(type: .name, isMain: true)
+                                  style: .default) { [weak self] (UIAlertAction2) in
+        self?.callCreateAllert(type: .name, isMain: true)
       }
       let action2 = UIAlertAction(title: "new number",
-                                  style: .default) { [self] (UIAlertAction2) in
-        callCreateAllert(type: .number, isMain: true)
+                                  style: .default) { [weak self] (UIAlertAction2) in
+        self?.callCreateAllert(type: .number, isMain: true)
       }
       let action3 = UIAlertAction(title: "Cancel", style: .cancel)
       optionMenu.addAction(action3)
@@ -70,8 +72,8 @@ class AddTableViewCell: UITableViewCell {
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
       let action2 = UIAlertAction(title: "new date of birth",
-                                  style: .default) { [self] (UIAlertAction2) in
-        callCreateAllert(type: .date, isMain: false)
+                                  style: .default) { [weak self] (UIAlertAction2) in
+        self?.callCreateAllert(type: .date, isMain: false)
       }
       let action3 = UIAlertAction(title: "Cancel", style: .cancel)
       optionMenu.addAction(action3)
@@ -108,7 +110,7 @@ class AddTableViewCell: UITableViewCell {
     alert.addAction(UIAlertAction(title: "Cancel",
                                   style: .cancel,
                                   handler: nil))
-    alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in
+    alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { _ in 
       guard let fields = alert.textFields, fields.count == 2 else {
         return
       }
@@ -116,7 +118,7 @@ class AddTableViewCell: UITableViewCell {
       let value = fields[1].text
       if isMain {
         let positionOfLast = self.currentEditingContact.getPositionOfLast(inMainFields: true,
-                                                         type: type)
+                                                                          type: type)
         var newField: ContactField
         switch type {
         case .name:

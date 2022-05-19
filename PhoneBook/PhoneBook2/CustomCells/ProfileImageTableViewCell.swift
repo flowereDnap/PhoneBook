@@ -8,11 +8,11 @@
 import UIKit
 
 class ProfileImageTableViewCell: UITableViewCell, saveCell {
-  
+
   
   @IBOutlet var profilePicture: UIImageView!
   var imagePicker: ImagePicker!
-  private var parentView: ContactViewController?
+  private weak var parentView: ContactViewController?
   internal var item: ContactField? {
     didSet {
       guard let image = ((item?.value) as? UIImage) else {

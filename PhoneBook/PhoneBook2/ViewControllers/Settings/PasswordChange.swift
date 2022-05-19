@@ -9,7 +9,6 @@ import UIKit
 import FirebaseAuth
 
 class PasswordChangeViewController: UIViewController {
-  
 
   
   func getView() -> UIViewController {
@@ -22,16 +21,18 @@ class PasswordChangeViewController: UIViewController {
   @IBOutlet var oldPassField: UITextField!
   @IBOutlet var newPassField: UITextField!
   @IBOutlet var newPassConfirmField: UITextField!
+  @IBOutlet var saveBtt: UIButton!
   
   override func viewDidLoad() {
         super.viewDidLoad()
     oldPassField.isSecureTextEntry = true
+    saveBtt.setUpStyle()
         // Do any additional setup after loading the view.
     }
 
  
   @IBAction func confirmBtt(_ sender: UIButton){
-    if oldPassField.text! != DataManager.user.password {
+    if oldPassField.text! != ApiClient.user!.password {
         self.showToast(message: "wrong password")
         return
     }
@@ -45,9 +46,9 @@ class PasswordChangeViewController: UIViewController {
       return
     }
     Auth.auth().currentUser?.updatePassword(to: newPass, completion: { error in
-      debugPrint(error?.localizedDescription)
+      debugPrint(error?.localizedDescription ?? "")
     })
-    DataManager.user.password = newPass
+    ApiClient.user!.password = newPass
     self.dismiss(animated: true, completion: nil)
   }
   @IBAction func dismissBtt(_ sender: UIButton){
@@ -59,7 +60,7 @@ class PasswordChangeViewController: UIViewController {
       alert.addAction(UIAlertAction(title: "Back",
                                     style: UIAlertAction.Style.destructive,
                                     handler: { _ in
-        self.dismiss(animated: false, completion: nil)
+        self.dismiss(animated: true, completion: nil)
       }))
       alert.addAction(UIAlertAction(title: "Keep editing",
                                     style: UIAlertAction.Style.default,
@@ -67,7 +68,7 @@ class PasswordChangeViewController: UIViewController {
       
       self.present(alert, animated: true, completion: nil)
     } else {
-      self.dismiss(animated: false, completion: nil)
+      self.dismiss(animated: true, completion: nil)
     }
   }
   /*

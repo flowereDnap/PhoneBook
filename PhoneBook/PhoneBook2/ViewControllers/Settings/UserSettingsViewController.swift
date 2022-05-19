@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class UserSettingsViewController: UIViewController {
+ 
   
   func getView() -> UIViewController {
     let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -21,41 +22,38 @@ class UserSettingsViewController: UIViewController {
   
   
   override func viewDidLoad() {
-        super.viewDidLoad()
-    let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 44))
-    view.addSubview(navBar)
-
-    let navItem = UINavigationItem(title: "SomeTitle")
-    let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: nil)
-    navItem.rightBarButtonItem = doneItem
-
-    navBar.setItems([navItem], animated: false)
-        // Do any additional setup after loading the view.
+      super.viewDidLoad()
+      // Do any additional setup after loading the view.
   }
   @IBOutlet var userNameLable: UILabel!
   @IBOutlet var emailLable: UILabel!
+  @IBOutlet var changePassBtt: UIButton!
+
 
   @IBAction func editUserNameBtt(_ sender: UIButton){
     let vc = UserChangeViewController().getView( changeType: .name)
-      self.present(vc , animated: true, completion: nil)
+    vc.modalPresentationStyle = .fullScreen
+    self.present(vc , animated: true, completion: nil)
   }
   @IBAction func editEmailBtt(_ sender: UIButton){
     let vc = UserChangeViewController().getView( changeType: .email)
-      self.present(vc , animated: true, completion: nil)
+    vc.modalPresentationStyle = .fullScreen
+    self.present(vc , animated: true, completion: nil)
   }
   @IBAction func changePasswordBtt(_ sender: UIButton){
     let vc = PasswordChangeViewController().getView()
-      self.present(vc , animated: true, completion: nil)
+    vc.modalPresentationStyle = .fullScreen
+    self.present(vc , animated: true, completion: nil)
   }
  
   @IBAction func backBtt(_ sender: UIButton){
-      self.dismiss(animated: true, completion: nil)
+    self.dismiss(animated: true, completion: nil)
   }
  
   override func viewWillAppear(_ animated: Bool) {
-    
-    userNameLable.text = DataManager.user.name
-    emailLable.text = DataManager.user.email
+    changePassBtt.setUpStyle()
+    userNameLable.text = ApiClient.user!.name
+    emailLable.text = ApiClient.user!.email
   }
 
   

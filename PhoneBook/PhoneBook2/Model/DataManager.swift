@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 enum DataProv: String, CaseIterable, Codable{
   case userDefaults
@@ -15,8 +16,8 @@ enum DataProv: String, CaseIterable, Codable{
 }
 
 class DataManager {
-  
-  private static var dataProvider: DataProvider!
+ 
+  private static var dataProvider: DataProvider = UserDefaultsDataProvider()
   
   
   
@@ -36,10 +37,9 @@ class DataManager {
     default:
       dataProvider = UserDefaultsDataProvider()
     }
-      return data2 ?? DataProv.userDefaults
+    return data2 ?? DataProv.userDefaults
   }() {
     didSet{
-      print("DIDSET", dataProvType)
       UserDefaults.standard.set(try? JSONEncoder().encode(dataProvType), forKey:DataManager.dataProvTypeKey)
       
     
@@ -55,14 +55,14 @@ class DataManager {
       }
     }
   }
+  
   static let dataProvTypeKey = "dataProvTypeKey"
   static let contactListKey = "contactsList5"
+  static let userKey = "userKey"
   
-  static var user: User!
   
   static var data: [Contact] {
     get {
-      print("dataptovtype:  ",dataProvType, dataProvider)
       return dataProvider.data }
     set {
       dataProvider.data = newValue

@@ -7,29 +7,31 @@
 
 import SwiftUI
 
-
-extension UITextField {
-    func setPreferences() {
-        self.layer.cornerRadius = 8
-        self.layer.borderColor = UIColor.gray.cgColor
-        self.layer.borderWidth = 20
-        // etc.
+struct BlueButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color(red: 0, green: 0, blue: 0.5))
+            .foregroundColor(.white)
+            .clipShape(Capsule())
     }
 }
 
 extension UIButton {
-  func setPreferences() {
-    let bgColor: UIColor = .black
-    let cornerRadius: CGFloat = 8
-    
-    self.setTitleColor(.white, for: .normal)
-    self.layer.borderWidth = 0.5
-    self.layer.borderColor = UIColor.gray.cgColor
-    self.backgroundColor = bgColor
-    self.layer.cornerRadius = 6
-    self.layer.masksToBounds = true
-    
-               self.clipsToBounds = true
-               
+  func setUpStyle(){
+    self.setTitleColor(UIColor.black, for: .normal)
+    self.backgroundColor = .clear
+    self.layer.cornerRadius = 4.0
   }
 }
+extension UIAlertAction {
+    var titleTextColor: UIColor? {
+        get {
+            return self.value(forKey: "titleTextColor") as? UIColor
+        } set {
+            self.setValue(newValue, forKey: "titleTextColor")
+        }
+    }
+}
+
+

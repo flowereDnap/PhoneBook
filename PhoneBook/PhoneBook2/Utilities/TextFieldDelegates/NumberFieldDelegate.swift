@@ -9,7 +9,7 @@ import UIKit
 
 class NumberFieldDelegate: NSObject, UITextFieldDelegate {
   
-  var parentView: UIViewController
+  weak var parentView: UIViewController?
   
   init (parentView: UIViewController) {
     self.parentView = parentView
@@ -22,7 +22,7 @@ class NumberFieldDelegate: NSObject, UITextFieldDelegate {
     alert.addAction(UIAlertAction(title: "ok",
                                   style: UIAlertAction.Style.default,
                                   handler: nil))
-    parentView.present(alert, animated: true, completion: nil)
+    parentView?.present(alert, animated: true, completion: nil)
   }
   
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

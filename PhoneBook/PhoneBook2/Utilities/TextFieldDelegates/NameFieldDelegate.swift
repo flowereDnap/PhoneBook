@@ -10,14 +10,14 @@ import UIKit
 
 class NameFieldDelegate: NSObject, UITextFieldDelegate {
   
-  var parentView: ContactViewController
+  weak var parentView: ContactViewController?
   
   init (parentView: ContactViewController) {
     self.parentView = parentView
   }
   
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    parentView.dataChanged = true
+    parentView?.dataChanged = true
     return true
   }
   
@@ -28,6 +28,6 @@ class NameFieldDelegate: NSObject, UITextFieldDelegate {
     alert.addAction(UIAlertAction(title: "ok",
                                   style: UIAlertAction.Style.default,
                                   handler: nil))
-    parentView.present(alert, animated: true, completion: nil)
+    parentView?.present(alert, animated: true, completion: nil)
   }
 }

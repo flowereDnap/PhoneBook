@@ -12,7 +12,7 @@ import FirebaseFirestoreSwift
 import SwiftUI
 
 class SignUpVC: UIViewController {
-  
+
   @IBOutlet var emailField: UITextField!
   @IBOutlet var userNameField: UITextField!
   @IBOutlet var passwordField: UITextField!
@@ -20,7 +20,7 @@ class SignUpVC: UIViewController {
   @IBOutlet var errorLable: UILabel!
   @IBOutlet var backBtt: UIButton!
   
-  let loadingVC = LoadingViewController()
+  let loadingVC = LoadingViewController.getView()
   
   var gotAnswer: Bool! {
     didSet {
@@ -35,13 +35,16 @@ class SignUpVC: UIViewController {
   override func viewDidLoad(){
     super.viewDidLoad()
     errorLable.alpha = 0
-    //НЕ РАБОТАЕТ ЕБАЛ ПОЧЕМУ НУЖНА СПРОСИТЬ
-    //passwordField.enablePasswordToggle()
-    //passwordConfirmField.enablePasswordToggle()
+
+    passwordField.isSecureTextEntry = true
+    passwordConfirmField.isSecureTextEntry = true
+    
+    passwordField.enablePasswordToggle2()
+    passwordConfirmField.enablePasswordToggle3()
   }
   
   @IBAction func backBtt(_ sender: UIButton){
-    self.dismiss(animated: false)
+    self.dismiss(animated: true)
   }
   @IBAction func signUpBtt(_ sender: UIButton){
     
@@ -93,14 +96,12 @@ class SignUpVC: UIViewController {
         
         let db = Firestore.firestore()
         let user = User(uid: result!.user.uid, email: result!.user.email ?? "", name: userName)
-        DataManager.user = user
-        do {
-          try db.collection("users").document(user.uid).setData(from: user)
-        } catch {
-          debugPrint("user save fail")
-        }
+        ApiClient.user = user
+        db.collection("users").document(user.uid).setData(["name": user.name])
+        
         self.gotAnswer = true
-        self.transitionToListOfContacts()
+        self.dismiss(animated: true)
+        
     }
   }
   

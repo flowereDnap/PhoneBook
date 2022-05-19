@@ -9,28 +9,28 @@ import Foundation
 import FirebaseAuth
 import Firebase
 import FirebaseFirestoreSwift
+import UIKit
 
 enum ApiError: Error {
   case noData
 }
 
 class ApiClient: DataProvider{
+ 
   
   
   
   static var user: User?
-  static var parentView: ViewController!
   
-  let loadingVC = LoadingViewController()
+  let loadingVC = LoadingViewController.getView()
 
   
   var gotAnswer: Bool! {
     didSet {
       if self.gotAnswer == true {
-        ApiClient.parentView.dismiss(animated: true, completion: nil)
-        ApiClient.parentView.reloadTableViewData(with: "")
+        loadingVC.hide()
       } else {
-        ApiClient.parentView.present(loadingVC, animated: true, completion: nil)
+        loadingVC.show()
       }
     }
   }
@@ -43,41 +43,54 @@ class ApiClient: DataProvider{
     
     loadingVC.modalPresentationStyle = .overCurrentContext
     loadingVC.modalTransitionStyle = .crossDissolve
-   
-    callfunc()
-    var result: [Contact] = []
-    let db = Firestore.firestore()
-    guard let uid = ApiClient.user?.uid else {
-      debugPrint("user uid is empty")
-      data = result
-      self.gotAnswer = true
-      return
-    }
     
+
     
-    db.collection(uid).getDocuments { (querySnapshot, error) in
-      if let err = error {
+    if ApiClient.user != nil {
+      callfunc()
+      var result: [Contact] = []
+      let db = Firestore.firestore()
+      guard let uid = ApiClient.user?.uid else {
+        debugPrint("user uid is empty")
+        self.data = result
         self.gotAnswer = true
-        ApiClient.parentView.showToast(message: err.localizedDescription)
-      }
       
-      
-      guard let snapshotDocuments = querySnapshot?.documents else {
-        self.gotAnswer = true
         return
       }
-      for document in snapshotDocuments {
-        do {
-          let contact = try document.data(as: Contact.self)
-          print("cont: ", contact.id)
-          result.append(contact)
-        } catch let error as NSError {
-          debugPrint("error: \(error.localizedDescription)")
+      
+      
+      db.collection(uid).getDocuments { (querySnapshot, error) in
+        if let err = error {
+          self.gotAnswer = true
+          debugPrint(err.localizedDescription)
+          debugPrint("USER:", Auth.auth().currentUser )
         }
+        
+        
+        guard let snapshotDocuments = querySnapshot?.documents else {
+          self.gotAnswer = true
+          return
+        }
+        for document in snapshotDocuments {
+          do {
+            let contact = try document.data(as: Contact.self)
+            result.append(contact)
+          } catch let error as NSError {
+            debugPrint("error: \(error.localizedDescription)")
+          }
+        }
+        self.data = result
+        self.gotAnswer = true
       }
-      self.data = result
-      self.gotAnswer = true
+    } else {
+      let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+      let vc: LoginViewController = mainStoryboard.instantiateViewController(withIdentifier: "LoginScene") as! LoginViewController
+      vc.parentView = LoadingViewController.parentView
+      vc.modalPresentationStyle = .fullScreen
+      LoadingViewController.parentView.present(vc, animated: true, completion: nil)
     }
+    
+    
   }
   func callfunc(){
     self.gotAnswer = false
@@ -103,7 +116,7 @@ class ApiClient: DataProvider{
     do {
       try db.collection(uid).document(contact.id).setData(from: contact)
     } catch let error {
-      debugPrint("Error writing city to Firestore: \(error)")
+      debugPrint("Error writing contact to Firestore: \(error)")
     }
     
     let changingContact = data.first{$0.id == contact.id}

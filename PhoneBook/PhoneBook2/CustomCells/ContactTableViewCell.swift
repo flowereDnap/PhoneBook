@@ -8,6 +8,7 @@
 import UIKit
 
 class ContactTableViewCell: MyCell {
+
   
   
   @IBOutlet var profileImage: UIImageView!

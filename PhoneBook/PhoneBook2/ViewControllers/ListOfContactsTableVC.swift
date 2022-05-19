@@ -23,6 +23,7 @@ enum SortType: String , Decodable, CaseIterable{
 
 
 class ViewController: UIViewController {
+
   
   @IBOutlet var tableView: UITableView!
   @IBOutlet var searchFooterBottomConstraint: NSLayoutConstraint!
@@ -40,6 +41,7 @@ class ViewController: UIViewController {
     set {
       DataManager.data = newValue
       filteredContacts = newValue
+      self.reloadTableViewData(with: "")
     }
   }
   
@@ -62,7 +64,8 @@ class ViewController: UIViewController {
   let searchController = UISearchController(searchResultsController: nil)
   
    func setUpView() {
-    let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+     let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))
+    rightBtt.tintColor = .black
     let menuBtn = UIButton(type: .custom)
     menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
     menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
@@ -98,11 +101,14 @@ class ViewController: UIViewController {
     reloadTableViewData(with: "No contacts yet")
   }
   
+  override func viewWillAppear(_ animated: Bool) {
+    LoadingViewController.parentView = self
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    LoadingViewController.parentView = self
     setUpView()
-    
-    ApiClient.parentView = self
     
     tableView?.register(ContactTableViewCell.nib, forCellReuseIdentifier: ContactTableViewCell.identifier)
     tableView?.rowHeight = UITableView.automaticDimension
@@ -335,8 +341,10 @@ extension ViewController {
         
         var title = "Save to \(type.rawValue)"
         var isEnabled = true
+        var titleColor = UIColor.black
         if type == DataManager.dataProvType{
           title = "Saved to \(type.rawValue)"
+          titleColor = .gray
           isEnabled = false
         }
         
@@ -356,6 +364,7 @@ extension ViewController {
             self.showToast(message: "loaded with \(type.rawValue)")
           }
         }
+        action.titleTextColor = titleColor
         action.isEnabled = isEnabled
         optionMenu.addAction(action)
       }
@@ -367,9 +376,10 @@ extension ViewController {
     }
     actions.append(action1)
     
-    if DataManager.dataProvType == .server{
+    if DataManager.dataProvType == .server {
       let action2 = UIAction(title: settingsButtonTitles[1]) { _ in
         let vc = UserSettingsViewController().getView()
+        vc.modalPresentationStyle = .fullScreen
         self.present(vc , animated: true, completion: nil)
       }
       actions.append(action2)
@@ -380,7 +390,11 @@ extension ViewController {
         } catch let signOutError as NSError {
           print("Error signing out: %@", signOutError)
         }
-        self.dismiss(animated: true, completion: nil)
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc: LoginViewController = mainStoryboard.instantiateViewController(withIdentifier: "LoginScene") as! LoginViewController
+        vc.parentView = self
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc , animated: true, completion: nil)
       }
       actions.append(action3)
     }

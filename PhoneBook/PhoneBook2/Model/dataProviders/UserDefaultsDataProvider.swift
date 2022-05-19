@@ -8,6 +8,7 @@
 import Foundation
 
 class UserDefaultsDataProvider: DataProvider {
+
  
   var data: [Contact] = []
   var dataLoad: [Contact] {

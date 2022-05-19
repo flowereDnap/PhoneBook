@@ -7,7 +7,9 @@
 
 import UIKit
 
-class ContactViewController: UITableViewController {
+class ContactViewController: UITableViewController{
+  
+  
   enum ViewMode {
     case edit
     case view
@@ -41,40 +43,43 @@ class ContactViewController: UITableViewController {
     dataChanged = false
     var rightButton: UIBarButtonItem
     var leftButton: UIBarButtonItem
+    let defBtt1 = UIButton()
+    let defBtt2 = UIButton()
+    defBtt1.setUpStyle()
+    defBtt2.setUpStyle()
     switch viewMode {
     case .edit:
-      rightButton = UIBarButtonItem.init(title: "Save",
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(saveButtonPressed))
+      defBtt1.setTitle("Save", for: .normal)
+      defBtt1.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+      rightButton = UIBarButtonItem(customView: defBtt1)
       rightButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .disabled)
       rightButton.isEnabled = false
       
-      leftButton = UIBarButtonItem.init(title: "Cancel",
-                                        style: .done,
-                                        target: self,
-                                        action: #selector(editCancelButtonPressed))
+      defBtt2.setTitle("Cancel", for: .normal)
+      defBtt2.addTarget(self, action: #selector(editCancelButtonPressed), for: .touchUpInside)
+      leftButton = UIBarButtonItem(customView: defBtt2)
+     
       
       
     case .view:
-      rightButton = UIBarButtonItem.init(title: "Edit",
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(editButtonPressed))
-      leftButton = UIBarButtonItem.init(title: "Back",
-                                        style: .done,
-                                        target: self,
-                                        action: #selector(backButtonPressed))
+      defBtt1.setTitle("Edit", for: .normal)
+      defBtt1.addTarget(self, action: #selector(editButtonPressed), for: .touchUpInside)
+      rightButton = UIBarButtonItem(customView: defBtt1)
+      
+      defBtt2.setTitle("Back", for: .normal)
+      defBtt2.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+      leftButton = UIBarButtonItem(customView: defBtt2)
+     
       
     case .create:
-      rightButton = UIBarButtonItem.init(title: "Create",
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(createButtonPressed))
-      leftButton = UIBarButtonItem.init(title: "Back",
-                                        style: .done,
-                                        target: self,
-                                        action: #selector(backButtonPressed))
+      
+      defBtt1.addTarget(self, action: #selector(createButtonPressed), for: .touchUpInside)
+      defBtt1.setTitle("Create", for: .normal)
+      rightButton = UIBarButtonItem(customView: defBtt1)
+      
+      defBtt2.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+      defBtt2.setTitle("Back", for: .normal)
+      leftButton = UIBarButtonItem(customView: defBtt2)
     }
     self.navigationItem.rightBarButtonItem = rightButton
     self.navigationItem.leftBarButtonItem = leftButton

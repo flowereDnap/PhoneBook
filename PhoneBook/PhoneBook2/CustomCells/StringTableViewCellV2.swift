@@ -9,11 +9,12 @@ import UIKit
 
 class StringTableViewCellV2: UITableViewCell, saveCell {
   
+  
   @IBOutlet var label: UILabel!
   @IBOutlet var textField: UITextField!
   
   var delegate: UITextFieldDelegate?
-  private var parentView: ContactViewController?
+  private weak var parentView: ContactViewController?
   internal var item: ContactField? {
     didSet {
       label.text = item?.lable

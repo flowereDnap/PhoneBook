@@ -9,6 +9,7 @@
 import UIKit
 
 class FileDataProvider: DataProvider {
+
   let filesManager = FilesManager()
   let encoder = JSONEncoder()
   let decoder = JSONDecoder()

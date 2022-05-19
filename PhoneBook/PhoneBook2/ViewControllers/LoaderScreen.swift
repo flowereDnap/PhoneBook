@@ -2,6 +2,26 @@
 import UIKit
 
 class LoadingViewController: UIViewController {
+ 
+  static var parentView: ViewController!
+  
+
+  static func getView()-> LoadingViewController{
+    let vc = LoadingViewController()
+    vc.modalPresentationStyle = .overCurrentContext
+    vc.modalTransitionStyle = .crossDissolve
+    return vc
+  }
+  
+
+  func show(parentView: ViewController = LoadingViewController.parentView){
+    parentView.present(self, animated: false, completion: nil)
+  }
+  func hide(parentView: ViewController = LoadingViewController.parentView){
+    parentView.dismiss(animated: true, completion: nil)
+    parentView.reloadTableViewData(with: "")
+  }
+  
   var loadingActivityIndicator: UIActivityIndicatorView = {
       let indicator = UIActivityIndicatorView()
       
@@ -38,9 +58,11 @@ class LoadingViewController: UIViewController {
       
       return blurEffectView
   }()
+  
   override func viewDidLoad() {
       super.viewDidLoad()
-      
+    
+
       view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
       
       // Add the blurEffectView with the same

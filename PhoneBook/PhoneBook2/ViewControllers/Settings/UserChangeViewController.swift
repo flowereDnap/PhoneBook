@@ -10,7 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class UserChangeViewController: UIViewController {
-  
+ 
   enum ChangeType{
     case name
     case email
@@ -27,10 +27,10 @@ class UserChangeViewController: UIViewController {
     switch changeType {
     case .name:
       vc.placeholderText = "user name"
-      vc.value = DataManager.user.name
+      vc.value = ApiClient.user!.name
     case .email:
       vc.placeholderText = "email"
-      vc.value = DataManager.user.email
+      vc.value = ApiClient.user!.email
     }
     
     
@@ -38,11 +38,13 @@ class UserChangeViewController: UIViewController {
     return vc
   }
   
+  @IBOutlet var saveBtt: UIButton!
   @IBOutlet var textField: UITextField!
   
   override func viewDidLoad() {
         super.viewDidLoad()
     textField.text = value
+    saveBtt.setUpStyle()
         // Do any additional setup after loading the view.
     }
 
@@ -52,9 +54,9 @@ class UserChangeViewController: UIViewController {
     switch changeType {
     case .name:
       let db = Firestore.firestore()
-      let docRef = db.collection("users").document(DataManager.user.uid)
+      let docRef = db.collection("users").document(ApiClient.user!.uid)
       docRef.setData(["name": new_value])
-      DataManager.user.name = new_value
+      ApiClient.user!.name = new_value
       self.dismiss(animated: true, completion: nil)
     case .email:
       
@@ -63,10 +65,10 @@ class UserChangeViewController: UIViewController {
         return
       }
       Auth.auth().currentUser?.updateEmail(to: new_value) { error in
-        debugPrint(error?.localizedDescription)
+        debugPrint(error?.localizedDescription ?? "")
         return
       }
-      DataManager.user.email = new_value
+      ApiClient.user!.email = new_value
       self.dismiss(animated: true, completion: nil)
     default:
       return
@@ -75,6 +77,7 @@ class UserChangeViewController: UIViewController {
     
     
   }
+  
   @IBAction func dismissBtt(_ sender: UIButton){
     if textField.text! != value {
       // cancel editing existing one
@@ -84,7 +87,7 @@ class UserChangeViewController: UIViewController {
       alert.addAction(UIAlertAction(title: "Back",
                                     style: UIAlertAction.Style.destructive,
                                     handler: { _ in
-        self.dismiss(animated: false, completion: nil)
+        self.dismiss(animated: true, completion: nil)
       }))
       alert.addAction(UIAlertAction(title: "Keep editing",
                                     style: UIAlertAction.Style.default,
@@ -92,7 +95,7 @@ class UserChangeViewController: UIViewController {
       
       self.present(alert, animated: true, completion: nil)
     } else {
-      self.dismiss(animated: false, completion: nil)
+      self.dismiss(animated: true, completion: nil)
     }
   }
   /*

@@ -13,21 +13,22 @@ import FirebaseFirestoreSwift
 import SwiftUI
 
 class LoginViewController: UIViewController {
-  
+
   @IBOutlet var emailTextField: UITextField!
   @IBOutlet var passwordTextField: UITextField!
   @IBOutlet var errorLable: UILabel!
   @IBOutlet var signUpTextField: UITextField!
+  @IBOutlet var settingsButton: UIButton!
   
-  let loadingVC = LoadingViewController()
+  let loadingVC = LoadingViewController.getView()
   var parentView: ViewController!
   
   var gotAnswer: Bool! {
     didSet {
       if gotAnswer == true {
-        self.dismiss(animated: true, completion: nil)
+        loadingVC.hide()
       } else {
-        self.present(loadingVC, animated: true, completion: nil)
+        loadingVC.show()
       }
     }
   }
@@ -36,11 +37,18 @@ class LoginViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     passwordTextField.text = nil
+    
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-  
+    
+    settingsButton.setImage(UIImage(named: "settingsIcon"), for: .normal)
+    settingsButton.imageView?.contentMode = .scaleAspectFit
+    settingsButton.showsMenuAsPrimaryAction = true
+    settingsButton.menu = makeSettingsMenu()
+    
+    
     passwordTextField.enablePasswordToggle()
     
     loadingVC.modalPresentationStyle = .overCurrentContext
@@ -72,20 +80,21 @@ class LoginViewController: UIViewController {
         self.gotAnswer = true
         return
       }
-      DataManager.user = User(authData: Auth.auth().currentUser!)
+
+      ApiClient.user = User(authData: Auth.auth().currentUser!)
+      print("USER:", Auth.auth().currentUser!)
       let db = Firestore.firestore()
       
-        let docRef = db.collection("users").document(DataManager.user.uid)
+      let docRef = db.collection("users").document(ApiClient.user!.uid)
         docRef.getDocument(source: .cache) { (document, error) in
             if let document = document {
-              DataManager.user.name = document.get("name") as! String
-              print("name:  ", DataManager.user.name)
+              ApiClient.user!.name = document.get("name") as! String
             } else {
                 print("Document does not exist in cache")
             }
         }
       
-      DataManager.user.password = password
+      ApiClient.user!.password = password
       self.gotAnswer = true
       
       DataManager.dataProvType = .server
@@ -157,4 +166,43 @@ class LoginViewController: UIViewController {
     let result = emailTest.evaluate(with: testStr)
     return result
   }
+  
+  func makeSettingsMenu()-> UIMenu{
+    let action1 =  UIAction(title: "data provider") { _ in
+      let optionMenu = UIAlertController(title: nil,
+                                         message: "Choose Option",
+                                         preferredStyle: .actionSheet)
+      
+      for type in DataProv.allCases {
+        
+        var title = "Save to \(type.rawValue)"
+        var isEnabled = true
+        if type == DataManager.dataProvType{
+          title = "Saved to \(type.rawValue)"
+          isEnabled = false
+        }
+        
+        let action = UIAlertAction(title: title,
+                                   style: .default) { [self] (UIAlertAction) in
+          if type != .server {
+            DataManager.dataProvType = type
+            self.parentView.setUpView()
+            self.showToast(message: "loaded with \(type.rawValue)")
+            self.dismiss(animated: true, completion: nil)
+          }
+        }
+        action.isEnabled = isEnabled
+        optionMenu.addAction(action)
+      }
+      
+      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+      optionMenu.addAction(cancelAction)
+      
+      self.present(optionMenu, animated: true, completion: nil)
+    }
+    return UIMenu(title: "Settings",
+                  options: .displayInline,
+                  children: [action1])
+  }
+  
 }
