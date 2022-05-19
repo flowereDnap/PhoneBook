@@ -69,6 +69,7 @@ class ViewController: UIViewController {
     let menuBtn = UIButton(type: .custom)
     menuBtn.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
     menuBtn.setImage(UIImage(named:"sort_icon"), for: .normal)
+    
     menuBtn.showsMenuAsPrimaryAction = true
     menuBtn.menu = makeFiltersMenu()
     
@@ -79,15 +80,16 @@ class ViewController: UIViewController {
     currHeight?.isActive = true
     
     let menuBtn2 = UIButton(type: .custom)
-    menuBtn2.frame = CGRect(x: 0.0, y: 0.0, width: 20, height: 20)
+    menuBtn2.frame = CGRect(x: 0.0, y: 0.0, width: 40, height: 40)
     menuBtn2.setImage(UIImage(named:"settingsIcon"), for: .normal)
     menuBtn2.showsMenuAsPrimaryAction = true
+    menuBtn2.contentMode = .scaleAspectFill
     menuBtn2.menu = makeSettingsMenu()
     
     let leftBarItem2 = UIBarButtonItem(customView: menuBtn2)
-    let currWidth2 = leftBarItem2.customView?.widthAnchor.constraint(equalToConstant: 24)
+    let currWidth2 = leftBarItem2.customView?.widthAnchor.constraint(equalToConstant: 44)
     currWidth2?.isActive = true
-    let currHeight2 = leftBarItem2.customView?.heightAnchor.constraint(equalToConstant: 24)
+    let currHeight2 = leftBarItem2.customView?.heightAnchor.constraint(equalToConstant: 44)
     currHeight2?.isActive = true
     
     self.navigationItem.rightBarButtonItems = [rightBtt, leftBarItem]
