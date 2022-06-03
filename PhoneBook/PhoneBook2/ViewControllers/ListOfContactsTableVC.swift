@@ -105,6 +105,7 @@ class ViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     LoadingViewController.parentView = self
+    setUpView()
   }
   
   override func viewDidLoad() {
@@ -391,6 +392,7 @@ extension ViewController {
         let firebaseAuth = Auth.auth()
         do {
           try firebaseAuth.signOut()
+          ApiClient.user = nil
         } catch let signOutError as NSError {
           print("Error signing out: %@", signOutError)
         }

@@ -8,16 +8,21 @@ class LoadingViewController: UIViewController {
   DispatchQueue(
     label: "net.loader.queue")
   
-  static func load(complation: @escaping ()->(), parentView: UIViewController = LoadingViewController.parentView) {
-      let loadingVC = LoadingViewController.getView()
-
+  static func show(){
     DispatchQueue.global(qos: .userInteractive).sync{
+      let loadingVC = LoadingViewController.getView()
       print("order:", 1.1)
       DispatchQueue.main.async {
         parentView.present(loadingVC, animated: false, completion: nil)
       }
         
     }
+  }
+  
+  static func load(complation: @escaping ()->(), parentView: UIViewController = LoadingViewController.parentView) {
+     
+
+    
     
     DispatchQueue.global(qos: .userInteractive).sync{
       print("order:", 1.2)
@@ -25,6 +30,9 @@ class LoadingViewController: UIViewController {
     }
     
     
+    
+  }
+  static func hide(){
     DispatchQueue.global(qos: .userInteractive).sync{
       print("order:", 1.3)
       DispatchQueue.main.async {

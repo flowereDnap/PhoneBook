@@ -96,7 +96,6 @@ class SignUpVC: UIViewController {
         
         let db = Firestore.firestore()
         let user = User(uid: result!.user.uid, email: result!.user.email ?? "", name: userName)
-        ApiClient.user = user
         db.collection("users").document(user.uid).setData(["name": user.name])
         
         self.gotAnswer = true

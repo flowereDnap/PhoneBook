@@ -13,4 +13,5 @@ protocol DataProvider {
   func addContact() -> Contact
   func updContact(contact: Contact)
   func deleteContact(id: String)
+  
 }

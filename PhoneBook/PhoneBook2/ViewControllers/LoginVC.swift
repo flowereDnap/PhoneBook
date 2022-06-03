@@ -34,9 +34,12 @@ class LoginViewController: UIViewController {
           DispatchQueue.global(qos: .userInitiated).sync{
               DataManager.dataProvType = .server
           }
+          
         }
         }
       }
+      LoadingViewController.hide()
+      loginResponse = false
     }
   }
   
@@ -114,6 +117,7 @@ class LoginViewController: UIViewController {
     print("login0",self.loginResponse)
     DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
       print("order",1)
+      LoadingViewController.show()
       LoadingViewController.load(complation: self!.authF)
       print("apiuser1", ApiClient.user)
     

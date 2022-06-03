@@ -37,7 +37,7 @@ extension UITextField {
     button2.setAttributedTitle(attributedQuote2, for: .selected)
     button2.setTitleColor(.black, for: .normal)
     button2.setTitleColor(.black, for: .selected)
-      button2.addTarget(self, action: #selector(togglePasswordView2), for: .touchUpInside)
+    button2.addTarget(self, action: #selector(togglePasswordView2), for: .touchUpInside)
     self.rightView = button2
     self.rightViewMode = .always
     button2.alpha = 0.4
@@ -57,7 +57,7 @@ extension UITextField {
     button3.setAttributedTitle(attributedQuote2, for: .selected)
     button3.setTitleColor(.black, for: .normal)
     button3.setTitleColor(.black, for: .selected)
-      button3.addTarget(self, action: #selector(togglePasswordView3), for: .touchUpInside)
+    button3.addTarget(self, action: #selector(togglePasswordView3), for: .touchUpInside)
     self.rightView = button3
     self.rightViewMode = .always
     button3.alpha = 0.4

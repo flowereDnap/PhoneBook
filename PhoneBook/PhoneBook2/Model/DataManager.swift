@@ -19,7 +19,11 @@ class DataManager {
  
   private static var dataProvider: DataProvider = UserDefaultsDataProvider()
   
-  
+  static var VC: ViewController!
+  static func setDataProvType(vc: ViewController, dataProvType: DataProv){
+    DataManager.VC = vc
+    DataManager.dataProvType = dataProvType
+  }
   
   static var dataProvType: DataProv = { () -> DataProv in
       var data2: DataProv?

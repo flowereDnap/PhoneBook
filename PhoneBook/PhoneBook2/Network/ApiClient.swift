@@ -16,16 +16,17 @@ enum ApiError: Error {
 }
 
 class ApiClient: DataProvider{
+ 
   
-  
-  var loadResponse: Bool = false {
+var loadResponse: Bool = false {
     didSet{
       if loadResponse == true{
       DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
-        DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async {
           print("order",3)
           LoadingViewController.parentView?.dismiss(animated: true, completion: nil)
         }
+        loadResponse = false
       }
       }
     }
