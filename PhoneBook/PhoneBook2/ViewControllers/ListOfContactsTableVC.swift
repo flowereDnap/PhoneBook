@@ -109,7 +109,7 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    LoadingViewController.parentView = self
+    LoadingViewController.parentView = self as UIViewController
     setUpView()
     
     tableView?.register(ContactTableViewCell.nib, forCellReuseIdentifier: ContactTableViewCell.identifier)
@@ -239,6 +239,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     if isFilteringBySearchBar {
       searchFooter.setIsFilteringToShow(filteredItemCount:
                                           filteredContacts.count, of: contacts.count)
+      print(dataToShow.count)
       return dataToShow.count
     }
     
@@ -249,6 +250,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     //new cell
     let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.identifier, for: indexPath) as! ContactTableViewCell
+    print(dataToShow.count)
     let contact = dataToShow[indexPath.row]
     cell.setUpCell(contact: contact, isFilteringBySearchBar: self.isFilteringBySearchBar)
     return cell

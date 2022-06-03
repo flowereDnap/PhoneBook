@@ -19,7 +19,7 @@ public class ContactFieldCore: NSManagedObject {
       typeOfValue = newValue.rawValue
     }
     get {
-      Types(rawValue: typeOfValue) ?? Types.date
+      Types(rawValue: typeOfValue) ?? Types.email
     }
   }
   
@@ -33,8 +33,8 @@ public class ContactFieldCore: NSManagedObject {
         valueAsData = Data((value as! String).utf8)
       case .number:
         valueAsData = Data((value as! String).utf8)
-      case .date:
-        valueAsData = withUnsafeBytes(of: (newValue as! Date).timeIntervalSinceReferenceDate) { Data($0) }
+      case .email:
+        valueAsData = Data((value as! String).utf8)
       }
     }
     get {
@@ -45,10 +45,8 @@ public class ContactFieldCore: NSManagedObject {
         return String(decoding: valueAsData, as: UTF8.self)
       case .image:
         return UIImage(data: valueAsData)
-      case .date:
-        return valueAsData.withUnsafeBytes {
-            $0.load(as: Int.self)
-        }
+      case .email:
+        return String(decoding: valueAsData, as: UTF8.self)
       }
     }
   }

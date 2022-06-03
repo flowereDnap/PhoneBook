@@ -37,7 +37,7 @@ public class Contact: Codable, Copyable{
         if let newType = type.getPrev() {
           return getPositionOfLast(inMainFields: false, type: newType)
         } else {
-          return 0
+          return -1
         }
       }
       return result

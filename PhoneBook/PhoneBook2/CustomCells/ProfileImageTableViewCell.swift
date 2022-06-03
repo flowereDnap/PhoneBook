@@ -60,6 +60,7 @@ extension ProfileImageTableViewCell: ImagePickerDelegate {
     }
     self.profilePicture.image = image
     item?.value = image
+    self.save()
   }
   func deleteImage(in sender: UIImageView) {
     sender.image = UIImage(named: "contactDefaultImage")

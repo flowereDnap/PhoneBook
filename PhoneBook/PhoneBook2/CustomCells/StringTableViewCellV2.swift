@@ -27,11 +27,10 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
         textField.text = item?.value as? String
         delegate = NumberFieldDelegate(parentView: parentView!)
         textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
-      case .date:
-        let dateFormatter = DateFormatter()
-        textField.text = dateFormatter.string(from: item?.value as! Date)
-        delegate = NumberFieldDelegate(parentView: parentView!)
-        textField.isUserInteractionEnabled = false
+      case .email:
+        textField.text = item?.value as? String
+        delegate = MailFieldDelegate(parentView: parentView!)
+        textField.isUserInteractionEnabled = !(parentView!.viewMode == .view)
       default:
         break
       }
@@ -65,13 +64,18 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
     }
     
     item?.value = textField.text!
+    self.save()
   }
   
   func save(){
-    if let updContactId = parentView?.currentEditingContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
-      parentView?.currentEditingContact?.mainFields[updContactId] = item!
-    } else if let updContactId = parentView?.currentEditingContact?.otherFields.firstIndex(where: {$0.position == item?.position}){
-      parentView?.currentEditingContact?.otherFields[updContactId] = item!
+    if item!.isMain() {
+      if let updContactId = parentView?.currentEditingContact?.mainFields.firstIndex(where: {$0.position == item?.position}){
+        parentView?.currentEditingContact?.mainFields[updContactId] = item!
+      }
+    } else {
+      if let updContactId = parentView?.currentEditingContact?.otherFields.firstIndex(where: {$0.position == item?.position}){
+        parentView?.currentEditingContact?.otherFields[updContactId] = item!
+      }
     }
   }
   
@@ -104,7 +108,7 @@ extension UIResponder {
   }
 }
 
-protocol saveCell: UITableViewCell {
+protocol saveCell: UITableViewCell{
   func save()
   var item: ContactField? {get set}
 }

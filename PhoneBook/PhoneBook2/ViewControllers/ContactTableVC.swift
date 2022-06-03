@@ -28,6 +28,7 @@ class ContactViewController: UITableViewController{
   var viewMode: ViewMode = .view
   private var currentContact: Contact!
   var currentEditingContact: Contact!
+  var cells:[saveCell]!
   
   static func getView(viewMode: ViewMode, currentContact: Contact) -> ContactViewController {
     let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -155,7 +156,6 @@ class ContactViewController: UITableViewController{
     //check if creating contact is not empty
     if dataChanged {
       // get data from cells
-      saveDataFromCells()
       //upd contact
       currentContact = currentEditingContact
       DataManager.updContact(contact: currentEditingContact)
@@ -182,8 +182,6 @@ class ContactViewController: UITableViewController{
   }
   
   @objc func saveButtonPressed(_ sender: UIButton) {
-    // upd data from cells
-    saveDataFromCells()
     //upd contact
     currentContact = currentEditingContact
     DataManager.updContact(contact: currentEditingContact)
@@ -192,18 +190,6 @@ class ContactViewController: UITableViewController{
     
     viewMode = .view
     setUpView()
-  }
-  
-  func saveDataFromCells(){
-    let totalSection = tableView.numberOfSections
-    for section in 0..<totalSection
-    {
-      let totalRows = tableView.numberOfRows(inSection: section)
-      for row in 0..<totalRows - 1
-      {
-        (tableView.cellForRow(at: IndexPath(row: row, section: section)) as! saveCell).save()
-      }
-    }
   }
 }
 
@@ -219,6 +205,7 @@ extension ContactViewController {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     switch section{
     case 0:
+      print(currentEditingContact?.mainFields.map{$0.type})
       var result = currentEditingContact?.mainFields.count ?? 0
       if !(self.viewMode == .view) {
         result = result + 1
@@ -247,17 +234,20 @@ extension ContactViewController {
     }
     
     switch item?.type{
-    case .date:
+    case .email:
       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
       cell.setUpCell(parentView: self, item: item!)
+     
       return cell
     case .name:
       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
       cell.setUpCell(parentView: self, item: item!)
+     
       return cell
     case .number:
       let cell = tableView.dequeueReusableCell(withIdentifier: StringTableViewCellV2.identifier, for: indexPath) as! StringTableViewCellV2
       cell.setUpCell(parentView: self, item: item!)
+      
       return cell
     case .image:
       let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageTableViewCell.identifier, for: indexPath) as! ProfileImageTableViewCell

@@ -3,23 +3,44 @@ import UIKit
 
 class LoadingViewController: UIViewController {
  
-  static var parentView: ViewController!
+  static weak var parentView: UIViewController!
+  static let serialNetQ =
+  DispatchQueue(
+    label: "net.loader.queue")
   
+  static func load(complation: @escaping ()->(), parentView: UIViewController = LoadingViewController.parentView) {
+      let loadingVC = LoadingViewController.getView()
+
+    DispatchQueue.global(qos: .userInteractive).sync{
+      print("order:", 1.1)
+      DispatchQueue.main.async {
+        parentView.present(loadingVC, animated: false, completion: nil)
+      }
+        
+    }
+    
+    DispatchQueue.global(qos: .userInteractive).sync{
+      print("order:", 1.2)
+      complation()
+    }
+    
+    
+    DispatchQueue.global(qos: .userInteractive).sync{
+      print("order:", 1.3)
+      DispatchQueue.main.async {
+        parentView.dismiss(animated: true)
+      }
+     
+    }
+  }
+  
+  static var isShown = false
 
   static func getView()-> LoadingViewController{
     let vc = LoadingViewController()
     vc.modalPresentationStyle = .overCurrentContext
     vc.modalTransitionStyle = .crossDissolve
     return vc
-  }
-  
-
-  func show(parentView: ViewController = LoadingViewController.parentView){
-    parentView.present(self, animated: false, completion: nil)
-  }
-  func hide(parentView: ViewController = LoadingViewController.parentView){
-    parentView.dismiss(animated: true, completion: nil)
-    parentView.reloadTableViewData(with: "")
   }
   
   var loadingActivityIndicator: UIActivityIndicatorView = {

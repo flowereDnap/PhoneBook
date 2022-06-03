@@ -12,7 +12,7 @@ public enum Types: String , Codable{
   case image
   case name
   case number
-  case date
+  case email
   
   func getPrev()->Types?{
     switch self {
@@ -22,7 +22,7 @@ public enum Types: String , Codable{
       return .image
     case .number:
       return .name
-    case .date:
+    case .email:
       return nil
     }
   }
@@ -35,8 +35,8 @@ public enum Types: String , Codable{
       return ""
     case .number:
       return ""
-    case .date:
-      return Date()
+    case .email:
+      return "" 
     }
   }
 }

@@ -31,8 +31,8 @@ public class ContactField: Codable, Copyable{
         valueAsData = Data((value as! String).utf8)
       case .number:
         valueAsData = Data((value as! String).utf8)
-      case .date:
-        valueAsData = withUnsafeBytes(of: (newValue as! Date).timeIntervalSinceReferenceDate) { Data($0) }
+      case .email:
+        valueAsData = Data((value as! String).utf8)
       }
     }
     get {
@@ -43,14 +43,25 @@ public class ContactField: Codable, Copyable{
         return String(decoding: valueAsData, as: UTF8.self)
       case .image:
         return UIImage(data: valueAsData)
-      case .date:
-        return valueAsData.withUnsafeBytes {
-            $0.load(as: Int.self)
-        }
+      case .email:
+        return String(decoding: valueAsData, as: UTF8.self)
       }
   }
   }
   var valueAsData: Data!
+  
+  func isMain()->Bool {
+    switch self.type{
+    case .image:
+      return true
+    case .name:
+      return true
+    case .number:
+      return true
+    case .email:
+      return false
+    }
+  }
   
   init(position:Int = -1, type: Types, lable: String? = nil, value: Any?) {
     self.position = position

@@ -12,6 +12,8 @@ import Firebase
 import FirebaseFirestoreSwift
 import SwiftUI
 
+
+
 class LoginViewController: UIViewController {
 
   @IBOutlet var emailTextField: UITextField!
@@ -22,22 +24,28 @@ class LoginViewController: UIViewController {
   
   let loadingVC = LoadingViewController.getView()
   var parentView: ViewController!
-  
-  var gotAnswer: Bool! {
-    didSet {
-      if gotAnswer == true {
-        loadingVC.hide()
-      } else {
-        loadingVC.show()
+  var loginResponse: Bool = false {
+    didSet{
+      if loginResponse == true {
+        DispatchQueue.global(qos: .userInitiated).async {
+        print("order",0)
+        if ApiClient.user != nil {
+          print("order",2)
+          DispatchQueue.global(qos: .userInitiated).sync{
+              DataManager.dataProvType = .server
+          }
+        }
+        }
       }
     }
   }
   
+
   var handle: AuthStateDidChangeListenerHandle?
   
   override func viewWillAppear(_ animated: Bool) {
     passwordTextField.text = nil
-    
+    LoadingViewController.parentView = self as UIViewController
   }
   
   override func viewDidLoad() {
@@ -58,31 +66,23 @@ class LoginViewController: UIViewController {
     errorLable.alpha = 0
   }
   
-  
-  @IBAction func loginButtonPressed(_ sender: UIButton) {
-   
-    let error = checkTheFields()
-    if let error = error {
-      showError(error)
-      return
-    } else {
-      hideError()
-    }
-    
-    let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-    let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+  func authF()->(){
+    //var email: String = ""
+    //var password: String = ""
 
+      let email = self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+      let password = self.passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
  
-    gotAnswer = false
     Auth.auth().signIn(withEmail: email, password: password) { user, error in
       if let error = error {
-        self.showError(error.localizedDescription)
-        self.gotAnswer = true
+        DispatchQueue.main.async {
+          self.showError(error.localizedDescription)
+         }
+        self.loginResponse = true
         return
       }
-
+      
       ApiClient.user = User(authData: Auth.auth().currentUser!)
-      print("USER:", Auth.auth().currentUser!)
       let db = Firestore.firestore()
       
       let docRef = db.collection("users").document(ApiClient.user!.uid)
@@ -95,13 +95,37 @@ class LoginViewController: UIViewController {
         }
       
       ApiClient.user!.password = password
-      self.gotAnswer = true
       
-      DataManager.dataProvType = .server
+      self.loginResponse = true
       self.showToast(message: "loaded with server")
-      self.parentView.setUpView()
-      self.dismiss(animated: true, completion: nil)
     }
+  }
+  
+  @IBAction func loginButtonPressed(_ sender: UIButton) {
+   
+    let error = checkTheFields()
+    if let error = error {
+      showError(error)
+      return
+    } else {
+      hideError()
+    }
+
+    print("login0",self.loginResponse)
+    DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
+      print("order",1)
+      LoadingViewController.load(complation: self!.authF)
+      print("apiuser1", ApiClient.user)
+    
+    }
+    
+   // DispatchQueue.global(qos: .userInitiated).sync {
+    //  print(loginResponse)
+      //while !loginResponse {
+        
+      //}
+    //}
+   
   }
   @IBAction func signUpButtonPressed(_ sender: UIButton) {
     // check the fields

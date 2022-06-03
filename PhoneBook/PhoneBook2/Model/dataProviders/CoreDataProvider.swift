@@ -60,10 +60,8 @@ class CoreDataProvider: DataProvider {
     contactToUpd?.otherFields = contact.mainFields ?????????
      */
     //idk if its optimal
-    
     //order matters
     deleteContact(id: contact.id)
-    
     ContactCore(context: context, contact: contact)
     save()
   }

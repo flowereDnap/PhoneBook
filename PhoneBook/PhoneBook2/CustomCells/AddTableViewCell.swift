@@ -71,9 +71,9 @@ class AddTableViewCell: UITableViewCell {
       let optionMenu = UIAlertController(title: nil,
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
-      let action2 = UIAlertAction(title: "new date of birth",
+      let action2 = UIAlertAction(title: "new email",
                                   style: .default) { [weak self] (UIAlertAction2) in
-        self?.callCreateAllert(type: .date, isMain: false)
+        self?.callCreateAllert(type: .email, isMain: false)
       }
       let action3 = UIAlertAction(title: "Cancel", style: .cancel)
       optionMenu.addAction(action3)
@@ -117,8 +117,10 @@ class AddTableViewCell: UITableViewCell {
       let lable = fields[0].text
       let value = fields[1].text
       if isMain {
+        
         let positionOfLast = self.currentEditingContact.getPositionOfLast(inMainFields: true,
                                                                           type: type)
+     
         var newField: ContactField
         switch type {
         case .name:
@@ -134,13 +136,13 @@ class AddTableViewCell: UITableViewCell {
         default:
           return
         }
-        
-        self.parentView.saveDataFromCells()
+    
         self.currentEditingContact.mainFields.forEach {
           if $0.position > positionOfLast {
             $0.position = $0.position + 1
           }
         }
+     
         self.currentEditingContact.mainFields.append(newField)
         self.currentEditingContact.sort()
         self.parentView.tableView.reloadData()
@@ -148,28 +150,29 @@ class AddTableViewCell: UITableViewCell {
       } else {
         let positionOfLast = self.currentEditingContact.getPositionOfLast(inMainFields: false,
                                                          type: type)
-        
+      
         var newField: ContactField
         switch type {
-        case .date:
-          //TODO : string to date delegate
+        case .email:
           newField = ContactField(position: positionOfLast + 1,
-                                  type: .date,
+                                  type: .email,
                                   lable: lable,
-                                  value: Date())
+                                  value: value ?? "")
         default:
           return
         }
-        
-        self.parentView.saveDataFromCells()
+     
         self.currentEditingContact.otherFields.forEach {
           if $0.position > positionOfLast {
             $0.position = $0.position + 1
           }
         }
+   
         self.currentEditingContact.otherFields.append(newField)
+      
         self.currentEditingContact.sort()
         self.parentView.tableView.reloadData()
+   
         self.parentView.dataChanged = true
       }
     }))
