@@ -11,34 +11,23 @@ class LoadingViewController: UIViewController {
   static func show(){
     DispatchQueue.global(qos: .userInteractive).sync{
       let loadingVC = LoadingViewController.getView()
-      print("order:", 1.1)
       DispatchQueue.main.async {
         parentView.present(loadingVC, animated: false, completion: nil)
       }
-        
     }
   }
   
   static func load(complation: @escaping ()->(), parentView: UIViewController = LoadingViewController.parentView) {
-     
-
-    
-    
     DispatchQueue.global(qos: .userInteractive).sync{
-      print("order:", 1.2)
       complation()
     }
-    
-    
-    
   }
+  
   static func hide(){
     DispatchQueue.global(qos: .userInteractive).sync{
-      print("order:", 1.3)
       DispatchQueue.main.async {
         parentView.dismiss(animated: true)
       }
-     
     }
   }
   

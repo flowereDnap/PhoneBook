@@ -13,10 +13,10 @@ protocol Observer: AnyObject {
 }
 
 enum SortType: String , Decodable, CaseIterable{
-  case alph
-  case reAlph = "re-alph"
-  case date
-  case reDate = "re-date"
+  case alph = "Alph"
+  case reAlph = "Re-alph"
+  case date = "Date"
+  case reDate = "Re-date"
 }
 
 
@@ -335,7 +335,7 @@ extension ViewController: UISearchResultsUpdating {
 extension ViewController {
   
   func makeSettingsMenu()-> UIMenu{
-    let settingsButtonTitles = ["data provider", "user", "logaout"]
+    let settingsButtonTitles = ["Data provider", "User", "Logaout"]
     var actions: [UIAction] = []
     let action1 =  UIAction(title: settingsButtonTitles[0]) { _ in
       let optionMenu = UIAlertController(title: nil,
@@ -366,7 +366,7 @@ extension ViewController {
           } else {
             DataManager.dataProvType = type
             setUpView()
-            self.showToast(message: "loaded with \(type.rawValue)")
+            self.showToast(message: "Loaded with \(type.rawValue)")
           }
         }
         action.titleTextColor = titleColor
@@ -388,7 +388,7 @@ extension ViewController {
         self.present(vc , animated: true, completion: nil)
       }
       actions.append(action2)
-      let action3 = UIAction(title: "logout") { _ in
+      let action3 = UIAction(title: settingsButtonTitles[2]) { _ in
         let firebaseAuth = Auth.auth()
         do {
           try firebaseAuth.signOut()
@@ -425,7 +425,7 @@ extension ViewController {
                               identifier: UIAction.Identifier(title),
                               handler: self.filterHandler)
         if title == self.sortMode.rawValue {
-          action.title = "sorted by " + title
+          action.title = "Sorted by " + title
           action.state = .on
         } else {
           action.title = title
@@ -449,14 +449,14 @@ extension ViewController {
     var toastText: String
     switch filter {
     case .alph:
-      toastText = "sorted by alphabet"
+      toastText = "Sorted by alphabet"
     case .date:
-      toastText = "sorted by date"
+      toastText = "Sorted by date"
       
     case .reAlph:
-      toastText = "reverse sorted by alphabet"
+      toastText = "Reverse sorted by alphabet"
     case .reDate:
-      toastText = "reverse sorted by date"
+      toastText = "Reverse sorted by date"
     }
     sortContacts(sorter: filter)
     let rightBtt = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addButton))

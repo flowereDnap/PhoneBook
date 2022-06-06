@@ -26,10 +26,10 @@ class UserChangeViewController: UIViewController {
     vc.changeType = changeType
     switch changeType {
     case .name:
-      vc.placeholderText = "user name"
+      vc.placeholderText = "User name"
       vc.value = ApiClient.user!.name
     case .email:
-      vc.placeholderText = "email"
+      vc.placeholderText = "Email"
       vc.value = ApiClient.user!.email
     }
     
@@ -61,7 +61,7 @@ class UserChangeViewController: UIViewController {
     case .email:
       
       if !LoginViewController.isValidEmail(testStr: new_value){
-        self.showToast(message: "not valid email")
+        self.showToast(message: "Invalid email")
         return
       }
       Auth.auth().currentUser?.updateEmail(to: new_value) { error in
@@ -82,7 +82,7 @@ class UserChangeViewController: UIViewController {
     if textField.text! != value {
       // cancel editing existing one
       let alert = UIAlertController(title: "Cancel",
-                                    message: "discard all changes?",
+                                    message: "Discard all changes?",
                                     preferredStyle: UIAlertController.Style.alert)
       alert.addAction(UIAlertAction(title: "Back",
                                     style: UIAlertAction.Style.destructive,

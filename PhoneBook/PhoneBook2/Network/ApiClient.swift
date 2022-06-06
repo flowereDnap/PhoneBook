@@ -23,7 +23,6 @@ var loadResponse: Bool = false {
       if loadResponse == true{
       DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
         DispatchQueue.main.async {
-          print("order",3)
           LoadingViewController.parentView?.dismiss(animated: true, completion: nil)
         }
         loadResponse = false

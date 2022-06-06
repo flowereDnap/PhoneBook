@@ -16,10 +16,10 @@ class NumberFieldDelegate: NSObject, UITextFieldDelegate {
   }
   
   func callWrongInputAllert() {
-    let alert = UIAlertController(title: "wrong input",
-                                  message: "only 0-9 allowed (first character may be \"+\")",
+    let alert = UIAlertController(title: "Wrong input",
+                                  message: "Only 0-9 allowed (first character may be \"+\")",
                                   preferredStyle: UIAlertController.Style.alert)
-    alert.addAction(UIAlertAction(title: "ok",
+    alert.addAction(UIAlertAction(title: "Ok",
                                   style: UIAlertAction.Style.default,
                                   handler: nil))
     parentView?.present(alert, animated: true, completion: nil)

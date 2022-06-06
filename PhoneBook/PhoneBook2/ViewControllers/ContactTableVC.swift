@@ -103,9 +103,27 @@ class ContactViewController: UITableViewController{
   //MARK: -nav bar button actions
   @objc func editCancelButtonPressed(_ sender: UIButton){
     self.viewMode = .view
-    currentEditingContact = currentContact?.copy()
-    self.dataChanged = false
-    setUpView()
+    if !dataChanged {
+      currentEditingContact = currentContact?.copy()
+      self.dataChanged = false
+      setUpView()
+    } else {
+      let alert = UIAlertController(title: "Changes not saved",
+                                    message: "Discard all changes?",
+                                    preferredStyle: UIAlertController.Style.alert)
+      alert.addAction(UIAlertAction(title: "Discard",
+                                    style: UIAlertAction.Style.destructive,
+                                    handler: { _ in
+        self.currentEditingContact = self.currentContact?.copy()
+        self.dataChanged = false
+        self.setUpView()
+      }))
+      alert.addAction(UIAlertAction(title: "Keep editing",
+                                    style: UIAlertAction.Style.default,
+                                    handler: nil))
+      
+      self.present(alert, animated: true, completion: nil)
+    }
   }
   
   @objc func backButtonPressed(_ sender: UIButton){
@@ -131,24 +149,7 @@ class ContactViewController: UITableViewController{
                                       handler: nil))
         
         self.present(alert, animated: true, completion: nil)
-       
-      } else {
-        // cancel editing existing one
-        let alert = UIAlertController(title: "Changes not saved",
-                                      message: "discard all changes?",
-                                      preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Back",
-                                      style: UIAlertAction.Style.destructive,
-                                      handler: { _ in
-          self.navigationController?.popViewController(animated: true)
-        }))
-        alert.addAction(UIAlertAction(title: "Keep editing",
-                                      style: UIAlertAction.Style.default,
-                                      handler: nil))
-        
-        self.present(alert, animated: true, completion: nil)
       }
-      
     }
   }
   
@@ -162,6 +163,7 @@ class ContactViewController: UITableViewController{
       //save changes
       DataManager.save()
       viewMode = .view
+      dataChanged = false
       setUpView()
     } else {
       let alert = UIAlertController(title: "Empty contact",

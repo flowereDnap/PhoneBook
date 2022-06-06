@@ -22,10 +22,10 @@ class NameFieldDelegate: NSObject, UITextFieldDelegate {
   }
   
   func callWrongInputAllert() {
-    let alert = UIAlertController(title: "wrong input",
+    let alert = UIAlertController(title: "Wrong input",
                                   message: "",
                                   preferredStyle: UIAlertController.Style.alert)
-    alert.addAction(UIAlertAction(title: "ok",
+    alert.addAction(UIAlertAction(title: "Ok",
                                   style: UIAlertAction.Style.default,
                                   handler: nil))
     parentView?.present(alert, animated: true, completion: nil)

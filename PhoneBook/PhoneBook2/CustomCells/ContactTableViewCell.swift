@@ -43,7 +43,7 @@ class ContactTableViewCell: MyCell {
       //set name text
       title.text = text
       if isFilteringBySearchBar{
-        let string = NSMutableAttributedString(string: "found in: ")
+        let string = NSMutableAttributedString(string: "Found in: ")
         string.append(contact.searchFoundIn!)
         subTitle.attributedText = string
       } else {

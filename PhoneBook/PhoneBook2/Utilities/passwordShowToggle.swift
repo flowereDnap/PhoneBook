@@ -53,7 +53,7 @@ extension UITextField {
     let attributes = [NSAttributedString.Key.font: font, .foregroundColor: UIColor.black]
     let attributedQuote = NSAttributedString(string: "Show  ", attributes: attributes)
     button3.setAttributedTitle(attributedQuote, for: .normal)
-    let attributedQuote2 = NSAttributedString(string: "Hide  ", attributes: attributes)
+    let attributedQuote2 = NSAttributedString(string: "Hide ", attributes: attributes)
     button3.setAttributedTitle(attributedQuote2, for: .selected)
     button3.setTitleColor(.black, for: .normal)
     button3.setTitleColor(.black, for: .selected)

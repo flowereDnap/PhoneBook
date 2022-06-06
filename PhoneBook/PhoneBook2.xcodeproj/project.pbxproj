@@ -58,6 +58,7 @@
 		CEBA0CAF27D6C3D700EE4FC3 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0CAE27D6C3D700EE4FC3 /* Toast.swift */; };
 		CEBA0CB127D6C3F200EE4FC3 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBA0CB027D6C3F200EE4FC3 /* ImagePicker.swift */; };
 		CECF673727F1E99B00722390 /* LoaderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF673627F1E99B00722390 /* LoaderScreen.swift */; };
+		CEE47072284DD7D800A48E5B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE47071284DD7D800A48E5B /* String.swift */; };
 		CEE90E14283400D300702DBB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEE90E13283400D300702DBB /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +112,7 @@
 		CEBA0CAE27D6C3D700EE4FC3 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEBA0CB027D6C3F200EE4FC3 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		CECF673627F1E99B00722390 /* LoaderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderScreen.swift; sourceTree = "<group>"; };
+		CEE47071284DD7D800A48E5B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		CEE90E13283400D300702DBB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -269,6 +271,7 @@
 				CEBA0CA927D69FB100EE4FC3 /* Copyable.swift */,
 				CE244FD02801D94B00619441 /* Styles.swift */,
 				CEB9F4152810365A008C9E9D /* passwordShowToggle.swift */,
+				CEE47071284DD7D800A48E5B /* String.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				CE4D542427E4A68B0019CEFE /* LoginVC.swift in Sources */,
 				CEBA0C8827D6361600EE4FC3 /* ContactCore+CoreDataClass.swift in Sources */,
 				CEBA0C9127D6483B00EE4FC3 /* ContactFieldCore+CoreDataProperties.swift in Sources */,
+				CEE47072284DD7D800A48E5B /* String.swift in Sources */,
 				CEBA0C4A27D6202000EE4FC3 /* PhoneBook2.xcdatamodeld in Sources */,
 				CE010F4D27D6D5C800E5D335 /* NumberFieldDelegate.swift in Sources */,
 				CEBA0C6527D6322C00EE4FC3 /* DataProviderProtocol.swift in Sources */,

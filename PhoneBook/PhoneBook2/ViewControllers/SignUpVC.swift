@@ -51,7 +51,7 @@ class SignUpVC: UIViewController {
       
       if  emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
           passwordField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-        showError("Please fill in all fields.")
+        showError("Please fill in all fields")
         return
       }
       
@@ -65,7 +65,7 @@ class SignUpVC: UIViewController {
       let cleanedEmail = emailField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
       
       if !LoginViewController.isValidEmail(testStr: cleanedEmail){
-        showError("invalid email")
+        showError("Invalid email")
         return
       }
       
@@ -78,18 +78,18 @@ class SignUpVC: UIViewController {
     //creating new account with email and validating password
 
       if userName.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-        self.showError("invalid name")
+        self.showError("Invalid name")
         return
       }
       if password != passwordConfirm {
-        self.showError("passwords dont match")
+        self.showError("Passwords dont match")
         return
       }
       
       self.gotAnswer = false
       Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
         if error != nil {
-          self.showError("error creating user: \(error!.localizedDescription)")
+          self.showError("Error creating user: \(error!.localizedDescription)")
           self.gotAnswer = true
           return
         }

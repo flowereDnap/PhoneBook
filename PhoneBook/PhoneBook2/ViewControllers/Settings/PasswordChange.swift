@@ -33,16 +33,16 @@ class PasswordChangeViewController: UIViewController {
  
   @IBAction func confirmBtt(_ sender: UIButton){
     if oldPassField.text! != ApiClient.user!.password {
-        self.showToast(message: "wrong password")
+        self.showToast(message: "Wrong password")
         return
     }
     let newPass = newPassField.text!
     if !LoginViewController.isPasswordValid(newPass) {
-      self.showToast(message: "invalid new password")
+      self.showToast(message: "Invalid new password")
       return
     }
     if newPass != newPassConfirmField.text! {
-      self.showToast(message: "new passwords don't match")
+      self.showToast(message: "New passwords don't match")
       return
     }
     Auth.auth().currentUser?.updatePassword(to: newPass, completion: { error in
@@ -55,7 +55,7 @@ class PasswordChangeViewController: UIViewController {
     if newPassField.text! != "" || newPassConfirmField.text! != "" {
       // cancel editing existing one
       let alert = UIAlertController(title: "Cancel",
-                                    message: "discard all changes?",
+                                    message: "Discard all changes?",
                                     preferredStyle: UIAlertController.Style.alert)
       alert.addAction(UIAlertAction(title: "Back",
                                     style: UIAlertAction.Style.destructive,

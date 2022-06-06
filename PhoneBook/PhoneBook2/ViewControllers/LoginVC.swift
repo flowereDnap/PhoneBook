@@ -28,9 +28,7 @@ class LoginViewController: UIViewController {
     didSet{
       if loginResponse == true {
         DispatchQueue.global(qos: .userInitiated).async {
-        print("order",0)
         if ApiClient.user != nil {
-          print("order",2)
           DispatchQueue.global(qos: .userInitiated).sync{
               DataManager.dataProvType = .server
           }
@@ -70,8 +68,6 @@ class LoginViewController: UIViewController {
   }
   
   func authF()->(){
-    //var email: String = ""
-    //var password: String = ""
 
       let email = self.emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
       let password = self.passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -100,7 +96,7 @@ class LoginViewController: UIViewController {
       ApiClient.user!.password = password
       
       self.loginResponse = true
-      self.showToast(message: "loaded with server")
+      self.showToast(message: "Loaded with server")
     }
   }
   
@@ -114,13 +110,9 @@ class LoginViewController: UIViewController {
       hideError()
     }
 
-    print("login0",self.loginResponse)
     DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
-      print("order",1)
       LoadingViewController.show()
       LoadingViewController.load(complation: self!.authF)
-      print("apiuser1", ApiClient.user)
-    
     }
     
    // DispatchQueue.global(qos: .userInitiated).sync {
@@ -138,10 +130,6 @@ class LoginViewController: UIViewController {
     let vc: SignUpVC = mainStoryboard.instantiateViewController(withIdentifier: "SignUp") as! SignUpVC
     vc.modalPresentationStyle = .fullScreen
     self.present(vc , animated: true, completion: nil)
-  
-    
-    
-    
   }
   
   func transitionToListOfContacts() {
@@ -164,7 +152,7 @@ class LoginViewController: UIViewController {
     
     if  emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
         passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-      return "Please fill in all fields."
+      return "Please fill in all fields"
     }
     
     let cleanedPassword = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -176,7 +164,7 @@ class LoginViewController: UIViewController {
     let cleanedEmail = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
     
     if !LoginViewController.isValidEmail(testStr: cleanedEmail){
-      return "invalid email"
+      return "Invalid email"
     }
     
     return nil
@@ -198,7 +186,7 @@ class LoginViewController: UIViewController {
   func makeSettingsMenu()-> UIMenu{
     let action1 =  UIAction(title: "data provider") { _ in
       let optionMenu = UIAlertController(title: nil,
-                                         message: "Choose Option",
+                                         message: "Choose option",
                                          preferredStyle: .actionSheet)
       
       for type in DataProv.allCases {
@@ -215,7 +203,7 @@ class LoginViewController: UIViewController {
           if type != .server {
             DataManager.dataProvType = type
             self.parentView.setUpView()
-            self.showToast(message: "loaded with \(type.rawValue)")
+            self.showToast(message: "Loaded with \(type.rawValue)")
             self.dismiss(animated: true, completion: nil)
           }
         }

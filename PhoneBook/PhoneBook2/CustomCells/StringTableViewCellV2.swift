@@ -15,9 +15,11 @@ class StringTableViewCellV2: UITableViewCell, saveCell {
   
   var delegate: UITextFieldDelegate?
   private weak var parentView: ContactViewController?
+  
   internal var item: ContactField? {
     didSet {
       label.text = item?.lable
+      label.setUpStyle()
       switch item?.type {
       case .name:
         textField.text = item?.value as? String

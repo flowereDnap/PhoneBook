@@ -54,11 +54,11 @@ class AddTableViewCell: UITableViewCell {
       let optionMenu = UIAlertController(title: nil,
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
-      let action1 = UIAlertAction(title: "new name",
+      let action1 = UIAlertAction(title: "New name",
                                   style: .default) { [weak self] (UIAlertAction2) in
         self?.callCreateAllert(type: .name, isMain: true)
       }
-      let action2 = UIAlertAction(title: "new number",
+      let action2 = UIAlertAction(title: "New number",
                                   style: .default) { [weak self] (UIAlertAction2) in
         self?.callCreateAllert(type: .number, isMain: true)
       }
@@ -71,7 +71,7 @@ class AddTableViewCell: UITableViewCell {
       let optionMenu = UIAlertController(title: nil,
                                          message: "Choose Option",
                                          preferredStyle: .actionSheet)
-      let action2 = UIAlertAction(title: "new email",
+      let action2 = UIAlertAction(title: "New email",
                                   style: .default) { [weak self] (UIAlertAction2) in
         self?.callCreateAllert(type: .email, isMain: false)
       }
@@ -85,11 +85,11 @@ class AddTableViewCell: UITableViewCell {
   }
   
   func callCreateAllert(type: Types, isMain: Bool){
-    let alert = UIAlertController(title: "new \(type.rawValue)",
-                                  message: "type in new \(type.rawValue)",
+    let alert = UIAlertController(title: "New \(type.rawValue)",
+                                  message: "Type in new \(type.rawValue)",
                                   preferredStyle: .alert)
     alert.addTextField { field in
-      field.placeholder = "label"
+      field.placeholder = "Label"
       field.returnKeyType = .next
     }
     switch type {

@@ -19,6 +19,7 @@ struct BlueButton: ButtonStyle {
 
 extension UIButton {
   func setUpStyle(){
+    self.setTitle(self.title(for: .normal)?.capitalized, for: .normal)
     self.setTitleColor(UIColor.black, for: .normal)
     self.backgroundColor = .clear
     self.layer.cornerRadius = 4.0
@@ -32,6 +33,18 @@ extension UIAlertAction {
             self.setValue(newValue, forKey: "titleTextColor")
         }
     }
+}
+
+extension UILabel {
+  func setUpStyle() {
+    self.text = self.text?.capitalizingFirstLetter()
+  }
+}
+
+extension UITextField {
+  func setUpStyle() {
+    self.placeholder = self.placeholder?.capitalizingFirstLetter()
+  }
 }
 
 
